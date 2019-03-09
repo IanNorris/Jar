@@ -9,13 +9,15 @@ namespace Jar
 		public IResourceHandler Create(IBrowser browser, IFrame frame, string schemeName, IRequest request)
 		{
 			Uri u = new Uri(request.Url);
-			String Base = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "content");
+			String Base = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
 			String file = Path.Combine(Base, u.AbsolutePath.Substring(1));
 
 			if (u.AbsolutePath.EndsWith("/"))
 			{
 				file += "\\index.html";
 			}
+
+			file = file.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
 			if (File.Exists(file))
 			{
