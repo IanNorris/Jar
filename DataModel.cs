@@ -1,12 +1,18 @@
 ﻿using SQLite;
 using Jar.Model;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Jar
 {
-	static class DataModel
+	public class DataModel
 	{
-		public static SQLiteConnection Create(string Path, string Password)
+		private SQLiteConnection m_database;
+
+		public SQLiteConnection Connection { get { return m_database; } }
+
+		public static SQLiteConnection CreateDatabase(string Path, string Password)
 		{
 			var ConnectionString = new SQLiteConnectionString(
 				Path,
@@ -36,5 +42,14 @@ namespace Jar
 			return DB;
 		}
 
+		public DataModel(string Path, string Password)
+		{
+			m_database = CreateDatabase(Path, Password);
+		}
+
+		public IEnumerable<Transaction> GetTransactions()
+		{
+			return m_database.Table<Transaction>();
+		}
 	}
 }

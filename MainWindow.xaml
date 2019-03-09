@@ -8,6 +8,6 @@
         mc:Ignorable="d"
         Title="Jar Budgeting" Height="620" Width="1100">
     <Grid>
-        <cef:ChromiumWebBrowser Grid.Row="0" Name="m_browser" IsBrowserInitializedChanged="m_browser_IsBrowserInitializedChanged" />
+        <cef:ChromiumWebBrowser Grid.Row="0" Name="m_browser" IsBrowserInitializedChanged="m_browser_IsBrowserInitializedChanged" Loaded="m_browser_Loaded" />
     </Grid>
 </Window>

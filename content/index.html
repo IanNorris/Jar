@@ -1,1 +1,16 @@
-<h1>Test</h1>
+<h1 id="mark">Test</h1>
+
+<script>
+
+(async function() {
+	await CefSharp.BindObjectAsync("data", "dataModel");
+	
+	let transactions = await data.getTransactions();
+	console.log(transactions);
+	for( let t = 0; t < transactions.length; t++ ) {
+		console.log(transactions[t]);
+		let marker = document.getElementById('mark');
+		marker.insertAdjacentHTML('afterend', '<p>' + transactions[t].Payee + '-' + transactions[t].Memo + '</p>');
+	}
+})();
+</script>

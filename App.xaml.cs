@@ -7,7 +7,7 @@ namespace Jar
 {
 	public partial class App : Application
 	{
-		SQLiteConnection m_database;
+		DataModel m_database;
 
 		public App()
 		{
@@ -19,7 +19,13 @@ namespace Jar
 
 			var DatabasePath = Path.Combine(AppDataPath, DBName);
 
-			DataModel.Create(DatabasePath, "Hello");
+			m_database = new DataModel(DatabasePath, "Hello");
+		}
+
+		private void Application_Startup(object sender, StartupEventArgs e)
+		{
+			MainWindow main = new MainWindow(m_database);
+			main.Show();
 		}
 	}
 }
