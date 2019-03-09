@@ -1,16 +1,46 @@
-<h1 id="mark">Test</h1>
+<body>
+
+<div id="app">
+
+	<h1 id="mark">Test</h1>
+
+	<table>
+	<tr v-for="t in trans">
+		<td>{{t.Date}}</td>
+		<td>{{t.Payee}}</td>
+		<td>{{t.Memo}}</td>
+		<td>{{t.Note}}</td>
+		<td>{{t.Amount}}</td>
+	</tr>
+	</table>
+</div>
+	
+<script src="/vendor/vue.js"></script>
 
 <script>
 
 (async function() {
 	await CefSharp.BindObjectAsync("data", "dataModel");
 	
-	let transactions = await data.getTransactions();
+	let newData = {
+		trans: await data.getTransactions()
+	};
+	
+	console.log(newData);
+		
+	let app = new Vue({
+		el: '#app',
+		data: newData
+	});
+	
+	/*let transactions = await data.getTransactions();
 	console.log(transactions);
 	for( let t = 0; t < transactions.length; t++ ) {
 		console.log(transactions[t]);
 		let marker = document.getElementById('mark');
 		marker.insertAdjacentHTML('afterend', '<p>' + transactions[t].Payee + '-' + transactions[t].Memo + '</p>');
-	}
+	}*/
 })();
 </script>
+
+</body>
