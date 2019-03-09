@@ -1,17 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using SQLite;
+using System;
+using System.IO;
 using System.Windows;
 
 namespace Jar
 {
-	/// <summary>
-	/// Interaction logic for App.xaml
-	/// </summary>
 	public partial class App : Application
 	{
+		SQLiteConnection m_database;
+
+		public App()
+		{
+			const string AppDataName = "JarBudgeting";
+			const string DBName = "Jar.db";
+
+			var AppDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppDataName);
+			Directory.CreateDirectory(AppDataPath);
+
+			var DatabasePath = Path.Combine(AppDataPath, DBName);
+
+			DataModel.Create(DatabasePath, "Hello");
+		}
 	}
 }

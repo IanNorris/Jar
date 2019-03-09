@@ -61,6 +61,21 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SQLite-net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\sqlite-net-sqlcipher.1.6.258-beta\lib\netstandard1.1\SQLite-net.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.batteries_sqlcipher, Version=1.1.13.388, Culture=neutral, PublicKeyToken=83625171f3d0bf82, processorArchitecture=MSIL">
+      <HintPath>packages\SQLitePCLRaw.bundle_sqlcipher.1.1.13\lib\net45\SQLitePCLRaw.batteries_sqlcipher.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.batteries_v2, Version=1.1.13.388, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL">
+      <HintPath>packages\SQLitePCLRaw.bundle_sqlcipher.1.1.13\lib\net45\SQLitePCLRaw.batteries_v2.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.core, Version=1.1.13.388, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
+      <HintPath>packages\SQLitePCLRaw.core.1.1.13\lib\net45\SQLitePCLRaw.core.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.provider.sqlcipher, Version=1.1.13.388, Culture=neutral, PublicKeyToken=7bbc99275c710061, processorArchitecture=MSIL">
+      <HintPath>packages\SQLitePCLRaw.provider.sqlcipher.net45.1.1.13\lib\net45\SQLitePCLRaw.provider.sqlcipher.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -89,6 +104,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataModel.cs" />
     <Compile Include="LocalSchemeHandlerFactory.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -96,6 +112,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Transaction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -120,7 +137,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="content\**\*">
+    <Content Include="Content\**\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -138,7 +155,13 @@
     <Error Condition="!Exists('packages\CefSharp.Common.71.0.1\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Common.71.0.1\build\CefSharp.Common.targets'))" />
     <Error Condition="!Exists('packages\CefSharp.Wpf.71.0.1\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Wpf.71.0.1\build\CefSharp.Wpf.props'))" />
     <Error Condition="!Exists('packages\CefSharp.Wpf.71.0.1\build\CefSharp.Wpf.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Wpf.71.0.1\build\CefSharp.Wpf.targets'))" />
+    <Error Condition="!Exists('packages\SQLitePCLRaw.lib.sqlcipher.linux.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.linux.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SQLitePCLRaw.lib.sqlcipher.linux.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.linux.targets'))" />
+    <Error Condition="!Exists('packages\SQLitePCLRaw.lib.sqlcipher.osx.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.osx.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SQLitePCLRaw.lib.sqlcipher.osx.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.osx.targets'))" />
+    <Error Condition="!Exists('packages\SQLitePCLRaw.lib.sqlcipher.windows.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.windows.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SQLitePCLRaw.lib.sqlcipher.windows.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.windows.targets'))" />
   </Target>
   <Import Project="packages\CefSharp.Common.71.0.1\build\CefSharp.Common.targets" Condition="Exists('packages\CefSharp.Common.71.0.1\build\CefSharp.Common.targets')" />
   <Import Project="packages\CefSharp.Wpf.71.0.1\build\CefSharp.Wpf.targets" Condition="Exists('packages\CefSharp.Wpf.71.0.1\build\CefSharp.Wpf.targets')" />
+  <Import Project="packages\SQLitePCLRaw.lib.sqlcipher.linux.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.linux.targets" Condition="Exists('packages\SQLitePCLRaw.lib.sqlcipher.linux.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.linux.targets')" />
+  <Import Project="packages\SQLitePCLRaw.lib.sqlcipher.osx.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.osx.targets" Condition="Exists('packages\SQLitePCLRaw.lib.sqlcipher.osx.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.osx.targets')" />
+  <Import Project="packages\SQLitePCLRaw.lib.sqlcipher.windows.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.windows.targets" Condition="Exists('packages\SQLitePCLRaw.lib.sqlcipher.windows.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.windows.targets')" />
 </Project>
