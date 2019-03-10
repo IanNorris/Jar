@@ -25,7 +25,8 @@ namespace Jar
 
 			m_database = new SQLiteConnection(ConnectionString);
 			m_database.CreateTable<Transaction>();
-			
+			m_database.CreateTable<Account>();
+
 			/*m_database.BeginTransaction();
 
 			m_database.Insert(new Transaction()
@@ -53,6 +54,11 @@ namespace Jar
 		public DataModel(string Path, string Password)
 		{
 			m_database = CreateDatabase(Path, Password);
+		}
+
+		public IEnumerable<Account> GetAccounts()
+		{
+			return m_database.Table<Account>();
 		}
 
 		public IEnumerable<Transaction> GetTransactions()
