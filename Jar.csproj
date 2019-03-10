@@ -60,6 +60,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
@@ -252,4 +255,7 @@
   <Import Project="packages\SQLitePCLRaw.lib.sqlcipher.linux.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.linux.targets" Condition="Exists('packages\SQLitePCLRaw.lib.sqlcipher.linux.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.linux.targets')" />
   <Import Project="packages\SQLitePCLRaw.lib.sqlcipher.osx.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.osx.targets" Condition="Exists('packages\SQLitePCLRaw.lib.sqlcipher.osx.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.osx.targets')" />
   <Import Project="packages\SQLitePCLRaw.lib.sqlcipher.windows.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.windows.targets" Condition="Exists('packages\SQLitePCLRaw.lib.sqlcipher.windows.1.1.13\build\net35\SQLitePCLRaw.lib.sqlcipher.windows.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>cmd /C $(SolutionDir)\DeployContent.bat $(SolutionDir)\Content $(OutDir)\Content</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -1,12 +1,15 @@
 <body>
 
+<script src="/vendor/vue.js"></script>
+<script src="/vendor/moment-with-locales.js"></script>
+
 <div id="app">
 
 	<h1 id="mark">Test</h1>
 
 	<table>
 	<tr v-for="t in trans">
-		<td>{{t.Date}}</td>
+		<td>{{t.Date | asDate}}</td>
 		<td>{{t.Payee}}</td>
 		<td>{{t.Memo}}</td>
 		<td>{{t.Note}}</td>
@@ -14,8 +17,6 @@
 	</tr>
 	</table>
 </div>
-	
-<script src="/vendor/vue.js"></script>
 
 <script>
 
@@ -23,14 +24,19 @@
 	await CefSharp.BindObjectAsync("data", "dataModel");
 	
 	let newData = {
-		trans: await data.getTransactions()
+		trans: await data.getTransactionsBetweenDates(moment('2018/04/01').toDate(), moment('2018/04/31').toDate() )
 	};
 	
 	console.log(newData);
 		
 	let app = new Vue({
 		el: '#app',
-		data: newData
+		data: newData,
+		filters: {
+			asDate: function(date) {
+				return moment(date).format('L');
+			}
+		}
 	});
 	
 	/*let transactions = await data.getTransactions();

@@ -25,8 +25,8 @@ namespace Jar
 
 			m_database = new SQLiteConnection(ConnectionString);
 			m_database.CreateTable<Transaction>();
-
-			m_database.BeginTransaction();
+			
+			/*m_database.BeginTransaction();
 
 			m_database.Insert(new Transaction()
 			{
@@ -40,12 +40,12 @@ namespace Jar
 				Amount = 5300
 			});
 
-			m_database.Commit();
+			m_database.Commit();*/
 
 			m_import = new Importer(this);
 
-			var FileToImport = @"C:\Users\ian\Downloads\5253030006984512_20190216_2014.qif";
-			m_import.Import(FileToImport, 123, 5);
+			//var FileToImport = @"FileToImport.qif";
+			//m_import.Import(FileToImport, 123, 5);
 			
 			return m_database;
 		}
@@ -58,6 +58,16 @@ namespace Jar
 		public IEnumerable<Transaction> GetTransactions()
 		{
 			return m_database.Table<Transaction>();
+		}
+
+		public IEnumerable<Transaction> GetTransactions(System.Linq.Expressions.Expression<Func<Transaction,bool>> Predicate)
+		{
+			return m_database.Table<Transaction>().Where(Predicate);
+		}
+
+		public IEnumerable<Transaction> GetTransactionsBetweenDates( DateTime Start, DateTime End )
+		{
+			return GetTransactions(t => t.Date >= Start && t.Date < End);
 		}
 	}
 }
