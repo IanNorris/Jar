@@ -2,7 +2,6 @@
 using CefSharp.Wpf;
 using System.Diagnostics;
 using System.Windows;
-using SQLite;
 
 namespace Jar
 {

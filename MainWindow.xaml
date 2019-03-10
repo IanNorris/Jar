@@ -6,7 +6,7 @@
         xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         xmlns:local="clr-namespace:Jar"
         mc:Ignorable="d"
-        Title="Jar Budgeting" Height="620" Width="1100">
+        Title="Jar Budgeting" Height="620" Width="1100" MinWidth="1100" MinHeight="620">
     <Grid>
         <cef:ChromiumWebBrowser Grid.Row="0" Name="m_browser" IsBrowserInitializedChanged="m_browser_IsBrowserInitializedChanged" Loaded="m_browser_Loaded" />
     </Grid>

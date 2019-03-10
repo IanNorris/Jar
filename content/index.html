@@ -1,50 +1,135 @@
-<body>
+<!DOCTYPE html>
+<html lang="en" class="default-style layout-fixed layout-navbar-fixed" dir="ltr">
+	<head>
+		<title>Jar Budgeting</title>
 
-<script src="/vendor/vue.js"></script>
-<script src="/vendor/moment-with-locales.js"></script>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-<div id="app">
+		<!-- Icon fonts -->
+		<link rel="stylesheet" href="vendor/appwork/vendor/fonts/fontawesome.css">
+		<link rel="stylesheet" href="vendor/appwork/vendor/fonts/ionicons.css">
+		<link rel="stylesheet" href="vendor/appwork/vendor/fonts/linearicons.css">
+		<link rel="stylesheet" href="vendor/appwork/vendor/fonts/open-iconic.css">
+		<link rel="stylesheet" href="vendor/appwork/vendor/fonts/pe-icon-7-stroke.css">
 
-	<h1 id="mark">Test</h1>
+		<!-- Core stylesheets -->
+		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/bootstrap.css" class="theme-settings-bootstrap-css">
+		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/appwork.css" class="theme-settings-appwork-css">
+		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/theme-twitlight.css" class="theme-settings-theme-css">
+		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/colors.css" class="theme-settings-colors-css">
+		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/uikit.css">
+		<link rel="stylesheet" href="vendor/appwork/css/demo.css">
 
-	<table>
-	<tr v-for="t in trans">
-		<td>{{t.Date | asDate}}</td>
-		<td>{{t.Payee}}</td>
-		<td>{{t.Memo}}</td>
-		<td>{{t.Note}}</td>
-		<td>{{t.Amount}}</td>
-	</tr>
-	</table>
-</div>
+		<script src="vendor/appwork/vendor/js/material-ripple.js"></script>
+		<script src="vendor/appwork/vendor/js/layout-helpers.js"></script>
+		<script src="vendor/appwork/vendor/js/theme-settings.js"></script>
 
-<script>
+		<!-- Core scripts -->
+		<script src="vendor/appwork/vendor/js/pace.js"></script>
+		<script src="vendor/jquery-3.3.1.min.js"></script>
 
-(async function() {
-	await CefSharp.BindObjectAsync("data", "dataModel");
-	
-	let newData = {
-		trans: await data.getTransactionsBetweenDates(moment('2018/04/01', 'YYYY/MM/DD').toDate(), moment('2018/04/31', 'YYYY/MM/DD').toDate() )
-	};
+		<!-- Libs -->
+		<link rel="stylesheet" href="vendor/appwork/vendor/libs/perfect-scrollbar/perfect-scrollbar.css">
+	</head>
+	<body>
+		<div class="page-loader">
+			<div class="bg-primary"></div>
+		</div>
 		
-	let app = new Vue({
-		el: '#app',
-		data: newData,
-		filters: {
-			asDate: function(date) {
-				return moment(date).format('L');
-			}
-		}
-	});
-	
-	/*let transactions = await data.getTransactions();
-	console.log(transactions);
-	for( let t = 0; t < transactions.length; t++ ) {
-		console.log(transactions[t]);
-		let marker = document.getElementById('mark');
-		marker.insertAdjacentHTML('afterend', '<p>' + transactions[t].Payee + '-' + transactions[t].Memo + '</p>');
-	}*/
-})();
-</script>
+		<!-- Layout wrapper -->
+		<div class="layout-wrapper layout-2">
+		<div class="layout-inner" id="app">
+			<!-- Layout sidenav -->
+			<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical bg-dark">
 
-</body>
+				<!-- Brand demo (see vendor/appwork/css/demo/demo.css) -->
+				<div class="app-brand demo">
+				  <span class="app-brand-logo demo bg-primary">
+					
+				  </span>
+				  <a class="app-brand-text demo sidenav-text font-weight-normal ml-2">Jar</a>
+				  <!--<a href="javascript:void(0)" class="layout-sidenav-toggle sidenav-link text-large ml-auto">
+					<i class="ion ion-md-menu align-middle"></i>
+				  </a>-->
+				</div>
+
+				<div class="sidenav-divider mt-0"></div>
+
+				<!-- Links -->
+				<ul class="sidenav-inner py-1">
+				
+					<li class="sidenav-item">
+						<a href="typography.html" class="sidenav-link"><i class="sidenav-icon ion ion-md-quote"></i>
+						  <div>Home</div>
+						</a>
+					</li>
+				
+					<li class="sidenav-item">
+						<a href="typography.html" class="sidenav-link"><i class="sidenav-icon ion ion-md-quote"></i>
+						  <div>Budget</div>
+						</a>
+					</li>
+					
+					<li class="sidenav-item">
+						<a href="typography.html" class="sidenav-link"><i class="sidenav-icon ion ion-md-quote"></i>
+						  <div>Reports</div>
+						</a>
+					</li>
+					
+					<li class="sidenav-divider mb-1"></li>
+				
+					<li class="sidenav-header small font-weight-semibold">Accounts</li>
+				
+					<li class="sidenav-item">
+						<a href="typography.html" class="sidenav-link"><i class="sidenav-icon ion ion-md-quote"></i>
+						  <div>Account 1</div>
+						</a>
+					</li>
+					
+					<li class="sidenav-item">
+						<a href="typography.html" class="sidenav-link"><i class="sidenav-icon ion ion-md-quote"></i>
+						  <div>Account 2</div>
+						</a>
+					</li>
+					
+					<li class="sidenav-item">
+						<a href="typography.html" class="sidenav-link"><i class="sidenav-icon ion ion-md-quote"></i>
+						  <div>Account 3</div>
+						</a>
+					</li>
+
+				</ul>
+			</div>
+			<!-- / Layout sidenav -->
+
+			<!-- Layout container -->
+			<div class="layout-container">
+
+				<!-- Layout content -->
+				<div class="layout-content">
+
+				  <!-- Content -->
+				  <div class="container-fluid flex-grow-1 container-p-y">
+
+					<h1>Foo</h1>
+
+				  </div>
+				  <!-- / Content -->
+
+				</div>
+				<!-- Layout content -->
+
+			</div>
+			<!-- / Layout container -->
+
+		</div>
+		<!-- / Layout wrapper -->
+
+		<!-- Core scripts -->
+		<script src="vendor/appwork/vendor/libs/popper/popper.js"></script>
+		<script src="vendor/appwork/vendor/js/bootstrap.js"></script>
+		<script src="vendor/appwork/vendor/js/sidenav.js"></script>
+	</body>
+</html>
