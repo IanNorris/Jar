@@ -1,30 +1,9 @@
-<body>
-
-<script src="/vendor/vue.js"></script>
-<script src="/vendor/moment-with-locales.js"></script>
-
-<div id="app">
-
-	<h1 id="mark">Test</h1>
-
-	<table>
-	<tr v-for="t in trans">
-		<td>{{t.Date | asDate}}</td>
-		<td>{{t.Payee}}</td>
-		<td>{{t.Memo}}</td>
-		<td>{{t.Note}}</td>
-		<td>{{t.Amount}}</td>
-	</tr>
-	</table>
-</div>
-
-<script>
-
 (async function() {
 	await CefSharp.BindObjectAsync("data", "dataModel");
 	
 	let newData = {
-		trans: await data.getTransactionsBetweenDates(moment('2018/04/01', 'YYYY/MM/DD').toDate(), moment('2018/04/31', 'YYYY/MM/DD').toDate() )
+		trans: await data.getTransactionsBetweenDates(moment('2018/04/01', 'YYYY/MM/DD').toDate(), moment('2018/04/30', 'YYYY/MM/DD').toDate() ),
+		accounts: await data.getAccounts()
 	};
 		
 	let app = new Vue({
@@ -33,6 +12,12 @@
 		filters: {
 			asDate: function(date) {
 				return moment(date).format('L');
+			},
+			asCurrency: function(amount) {
+				return '£' + (amount / 100.0);
+			},
+			asCurrencyRoundDown: function(amount) {
+				return '£' + Math.floor((amount / 100.0));
 			}
 		}
 	});
@@ -45,6 +30,3 @@
 		marker.insertAdjacentHTML('afterend', '<p>' + transactions[t].Payee + '-' + transactions[t].Memo + '</p>');
 	}*/
 })();
-</script>
-
-</body>
