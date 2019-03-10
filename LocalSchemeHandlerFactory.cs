@@ -50,7 +50,7 @@ namespace Jar
 			}
 			else
 			{
-				return ResourceHandler.ForErrorMessage("Not found", System.Net.HttpStatusCode.NotFound);
+				return ResourceHandler.ForErrorMessage($"{file} Not found", System.Net.HttpStatusCode.NotFound);
 			}
 		}
 	}
