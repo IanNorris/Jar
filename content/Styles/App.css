@@ -22,3 +22,10 @@ input, button, textarea, :focus
 {
 	outline: none; /* You should add some other style for :focus to help UX/a11y */
 }
+
+.sidenav-bottom
+{
+	background-color: #828487;
+	width: 100%;
+	padding: 1em;
+}

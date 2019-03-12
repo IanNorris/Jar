@@ -2,6 +2,7 @@
 	<div class="layout-inner">
 		<!-- Layout sidenav -->
 		<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical bg-dark">
+
 			<!-- Links -->
 			<ul class="sidenav-inner py-1">
 			
@@ -41,6 +42,20 @@
 					</a>
 				</li>
 			</ul>
+
+			<div class="sidenav-bottom">
+				<div class="dropdown show">
+						<a class="dropdown-toggle sidenav-text" role="button" id="budgetMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="fa fa-cog"></i> Family Budget
+						</a>
+						
+						<div class="dropdown-menu" aria-labelledby="budgetMenuLink">
+							<a class="dropdown-item"><i class="fa fa-cog"></i> Settings</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item"><i class="fa fa-sign-out-alt"></i> Sign out</a>
+						</div>
+						</div>
+			</div>
 		</div>
 		<!-- / Layout sidenav -->
 
