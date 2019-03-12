@@ -30,35 +30,9 @@
 		<script src="vendor/appwork/vendor/js/pace.js"></script>
 		<script src="vendor/jquery-3.3.1.min.js"></script>
 
-		<!-- Libs -->
-		<link rel="stylesheet" href="vendor/appwork/vendor/libs/perfect-scrollbar/perfect-scrollbar.css">
-		
-		<style>
-			/* Disable drag support for native feel */
-			a:not([draggable=true]), img:not([draggable=true])
-			{
-				-webkit-user-drag: none; 
-				user-drag: none; /* Technically not supported in Electron yet */
-			}
+		<link rel="stylesheet" href="Styles/App.css">
 
-			a[href^="http://"], a[href^="https://"], a[href^="ftp://"]
-			{
-				-webkit-user-drag: auto;
-				user-drag: auto; /* Technically not supported in Electron yet */
-			}
-			
-			:not(input):not(textarea), :not(input):not(textarea)::after, :not(input):not(textarea)::before
-			{
-				-webkit-user-select: none;
-				user-select: none;
-				cursor: default;
-			}
-			
-			input, button, textarea, :focus
-			{
-				outline: none; /* You should add some other style for :focus to help UX/a11y */
-			}
-		</style>
+		<script type="text/x-template" id="MainTemplate" template-name="Main"></script>
 
 	</head>
 	<body>
@@ -67,111 +41,41 @@
 		</div>
 		
 		<!-- Layout wrapper -->
-		<div class="layout-wrapper layout-2">
-		<div class="layout-inner" id="app">
-			<!-- Layout sidenav -->
-			<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical bg-dark">
-				<!-- Links -->
-				<ul class="sidenav-inner py-1">
+		<div id="app">
+			<jar-main v-if="budget">
 				
-					<li class="sidenav-item">
-						<a class="sidenav-link active"><i class="sidenav-icon fa fa-home"></i>
-						  <div>Home</div>
-						</a>
-					</li>
-				
-					<li class="sidenav-item">
-						<a class="sidenav-link"><i class="sidenav-icon fa fa-chart-pie"></i>
-						  <div>Budget</div>
-						</a>
-					</li>
-					
-					<li class="sidenav-item">
-						<a class="sidenav-link"><i class="sidenav-icon fa fa-chart-line"></i>
-						  <div>Reports</div>
-						</a>
-					</li>
-					
-					<li class="sidenav-divider mb-1"></li>
-				
-					<li class="sidenav-header small font-weight-semibold pl-3">
-						<div class="float-left">Accounts</div>
-						<div class="pl-1 ml-auto float-right">
-							<a class="sidenav-link"><i class="fa fa-cog"></i></a>
-						</div>
-					</li>
-					
-					<li v-for="account in accounts" class="sidenav-item" v-if="account.IsOpen">
-						<a class="sidenav-link">
-						  <div>{{account.Name}}</div>
-						  <div class="pl-1 ml-auto">
-							<div :class="{ 'badge': true, 'badge-success': account.LastBalance >= 0, 'badge-danger': account.LastBalance < 0}">{{account.LastBalance | asCurrencyRoundDown}}</div>
-						  </div>
-						</a>
-					</li>
-				</ul>
-			</div>
-			<!-- / Layout sidenav -->
-
-			<!-- Layout container -->
-			<div class="layout-container">
-
-				<!-- Layout content -->
-				<div class="layout-content">
-
-				  <!-- Content -->
-				  <div class="container-fluid flex-grow-1 container-p-y">
-						<div>
-							<h1>Account 1</h1>
-							<p>Account balance: £26,981.73</p>
-						</div>
-						<div>
-							<div class="table-responsive">
-							  <table class="datatables-demo table table-striped table-bordered">
-								<thead>
-								  <tr>
-									<th>Date</th>
-									<th>Payee</th>
-									<th>Memo</th>
-									<th>Note</th>
-									<th>Amount</th>
-								  </tr>
-								</thead>
-								<tbody>
-								  <tr v-for="(t,index) in trans" :class="{ 'odd': index % 2 !== 0, 'even': index % 2 === 0}">
-										<td>{{t.Date | asDate}}</td>
-										<td>{{t.Payee}}</td>
-										<td>{{t.Memo}}</td>
-										<td>{{t.Note}}</td>
-										<td>{{t.Amount | asCurrency}}</td>
-									</tr>
-								</tbody>
-							  </table>
-							</div>
-						</div>
-					</div>
-					
-
-				  </div>
-				  <!-- / Content -->
-
-				</div>
-				<!-- Layout content -->
-
-			</div>
-			<!-- / Layout container -->
-
+			</jar-main>
 		</div>
-		<!-- / Layout wrapper -->
 
 		<!-- Core scripts -->
 		<script src="vendor/appwork/vendor/libs/popper/popper.js"></script>
 		<script src="vendor/appwork/vendor/js/bootstrap.js"></script>
 		<script src="vendor/appwork/vendor/js/sidenav.js"></script>
-		
+
 		<script src="/vendor/vue.js"></script>
 		<script src="/vendor/moment-with-locales.js"></script>
+		
+		<script id="VueComponentSrc"></script>
 
 		<script src="Scripts/App.js"></script>
+
+		<script>
+			//Load all the templates
+			var jobsStarted = 0;
+			var basePath = "Components/";
+			$('[template-name]').each( function() {
+				jobsStarted++;
+			} );
+			$('[template-name]').each( function() {
+				$(this).load( basePath + $(this).attr('template-name') + '.tpl', function(){
+					if( --jobsStarted == 0 ) {
+						$('body').trigger("jarTemplatesLoaded");
+					}
+				});
+			} );
+		</script>
+
+		<script src="Components/Main.js"></script>
+		
 	</body>
 </html>

@@ -48,7 +48,7 @@ namespace Jar
 
 		private void m_browser_Loaded(object sender, RoutedEventArgs e)
 		{
-			m_browser.JavascriptObjectRepository.Register("data", m_database, true);
+			m_browser.JavascriptObjectRepository.Register("dataModel", m_database, true);
 		}
 	}
 }
