@@ -20,7 +20,7 @@
 		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/theme-twitlight.css" class="theme-settings-theme-css">
 		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/colors.css" class="theme-settings-colors-css">
 		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/uikit.css">
-		<link rel="stylesheet" href="vendor/appwork/css/demo.css">
+		<link rel="stylesheet" href="vendor/appwork/vendor/css/pages/authentication.css">
 
 		<script src="vendor/appwork/vendor/js/material-ripple.js"></script>
 		<script src="vendor/appwork/vendor/js/layout-helpers.js"></script>
@@ -33,6 +33,7 @@
 		<link rel="stylesheet" href="Styles/App.css">
 
 		<script type="text/x-template" id="MainTemplate" template-name="Main"></script>
+		<script type="text/x-template" id="OpenTemplate" template-name="Open"></script>
 
 	</head>
 	<body>
@@ -42,9 +43,8 @@
 		
 		<!-- Layout wrapper -->
 		<div id="app">
-			<jar-main v-if="budget">
-				
-			</jar-main>
+			<jar-open />
+			<jar-main v-if="budget" />
 		</div>
 
 		<!-- Core scripts -->
@@ -76,6 +76,7 @@
 		</script>
 
 		<script src="Components/Main.js"></script>
+		<script src="Components/Open.js"></script>
 		
 	</body>
 </html>

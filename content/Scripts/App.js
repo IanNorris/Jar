@@ -6,7 +6,7 @@ let onLoaded = function(){
 	let app = new Vue({
 		el: '#app',
 		data: {
-			budget: {},
+			budget: null,
 		}
 	});
 };
