@@ -1,19 +1,26 @@
 ﻿using SQLite;
 using Jar.Model;
 using System;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using Jar.Import;
+using Newtonsoft.Json.Linq;
+using System.Windows;
+using Newtonsoft.Json;
 
 namespace Jar
 {
 	public class DataModel
 	{
 		private SQLiteConnection m_database;
+		private Settings m_settings;
 		private Importer m_import;
+		private string m_settingsPath;
 
 		public SQLiteConnection Connection { get { return m_database; } }
 		public Importer Import { get { return m_import; } }
+		public Settings Settings { get { return m_settings; } }
 
 		public SQLiteConnection CreateDatabase(string Path, string Password)
 		{
@@ -51,9 +58,56 @@ namespace Jar
 			return m_database;
 		}
 
-		public DataModel(string Path, string Password)
+		public DataModel(string SettingsPath)
 		{
-			m_database = CreateDatabase(Path, Password);
+			m_settingsPath = SettingsPath;
+			m_settings = new Settings();
+
+			if ( File.Exists(SettingsPath) )
+			{
+				try
+				{
+					var SettingsJson = JObject.Parse(File.ReadAllText(SettingsPath));
+
+					bool HasBudgets = SettingsJson.ContainsKey("Budgets");
+					bool HasWindowsSettings = SettingsJson.ContainsKey("Window");
+
+					if(HasBudgets)
+					{
+						var JsonList = SettingsJson["Budgets"].Children().ToList();
+						foreach(var JsonBudget in JsonList )
+						{
+							var Budget = JsonBudget.ToObject<Budget>();
+							Budget.Name = Path.GetFileNameWithoutExtension(Budget.Path);
+							m_settings.Budgets.Add(Budget);
+						}
+					}
+
+					if(HasWindowsSettings)
+					{
+						m_settings.WindowSettings = SettingsJson["Window"].ToObject<WindowSettings>();
+					}
+				}
+				catch(Exception e)
+				{
+					MessageBox.Show($"Settings file {SettingsPath} is corrupt.\nYou can attempt to load your budget again by opening it. Technical details:\n{e.Message}", "Error", MessageBoxButton.OK);
+				}
+			}
+
+			m_settings.Budgets = m_settings.Budgets.OrderByDescending(b => b.LastAccessed ).ToList();
+
+			WriteSettings();
+		}
+
+		public void WriteSettings()
+		{
+			var String = JsonConvert.SerializeObject(m_settings, Formatting.Indented);
+			File.WriteAllText(m_settingsPath, String);
+		}
+
+		public Settings GetSettings()
+		{
+			return m_settings;
 		}
 
 		public IEnumerable<Account> GetAccounts()

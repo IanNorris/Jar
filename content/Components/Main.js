@@ -7,8 +7,8 @@ Vue.component( 'jar-main', {
         };
     },
     created: function(){
-        this.getAccounts();
-        this.getTransactions();
+        //this.getAccounts();
+        //this.getTransactions();
     },
     methods: {
         getAccounts: async function() {

@@ -28,18 +28,12 @@
 
 		<!-- Form -->
 		<form class="my-5">
-		  <div class="cui-example mb-2">
+		  <div v-if="settings && settings.Budgets.length "class="mb-2">
 			  <div class="list-group">
-				<a href="javascript:void(0)" class="list-group-item list-group-item-action flex-column align-items-start active">
+				<a v-for="(budget,index) in settings.Budgets" href="javascript:void(0)" class="list-group-item list-group-item-action flex-column align-items-start" v-bind:class="{ 'active': index == selectedBudget }" v-on:click="selectBudget( index )">
 				  <div class="d-flex justify-content-between w-100">
-					<h5 class="mb-1">Family</h5>
-					<small>3 days ago</small>
-				  </div>
-				</a>
-				<a href="javascript:void(0)" class="list-group-item list-group-item-action flex-column align-items-start">
-				  <div class="d-flex justify-content-between w-100">
-					<h5 class="mb-1">Company</h5>
-					<small class="text-muted">2 months ago</small>
+					<h5 class="mb-1">{{budget.Name}}</h5>
+					<small>{{budget.LastAccessed | asDateAgo}}</small>
 				  </div>
 				</a>
 			  </div>
@@ -53,9 +47,13 @@
 			<label class="form-label d-flex justify-content-between align-items-end">
 			  <div>Password</div>
 			</label>
-			<input type="password" class="form-control">
+			<input type="password" ref="password" class="form-control">
 		  </div>
-		  <div class="d-flex justify-content-between align-items-right m-0">
+		  <div class="d-flex justify-content-between align-items-center m-0">
+			<label class="custom-control custom-checkbox m-0">
+			  <input type="checkbox" class="custom-control-input">
+			  <span class="custom-control-label">Remember password</span>
+			</label>
 			<button type="button" class="btn btn-primary">Open</button>
 		  </div>
 		</form>

@@ -7,24 +7,23 @@ namespace Jar
 {
 	public partial class App : Application
 	{
-		DataModel m_database;
+		DataModel m_dataModel;
 
 		public App()
 		{
 			const string AppDataName = "JarBudgeting";
-			const string DBName = "Jar.db";
+			const string Settings = "Settings.json";
 
 			var AppDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppDataName);
 			Directory.CreateDirectory(AppDataPath);
 
-			var DatabasePath = Path.Combine(AppDataPath, DBName);
-
-			m_database = new DataModel(DatabasePath, "Hello");
+			var SettingsPath = Path.Combine(AppDataPath, Settings);
+			m_dataModel = new DataModel(SettingsPath);
 		}
 
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
-			MainWindow main = new MainWindow(m_database);
+			MainWindow main = new MainWindow(m_dataModel);
 			main.Show();
 		}
 	}
