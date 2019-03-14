@@ -24,44 +24,66 @@
 	<div class="d-flex col-sm-7 col-md-5 col-lg-12 px-0 px-xl-4 mx-auto">
 	  <div class="w-100">
 
-		<h4 class="text-center font-weight-normal mt-5 mb-0">Select a budget</h4>
-
-		<!-- Form -->
-		<form class="my-5">
-		  <div v-if="settings && settings.Budgets.length "class="mb-2">
-			  <div class="list-group">
-				<a v-for="(budget,index) in settings.Budgets" href="javascript:void(0)" class="list-group-item list-group-item-action flex-column align-items-start" v-bind:class="{ 'active': index == selectedBudget }" v-on:click="selectBudget( index )">
-				  <div class="d-flex justify-content-between w-100">
-					<h5 class="mb-1">{{budget.Name}}</h5>
-					<small>{{budget.LastAccessed | asDateAgo}}</small>
+		<div v-if="settings && settings.Budgets.length">
+			<h4 class="text-center font-weight-normal mb-0">Select a budget</h4>
+			
+			<!-- Form -->
+			<form class="my-5">
+			  <div class="mb-2">
+				  <div class="list-group">
+					<a v-for="(budget,index) in settings.Budgets" href="javascript:void(0)" class="list-group-item list-group-item-action flex-column align-items-start" v-bind:class="{ 'active': index == selectedBudget }" v-on:click="selectBudget( index )">
+					  <div class="d-flex justify-content-between w-100">
+						<h5 class="mb-1">{{budget.Name}}</h5>
+						<small>{{budget.LastAccessed | asDateAgo}}</small>
+					  </div>
+					</a>
 				  </div>
-				</a>
+				</div>
+				
+				<div class="text-center text-muted mb-3">
+					<a href="javascript:void(0)" style="text-align: center">Open a budget</a>
+				</div>
+				
+			  <div>
+				  <div class="form-group">
+					<label class="form-label d-flex justify-content-between align-items-end">
+					  <div>Password</div>
+					</label>
+					<input type="password" ref="password" class="form-control">
+				  </div>
+				  <div class="d-flex justify-content-between align-items-center m-0">
+					<label class="custom-control custom-checkbox m-0">
+					  <input type="checkbox" class="custom-control-input">
+					  <span class="custom-control-label">Remember password</span>
+					</label>
+					<button type="button" class="btn btn-primary">Open</button>
+				  </div>
 			  </div>
-			</div>
+			</form>
+			<!-- / Form -->
 			
-			<div class="text-center text-muted mb-3">
-				<a href="javascript:void(0)" style="text-align: center">Open a budget</a>
+			<div class="text-center text-muted">
+			  Don't have a budget yet? <a href="javascript:void(0)">Create one</a>
 			</div>
-			
-		  <div class="form-group">
-			<label class="form-label d-flex justify-content-between align-items-end">
-			  <div>Password</div>
-			</label>
-			<input type="password" ref="password" class="form-control">
-		  </div>
-		  <div class="d-flex justify-content-between align-items-center m-0">
-			<label class="custom-control custom-checkbox m-0">
-			  <input type="checkbox" class="custom-control-input">
-			  <span class="custom-control-label">Remember password</span>
-			</label>
-			<button type="button" class="btn btn-primary">Open</button>
-		  </div>
-		</form>
-		<!-- / Form -->
-
-		<div class="text-center text-muted">
-		  Don't have a budget yet? <a href="javascript:void(0)">Create one</a>
 		</div>
+
+		<div v-if="settings && settings.Budgets.length == 0">
+			<h4 class="text-center font-weight-normal mb-5">New here?</h4>
+			
+			<div class="text-center text-muted">
+				<a href="javascript:void(0)">Create a new budget</a>
+			</div>
+			
+			<div class="text-center text-muted mt-3 mb-2">
+				<p>or</p>
+			</div>
+			
+			<div class="text-center text-muted">
+				<a href="javascript:void(0)" style="text-align: center">Open an existing budget</a>
+			</div>
+		</div>
+
+		
 
 	  </div>
 	</div>

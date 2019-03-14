@@ -10,7 +10,9 @@ Vue.component( 'jar-open', {
         this.getSettings();
     },
 	mounted: function(){
-		this.$refs.password.focus();
+		if( this.$refs.password ) {
+			this.$refs.password.focus();
+		}
 	},
     methods: {
         getSettings: async function() {
