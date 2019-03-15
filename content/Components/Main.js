@@ -2,13 +2,13 @@ Vue.component( 'jar-main', {
     template: '#MainTemplate',
     data: function() {
         return {
-            transactions: null,
-            accounts: null
+            transactions: [],
+            accounts: []
         };
     },
     created: function(){
-        //this.getAccounts();
-        //this.getTransactions();
+		this.getAccounts();
+		this.getTransactions();
     },
     methods: {
         getAccounts: async function() {

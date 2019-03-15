@@ -10,11 +10,11 @@ namespace Jar
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		DataModel m_database;
+		DataModel m_dataModel;
 
-		public MainWindow(DataModel database)
+		public MainWindow(DataModel dataModel)
 		{
-			m_database = database;
+			m_dataModel = dataModel;
 
 			var Settings = new CefSettings();
 			Settings.RegisterScheme(
@@ -46,9 +46,33 @@ namespace Jar
 			}
 		}
 
+		const string ErrorMessageFormat = @"swal({{
+				text: ""{0}"",
+				title: ""{1}"",
+				icon: ""{2}"",
+				closeOnEsc: true,
+				dangerMode: {3},
+				buttons: {{
+					cancel: {4},
+					confirm: true
+				}}
+			}});";
+		
+		private static string BuildMessageCommand( string Text, string Title, MessageIcon Icon, bool ShowCancel, bool DangerMode )
+		{
+			return string.Format(ErrorMessageFormat, Text, Title, Icon.ToString().ToLower(), DangerMode.ToString().ToLower(), ShowCancel.ToString().ToLower());
+		}
+
+		private void ShowMessage(string Text, string Title, MessageIcon Icon, bool ShowCancel, bool DangerMode )
+		{
+			string JS = BuildMessageCommand(Text, Title, Icon, ShowCancel, DangerMode);
+			m_browser.GetMainFrame().ExecuteJavaScriptAsync(JS);
+		}
+
 		private void m_browser_Loaded(object sender, RoutedEventArgs e)
 		{
-			m_browser.JavascriptObjectRepository.Register("dataModel", m_database, true);
+			m_browser.JavascriptObjectRepository.Register("dataModel", m_dataModel, true);
+			m_dataModel.ShowMessage = ShowMessage;
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace Jar
@@ -10,6 +11,9 @@ namespace Jar
 		public string EncryptedPassword;
 		public bool RememberPassword;
 		public DateTime LastAccessed;
+
+		[JsonIgnoreAttribute]
+		public string Password;
 	}
 
 	public class WindowSettings

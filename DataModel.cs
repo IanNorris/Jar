@@ -11,8 +11,18 @@ using Newtonsoft.Json;
 
 namespace Jar
 {
+	public enum MessageIcon
+	{
+		Warning,
+		Error,
+		Success,
+		Info
+	}
+
 	public class DataModel
 	{
+		public delegate void ShowMessageDelegate(string Text, string Title, MessageIcon Icon, bool ShowCancel, bool DangerMode);
+
 		private SQLiteConnection m_database;
 		private Settings m_settings;
 		private Importer m_import;
@@ -22,6 +32,8 @@ namespace Jar
 		public Importer Import { get { return m_import; } }
 		public Settings Settings { get { return m_settings; } }
 
+		public ShowMessageDelegate ShowMessage;
+
 		public SQLiteConnection CreateDatabase(string Path, string Password)
 		{
 			var ConnectionString = new SQLiteConnectionString(
@@ -30,8 +42,23 @@ namespace Jar
 				key: Password
 			);
 
-			m_database = new SQLiteConnection(ConnectionString);
-			m_database.CreateTable<Transaction>();
+			try
+			{
+				m_database = new SQLiteConnection(ConnectionString);
+				m_database.CreateTable<Transaction>();
+			}
+			catch(Exception e)
+			{
+				if (ShowMessage != null)
+				{
+					ShowMessage("Invalid password, your budget is corrupted or you selected a file that is not a budget.", "Unable to open budget", MessageIcon.Error, false, false);
+				}
+
+				m_database = null;
+				return null;
+			}
+
+			
 			m_database.CreateTable<Account>();
 
 			/*m_database.BeginTransaction();
@@ -79,6 +106,20 @@ namespace Jar
 						{
 							var Budget = JsonBudget.ToObject<Budget>();
 							Budget.Name = Path.GetFileNameWithoutExtension(Budget.Path);
+
+							if (Budget.EncryptedPassword.Length > 0)
+							{
+								try
+								{
+									Budget.Password = Crypto.DecryptString(Budget.EncryptedPassword);
+								}
+								catch (Exception e)
+								{
+									System.Diagnostics.Debug.WriteLine(e.Message);
+									System.Diagnostics.Debug.WriteLine(e.StackTrace);
+								}
+							}
+
 							m_settings.Budgets.Add(Budget);
 						}
 					}
@@ -108,6 +149,11 @@ namespace Jar
 		public Settings GetSettings()
 		{
 			return m_settings;
+		}
+
+		public bool OpenBudget( string Path, string Password )
+		{
+			return CreateDatabase(Path, Password) != null;
 		}
 
 		public IEnumerable<Account> GetAccounts()

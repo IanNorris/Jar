@@ -1,14 +1,16 @@
 let globalDataModel = null;
+let globalApp = null;
 
 let onLoaded = function(){
-	
-		
 	let app = new Vue({
 		el: '#app',
 		data: {
-			budget: null,
+			showOpen: true,
+			showBudget: false,
 		}
 	});
+	
+	globalApp = app;
 };
 
 let waitingFor = 2;

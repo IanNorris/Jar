@@ -43,8 +43,9 @@
 		
 		<!-- Layout wrapper -->
 		<div id="app">
-			<jar-open />
-			<jar-main v-if="budget" />
+			<div><div><div><div><div><jar-main v-if="showBudget"/></div></div></div></div></div>
+			<div><div><div><div><div><jar-open v-if="showOpen" /></div></div></div></div></div>
+			
 		</div>
 
 		<!-- Core scripts -->
@@ -52,11 +53,13 @@
 		<script src="vendor/appwork/vendor/js/bootstrap.js"></script>
 		<script src="vendor/appwork/vendor/js/sidenav.js"></script>
 
-		<script src="/vendor/vue.js"></script>
-		<script src="/vendor/moment-with-locales.js"></script>
+		<script src="vendor/vue.js"></script>
+		<script src="vendor/moment-with-locales.js"></script>
+		<script src="vendor/sweetalert.min.js"></script>
 		
-		<script id="VueComponentSrc"></script>
-
+		<script src="Components/Open.js"></script>
+		<script src="Components/Main.js"></script>
+		
 		<script src="Scripts/App.js"></script>
 
 		<script>
@@ -74,9 +77,5 @@
 				});
 			} );
 		</script>
-
-		<script src="Components/Main.js"></script>
-		<script src="Components/Open.js"></script>
-		
 	</body>
 </html>
