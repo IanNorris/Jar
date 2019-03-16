@@ -40,6 +40,8 @@ namespace Jar
 		{
 			if ((bool)e.NewValue)
 			{
+				m_browser.MenuHandler = new MenuHandler();
+
 				m_browser.Load($@"local://index.html");
 
 				ShowDevTools();

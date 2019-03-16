@@ -195,6 +195,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Crypto.cs" />
+    <Compile Include="MenuHandler.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="DataModel.cs" />
     <Compile Include="Import\IImport.cs" />
