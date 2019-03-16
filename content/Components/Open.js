@@ -31,6 +31,22 @@ Vue.component( 'jar-open', {
 					globalApp.showBudget = true;
 				}
 			} );
+		},
+		newBudget: function() {
+			globalDataModel.newBudget().then( function(result) {
+				globalDataModel.getSettings().then( function(result) {
+					this.settings = result;
+				});
+			} );
+		},
+		openExistingBudget: function() {
+			let self = this;
+			globalDataModel.openExistingBudget().then( function(result) {
+				globalDataModel.getSettings().then( function(result) {
+					self.settings.Budgets = result.Budgets;
+					self.selectedBudget = self.settings.Budgets.length - 1;
+				});
+			} );
 		}
     },
 	filters: {

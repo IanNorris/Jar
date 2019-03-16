@@ -38,7 +38,7 @@
 				</div>
 			  </div>
 			  <div class="text-center text-muted mb-3">
-				<a href="javascript:void(0)" style="text-align: center">Open a budget</a>
+				<a href="javascript:void(0)" v-on:click="openExistingBudget" style="text-align: center">Open a budget</a>
 			  </div>
 			  <div>
 				<div class="form-group">

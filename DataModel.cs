@@ -8,6 +8,7 @@ using Jar.Import;
 using Newtonsoft.Json.Linq;
 using System.Windows;
 using Newtonsoft.Json;
+using Microsoft.Win32;
 
 namespace Jar
 {
@@ -47,7 +48,7 @@ namespace Jar
 				m_database = new SQLiteConnection(ConnectionString);
 				m_database.CreateTable<Transaction>();
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				if (ShowMessage != null)
 				{
@@ -154,6 +155,36 @@ namespace Jar
 		public bool OpenBudget( string Path, string Password )
 		{
 			return CreateDatabase(Path, Password) != null;
+		}
+
+		public bool OpenExistingBudget()
+		{
+			var FilePath = string.Empty;
+
+			OpenFileDialog Dialog = new OpenFileDialog();
+
+			Dialog.Filter = "Budget (*.jar)|*.jar|All files (*.*)|*.*";
+			Dialog.FilterIndex = 1;
+			Dialog.RestoreDirectory = true;
+
+			var Result = Dialog.ShowDialog();
+			if (Result.GetValueOrDefault())
+			{
+				//Get the path of specified file
+				FilePath = Dialog.FileName;
+
+				var NewBudget = new Budget();
+				NewBudget.Path = FilePath;
+				NewBudget.Name = Path.GetFileNameWithoutExtension(FilePath);
+				NewBudget.LastAccessed = DateTime.UtcNow;
+				NewBudget.RememberPassword = false;
+
+				Settings.Budgets.Add(NewBudget);
+
+				return true;
+			}
+
+			return false;
 		}
 
 		public IEnumerable<Account> GetAccounts()
