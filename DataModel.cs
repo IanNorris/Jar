@@ -157,6 +157,27 @@ namespace Jar
 			return CreateDatabase(Path, Password) != null;
 		}
 
+		public bool CreateNewBudget(string FilePath, string Password)
+		{
+			if(CreateDatabase(FilePath, Password) != null )
+			{
+				var NewBudget = new Budget();
+				NewBudget.Path = FilePath;
+				NewBudget.Name = Path.GetFileNameWithoutExtension(FilePath);
+				NewBudget.LastAccessed = DateTime.UtcNow;
+				NewBudget.RememberPassword = false;
+				NewBudget.Password = Password;
+
+				m_settings.Budgets.Add(NewBudget);
+
+				WriteSettings();
+
+				return true;
+			}
+
+			return false;
+		}
+
 		public bool OpenExistingBudget()
 		{
 			var FilePath = string.Empty;
@@ -185,6 +206,34 @@ namespace Jar
 			}
 
 			return false;
+		}
+
+		public Budget GetNewBudgetPath()
+		{
+			var FilePath = string.Empty;
+
+			SaveFileDialog Dialog = new SaveFileDialog();
+
+			Dialog.Filter = "Budget (*.jar)|*.jar|All files (*.*)|*.*";
+			Dialog.FilterIndex = 1;
+			Dialog.RestoreDirectory = true;
+
+			var Result = Dialog.ShowDialog();
+			if (Result.GetValueOrDefault())
+			{
+				//Get the path of specified file
+				FilePath = Dialog.FileName;
+
+				var NewBudget = new Budget();
+				NewBudget.Path = FilePath;
+				NewBudget.Name = Path.GetFileNameWithoutExtension(FilePath);
+				NewBudget.LastAccessed = DateTime.UtcNow;
+				NewBudget.RememberPassword = false;
+
+				return NewBudget;
+			}
+
+			return null;
 		}
 
 		public IEnumerable<Account> GetAccounts()

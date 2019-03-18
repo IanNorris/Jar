@@ -5,6 +5,8 @@ Vue.component( 'jar-open', {
 			settings: null,
 			selectedBudget: 0,
 			password: '',
+			password2: '',
+			newBudgetObj: null,
         };
     },
     created: function(){
@@ -35,7 +37,9 @@ Vue.component( 'jar-open', {
 		newBudget: function() {
 			globalDataModel.newBudget().then( function(result) {
 				globalDataModel.getSettings().then( function(result) {
-					this.settings = result;
+					if( result ) {
+						this.newBudgetObj = result;
+					}
 				});
 			} );
 		},
@@ -45,8 +49,28 @@ Vue.component( 'jar-open', {
 				globalDataModel.getSettings().then( function(result) {
 					self.settings.Budgets = result.Budgets;
 					self.selectedBudget = self.settings.Budgets.length - 1;
+					globalDataModel.writeSettings();
 				});
 			} );
+		},
+		getNewBudgetPath: function() {
+			let self = this;
+			globalDataModel.getNewBudgetPath().then( function(result) {
+				self.newBudgetObj = result;
+				self.newBudgetObj.password2 = "";
+			} );
+		},
+		createNewBudget: function() {
+			let self = this;
+			globalDataModel.createNewBudget( self.newBudgetObj.Path, this.password ).then( function(result) {
+				if( result ) {
+					globalApp.showOpen = false;
+					globalApp.showBudget = true;
+				}
+			} );
+		},
+		cancelNew: function() {
+			this.newBudgetObj = null;
 		}
     },
 	filters: {

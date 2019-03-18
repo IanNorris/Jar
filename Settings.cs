@@ -6,14 +6,14 @@ namespace Jar
 {
 	public class Budget
 	{
-		public string Name;
-		public string Path;
-		public string EncryptedPassword;
+		public string Name = "";
+		public string Path = "";
+		public string EncryptedPassword = "";
 		public bool RememberPassword;
 		public DateTime LastAccessed;
 
 		[JsonIgnoreAttribute]
-		public string Password;
+		public string Password = "";
 	}
 
 	public class WindowSettings
