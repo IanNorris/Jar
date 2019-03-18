@@ -16,6 +16,10 @@ Vue.component( 'jar-main', {
         },
         getTransactions: async function() {
             this.transactions = await globalDataModel.getTransactionsBetweenDates(moment('2018/04/01', 'YYYY/MM/DD').toDate(), moment('2018/04/30', 'YYYY/MM/DD').toDate() );
+        },
+        signOut: function() {
+            globalApp.showOpen = true;
+			globalApp.showBudget = false;
         }
     },
     filters: {

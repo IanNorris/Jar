@@ -41,7 +41,7 @@
 		  <div class="dropdown-menu" aria-labelledby="budgetMenuLink">
 			<a class="dropdown-item">Settings</a>
 			<div class="dropdown-divider"></div>
-			<a class="dropdown-item"> Sign out</a>
+			<a class="dropdown-item" v-on:click="signOut"> Sign out</a>
 		  </div>
 		</div>
 	  </div>
