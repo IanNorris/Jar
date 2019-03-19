@@ -5,17 +5,17 @@
 	  <!-- Links -->
 	  <ul class="sidenav-inner py-1">
 		<li class="sidenav-item">
-		  <a class="sidenav-link active">
+		  <a class="sidenav-link active" v-on:click="openHome">
 			<div>Home</div>
 		  </a>
 		</li>
 		<li class="sidenav-item">
-		  <a class="sidenav-link">
+		  <a class="sidenav-link" v-on:click="openBudget">
 			<div>Budget</div>
 		  </a>
 		</li>
 		<li class="sidenav-item">
-		  <a class="sidenav-link">
+		  <a class="sidenav-link" v-on:click="openReports">
 			<div>Reports</div>
 		  </a>
 		</li>
@@ -25,8 +25,8 @@
 			<a class="sidenav-link"></a>
 		  </div>
 		</li>
-		<li v-for="account in accounts" class="sidenav-item" v-if="account.IsOpen">
-		  <a class="sidenav-link">
+		<li v-for="(account,index) in accounts" class="sidenav-item" v-if="account.IsOpen">
+		  <a class="sidenav-link" v-on:click="selectAccount(index)">
 			<div>{{account.Name}}</div>
 			<div class="pl-1 ml-auto">
 			  <div>{{account.LastBalance | asCurrencyRoundDown}}</div>
@@ -52,10 +52,10 @@
 	  <!-- Layout content -->
 	  <div class="layout-content">
 		<!-- Content -->
-		<div class="container-fluid flex-grow-1 container-p-y">
+		<div v-if="selectedAccount" class="container-fluid flex-grow-1 container-p-y">
 		  <div>
-			<h1>Account 1</h1>
-			<p>Account balance: £26,981.73</p>
+			<h1>{{selectedAccount.Name}}</h1>
+			<p>Account balance: {{selectedAccount.LastBalance | asCurrencyRoundDown}}</p>
 		  </div>
 		  <div>
 			<div class="table-responsive">
@@ -81,6 +81,15 @@
 			  </table>
 			</div>
 		  </div>
+		</div>
+		<div v-if="!selectedAccount && showHome">
+			<h1>Home</h1>
+		</div>
+		<div v-if="!selectedAccount && showBudget">
+				<h1>Budget</h1>
+		</div>
+		<div v-if="!selectedAccount && showReports">
+				<h1>Reports</h1>
 		</div>
 	  </div>
 	  <!-- / Content -->

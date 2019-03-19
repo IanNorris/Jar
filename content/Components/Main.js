@@ -2,7 +2,10 @@ Vue.component( 'jar-main', {
     template: '#MainTemplate',
     data: function() {
         return {
-            transactions: [],
+            showHome: true,
+            showBudget: false,
+            showReports: false,
+            selectedAccount: null,
             accounts: []
         };
     },
@@ -11,6 +14,9 @@ Vue.component( 'jar-main', {
 		this.getTransactions();
     },
     methods: {
+        selectAccount: async function(index) {
+            this.selectedAccount = this.accounts[index];
+        },
         getAccounts: async function() {
             this.accounts = await globalDataModel.getAccounts();
         },
@@ -20,6 +26,24 @@ Vue.component( 'jar-main', {
         signOut: function() {
             globalApp.showOpen = true;
 			globalApp.showBudget = false;
+        },
+        openHome: function() {
+            this.showHome = true;
+            this.showBudget = false;
+            this.showReports = false;
+            this.selectedAccount = null;
+        },
+        openBudget: function() {
+            this.showHome = false;
+            this.showBudget = true;
+            this.showReports = false;
+            this.selectedAccount = null;
+        },
+        openReports: function() {
+            this.showHome = false;
+            this.showBudget = false;
+            this.showReports = true;
+            this.selectedAccount = null;
         }
     },
     filters: {
