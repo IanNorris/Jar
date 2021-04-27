@@ -5,6 +5,8 @@ Vue.component( 'jar-main', {
             showHome: true,
             showBudget: false,
             showReports: false,
+            showAccounts: false,
+            addNewAccount: false,
             selectedAccount: null,
             accounts: []
         };
@@ -31,20 +33,30 @@ Vue.component( 'jar-main', {
             this.showHome = true;
             this.showBudget = false;
             this.showReports = false;
+            this.showAccounts = false;
             this.selectedAccount = null;
         },
         openBudget: function() {
             this.showHome = false;
             this.showBudget = true;
             this.showReports = false;
+            this.showAccounts = false;
             this.selectedAccount = null;
         },
         openReports: function() {
             this.showHome = false;
             this.showBudget = false;
             this.showReports = true;
+            this.showAccounts = false;
             this.selectedAccount = null;
-        }
+        },
+        openAccounts: function() {
+            this.showHome = false;
+            this.showBudget = false;
+            this.showReports = false;
+            this.showAccounts = true;
+            this.selectedAccount = null;
+        },
     },
     filters: {
         asDate: function(date) {

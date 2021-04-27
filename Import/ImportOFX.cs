@@ -1,6 +1,4 @@
-﻿using OFXSharp;
-using System;
-using System.IO;
+﻿using System;
 
 namespace Jar.Import
 {
@@ -18,15 +16,8 @@ namespace Jar.Import
 
 		public void Import(DataModel Model, string Filename, int Account, int Currency )
 		{
-			var parser = new OFXDocumentParser();
-			var ofxDocument = parser.Import(new FileStream(Filename, FileMode.Open));
-
-			//TODO
-			//ofxDocument.Currency
-			//ofxDocument.Balance.AvaliableBalance
-			//ofxDocument.Balance.AvaliableBalanceDate
-
-			//TODO: Apply Currency rules.
+			var parser = new OFXParser.OFXParser();
+			var ofxDocument = parser.GenerateExtract(Filename);
 
 			Model.Connection.BeginTransaction();
 			foreach ( var inputTransaction in ofxDocument.Transactions )
@@ -37,9 +28,8 @@ namespace Jar.Import
 				var outputTransaction = new Model.Transaction();
 				outputTransaction.Account = Account;
 				outputTransaction.Date = inputTransaction.Date;
-				outputTransaction.Payee = inputTransaction.Name;
-				outputTransaction.Memo = inputTransaction.Memo;
-				outputTransaction.Amount = (int)Math.Round((decimal)100.0 * inputTransaction.Amount);
+				outputTransaction.Payee = inputTransaction.Description;
+				outputTransaction.Amount = (int)Math.Round(100.0 * inputTransaction.TransactionValue);
 
 				Model.Connection.Insert(outputTransaction);
 			}

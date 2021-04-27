@@ -3,7 +3,7 @@ Vue.component( 'jar-open', {
     data: function() {
         return {
 			settings: null,
-			selectedBudget: 0,
+			selectedBudget: -1,
 			password: '',
 			password2: '',
 			newBudgetObj: null,
@@ -19,8 +19,10 @@ Vue.component( 'jar-open', {
 	},
     methods: {
         getSettings: async function() {
-            this.settings = await globalDataModel.getSettings();
-			this.password = this.settings.Budgets[this.selectedBudget].Password;
+			this.settings = await globalDataModel.getSettings();
+			if (this.selectedBudget > 0) {
+				this.password = this.settings.Budgets[this.selectedBudget].Password;
+			}
         },
 		selectBudget: function(index) {
 			this.selectedBudget = index;
@@ -57,7 +59,7 @@ Vue.component( 'jar-open', {
 			let self = this;
 			globalDataModel.getNewBudgetPath().then( function(result) {
 				self.newBudgetObj = result;
-				self.newBudgetObj.password2 = "";
+				self.newBudgetObj.Password = "";
 			} );
 		},
 		createNewBudget: function() {

@@ -34,7 +34,10 @@ namespace Jar
 		{
 			RegistryKey HKLM = GetHKLM();
 
-			Microsoft.Win32.RegistryKey CryptoInfo = HKLM.OpenSubKey(@"Software\Microsoft\Cryptography", RegistryKeyPermissionCheck.ReadSubTree);
+			//TODO: Move to ProtectedData API:
+			// https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.protecteddata?view=net-5.0
+
+			RegistryKey CryptoInfo = HKLM.OpenSubKey(@"Software\Microsoft\Cryptography", RegistryKeyPermissionCheck.ReadSubTree);
 			string MachineGuid = (string)CryptoInfo.GetValue("MachineGuid", "");
 			byte[] ProgramKeyBytes = Encoding.ASCII.GetBytes(ProgramKey);
 			CryptoInfo.Close();
@@ -63,7 +66,7 @@ namespace Jar
 
 				using( MemoryStream Stream = new MemoryStream() )
 				{
-					Stream.Write( BitConverter.GetBytes( (Int32)AES.IV.Length ), 0, sizeof(Int32) );
+					Stream.Write( BitConverter.GetBytes( AES.IV.Length ), 0, sizeof(int) );
 					Stream.Write( AES.IV, 0, AES.IV.Length );
 					using( CryptoStream CryptoStream = new CryptoStream( Stream, Encrypt, CryptoStreamMode.Write ) )
 					{
