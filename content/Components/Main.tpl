@@ -1,7 +1,7 @@
 <div class="layout-wrapper layout-2">
   <div class="layout-inner">
 	<!-- Layout sidenav -->
-	<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical bg-dark">
+	<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical bg-success-darker sidenav-dark">
 	  <!-- Links -->
 	  <ul class="sidenav-inner py-1">
 		<li class="sidenav-item">

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="default-style layout-fixed layout-navbar-fixed" dir="ltr">
 	<head>
 		<title>Jar Budgeting</title>
@@ -17,7 +17,7 @@
 		<!-- Core stylesheets -->
 		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/bootstrap.css" class="theme-settings-bootstrap-css">
 		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/appwork.css" class="theme-settings-appwork-css">
-		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/theme-twitlight.css" class="theme-settings-theme-css">
+		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/theme-soft.css" class="theme-settings-theme-css">
 		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/colors.css" class="theme-settings-colors-css">
 		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/uikit.css">
 		<link rel="stylesheet" href="vendor/appwork/vendor/css/pages/authentication.css">
@@ -45,8 +45,8 @@
 		
 		<!-- Layout wrapper -->
 		<div id="app">
-			<div><div><div><div><div><jar-main v-if="showBudget"/></div></div></div></div></div>
-			<div><div><div><div><div><jar-open v-if="showOpen" /></div></div></div></div></div>
+			<div><jar-main v-if="showBudget"/></div>
+			<div><jar-open v-if="showOpen" /></div>
 			
 		</div>
 
