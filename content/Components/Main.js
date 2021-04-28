@@ -23,7 +23,7 @@ Vue.component( 'jar-main', {
             this.accounts = await globalDataModel.getAccounts();
         },
         getTransactions: async function() {
-            this.transactions = await globalDataModel.getTransactionsBetweenDates(moment('2018/04/01', 'YYYY/MM/DD').toDate(), moment('2018/04/30', 'YYYY/MM/DD').toDate() );
+            this.transactions = await globalDataModel.getTransactionsBetweenDates(moment('2020/03/01', 'YYYY/MM/DD').toDate(), moment('2022/01/01', 'YYYY/MM/DD').toDate() );
         },
         signOut: function() {
             globalApp.showOpen = true;
