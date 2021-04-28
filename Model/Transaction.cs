@@ -15,6 +15,7 @@ namespace Jar.Model
 		public string Memo { get; set; }
 		public string Note { get; set; }
 		public int Category { get; set; }
+		public string ImportedCategory { get; set; }
 		public int Currency { get; set; }
 		public int ConversionRate { get; set; }
 		public int Amount { get; set; }

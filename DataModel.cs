@@ -62,6 +62,10 @@ namespace Jar
 			
 			m_database.CreateTable<Account>();
 
+			//m_database.BeginTransaction();
+			//m_database.Insert(new Account { Currency = 0, Id = 0, IsOpen = true, LastBalance = 0, Name = "N", Order = 0, Type= AccountType.Current });
+			//m_database.Commit();
+
 			/*m_database.BeginTransaction();
 
 			m_database.Insert(new Transaction()
@@ -81,7 +85,7 @@ namespace Jar
 			m_import = new Importer(this);
 
 			//var FileToImport = @"FileToImport.qif";
-			//m_import.Import(FileToImport, 123, 5);
+			//m_import.Import(FileToImport, 0, 0);
 			
 			return m_database;
 		}
