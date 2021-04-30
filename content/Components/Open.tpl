@@ -47,14 +47,14 @@
 									<div>
 										<label class="form-label d-flex justify-content-between align-items-end">Password</label>
 									</div>
-									<input type="password" ref="password" class="form-control" v-model="password" />
+									<input type="password" ref="password" class="form-control" v-model="password" autofocus />
 								</div>
-								<div class="d-flex justify-content-between align-items-center m-0">
-									<label class="custom-control custom-checkbox m-0">
-										<input type="checkbox" class="custom-control-input" />
+								<div class="d-flex m-0">
+									<!--<label class="custom-control custom-checkbox m-0">
+										<input type="checkbox" class="custom-control-input" v-model="rememberPassword" />
 										<span class="custom-control-label">Remember password</span>
-									</label>
-									<button type="submit" class="btn btn-primary">Open</button>
+									</label>-->
+									<button type="submit" class="btn btn-primary push-right">Open</button>
 								</div>
 							</div>
 						</form>

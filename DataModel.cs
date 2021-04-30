@@ -111,20 +111,7 @@ namespace Jar
 						{
 							var Budget = JsonBudget.ToObject<Budget>();
 							Budget.Name = Path.GetFileNameWithoutExtension(Budget.Path);
-
-							if (Budget.EncryptedPassword.Length > 0)
-							{
-								try
-								{
-									Budget.Password = Crypto.DecryptString(Budget.EncryptedPassword);
-								}
-								catch (Exception e)
-								{
-									System.Diagnostics.Debug.WriteLine(e.Message);
-									System.Diagnostics.Debug.WriteLine(e.StackTrace);
-								}
-							}
-
+														
 							m_settings.Budgets.Add(Budget);
 						}
 					}
@@ -184,8 +171,6 @@ namespace Jar
 
 		public bool OpenExistingBudget()
 		{
-			var FilePath = string.Empty;
-
 			OpenFileDialog Dialog = new OpenFileDialog();
 
 			Dialog.Filter = "Budget (*.jar)|*.jar|All files (*.*)|*.*";
@@ -196,11 +181,11 @@ namespace Jar
 			if (Result.GetValueOrDefault())
 			{
 				//Get the path of specified file
-				FilePath = Dialog.FileName;
+				var filePath = Dialog.FileName;
 
 				var NewBudget = new Budget();
-				NewBudget.Path = FilePath;
-				NewBudget.Name = Path.GetFileNameWithoutExtension(FilePath);
+				NewBudget.Path = filePath;
+				NewBudget.Name = Path.GetFileNameWithoutExtension(filePath);
 				NewBudget.LastAccessed = DateTime.UtcNow;
 				NewBudget.RememberPassword = false;
 
@@ -214,8 +199,6 @@ namespace Jar
 
 		public Budget GetNewBudgetPath()
 		{
-			var FilePath = string.Empty;
-
 			SaveFileDialog Dialog = new SaveFileDialog();
 
 			Dialog.Filter = "Budget (*.jar)|*.jar|All files (*.*)|*.*";
@@ -226,11 +209,11 @@ namespace Jar
 			if (Result.GetValueOrDefault())
 			{
 				//Get the path of specified file
-				FilePath = Dialog.FileName;
+				var filePath = Dialog.FileName;
 
 				var NewBudget = new Budget();
-				NewBudget.Path = FilePath;
-				NewBudget.Name = Path.GetFileNameWithoutExtension(FilePath);
+				NewBudget.Path = filePath;
+				NewBudget.Name = Path.GetFileNameWithoutExtension(filePath);
 				NewBudget.LastAccessed = DateTime.UtcNow;
 				NewBudget.RememberPassword = false;
 
@@ -242,7 +225,13 @@ namespace Jar
 
 		public IEnumerable<Account> GetAccounts()
 		{
-			return m_database.Table<Account>();
+			var results = m_database.Table<Account>().ToArray();
+			foreach( var result in results )
+			{
+				result.LastBalance = m_database.Table<Transaction>().Where(t => t.Account == result.Id ).Select(t => t.Amount).Sum();
+			}
+
+			return results;
 		}
 
 		public IEnumerable<Transaction> GetTransactions()
@@ -255,9 +244,11 @@ namespace Jar
 			return m_database.Table<Transaction>().Where(Predicate);
 		}
 
-		public IEnumerable<Transaction> GetTransactionsBetweenDates( DateTime Start, DateTime End )
+		public IEnumerable<Transaction> GetTransactionsBetweenDates( DateTime Start, DateTime End, int account )
 		{
-			return GetTransactions(t => t.Date >= Start && t.Date < End);
+			var results = GetTransactions(t => t.Date >= Start && t.Date < End && t.Account == account).ToList();
+
+			return results;
 		}
 	}
 }

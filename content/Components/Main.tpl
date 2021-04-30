@@ -29,7 +29,7 @@
 		  <a class="sidenav-link" v-on:click="selectAccount(index)">
 			<div>{{account.Name}}</div>
 			<div class="pl-1 ml-auto">
-			  <div>{{account.LastBalance | asCurrencyRoundDown}}</div>
+				<div>{{account.LastBalance | asCurrency}}</div>
 			</div>
 		  </a>
 		</li>
@@ -55,7 +55,7 @@
 		<div v-if="selectedAccount" class="container-fluid flex-grow-1 container-p-y">
 		  <div>
 			<h1>{{selectedAccount.Name}}</h1>
-			<p>Account balance: {{selectedAccount.LastBalance | asCurrencyRoundDown}}</p>
+			<p>Account balance: {{selectedAccount.LastBalance | asCurrency}}</p>
 		  </div>
 		  <div>
 			<div class="table-responsive">

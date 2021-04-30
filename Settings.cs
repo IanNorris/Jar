@@ -8,11 +8,11 @@ namespace Jar
 	{
 		public string Name = "";
 		public string Path = "";
-		public string EncryptedPassword = "";
 		public bool RememberPassword;
-		public DateTime LastAccessed;
+		public bool RememberedPassword;
+		public DateTime LastAccessed = DateTime.UtcNow;
 
-		[JsonIgnoreAttribute]
+		[JsonIgnore]
 		public string Password = "";
 	}
 

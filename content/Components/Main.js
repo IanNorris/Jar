@@ -8,22 +8,26 @@ Vue.component( 'jar-main', {
             showAccounts: false,
             addNewAccount: false,
             selectedAccount: null,
-            accounts: []
+            accounts: [],
+            transactions: []
         };
     },
     created: function(){
 		this.getAccounts();
-		this.getTransactions();
     },
     methods: {
         selectAccount: async function(index) {
             this.selectedAccount = this.accounts[index];
+
+            this.getTransactions();
         },
         getAccounts: async function() {
             this.accounts = await globalDataModel.getAccounts();
         },
-        getTransactions: async function() {
-            this.transactions = await globalDataModel.getTransactionsBetweenDates(moment('2020/03/01', 'YYYY/MM/DD').toDate(), moment('2022/01/01', 'YYYY/MM/DD').toDate() );
+        getTransactions: async function () {
+            if (this.selectedAccount) {
+                this.transactions = await globalDataModel.getTransactionsBetweenDates(moment('2020/03/01', 'YYYY/MM/DD').toDate(), moment('2022/01/01', 'YYYY/MM/DD').toDate(), this.selectedAccount.Id);
+            }
         },
         signOut: function() {
             globalApp.showOpen = true;

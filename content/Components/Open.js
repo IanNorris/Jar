@@ -3,21 +3,17 @@ Vue.component( 'jar-open', {
     data: function() {
         return {
 			settings: null,
-			selectedBudget: -1,
+			selectedBudget: 0,
 			password: '',
 			password2: '',
+			rememberPassword: false,
 			newBudgetObj: null,
         };
     },
     created: function(){
         this.getSettings();
-    },
-	mounted: function(){
-		if( this.$refs.password ) {
-			this.$refs.password.focus();
-		}
 	},
-    methods: {
+	methods: {
         getSettings: async function() {
 			this.settings = await globalDataModel.getSettings();
 			if (this.selectedBudget > 0) {
@@ -26,7 +22,9 @@ Vue.component( 'jar-open', {
         },
 		selectBudget: function(index) {
 			this.selectedBudget = index;
-			this.$refs.password.focus();
+			if (this.$refs.password) {
+				this.$refs.password.focus();
+			}
 		},
 		openBudget: async function() {
 			globalDataModel.openBudget( this.settings.Budgets[this.selectedBudget].Path, this.password ).then( function(result) {
@@ -79,5 +77,5 @@ Vue.component( 'jar-open', {
         asDateAgo: function(date) {
             return moment(date).fromNow();
         }
-    }
+	}
 });
