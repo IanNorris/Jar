@@ -15,7 +15,7 @@ namespace Jar.Import
 			return "Quicken";
 		}
 
-		public void Import(DataModel Model, string Filename, int Account, int Currency)
+		public void Import(DataModel Model, string Filename, int Account, int Currency, int BatchId)
 		{
 			Model.Connection.BeginTransaction();
 
@@ -40,7 +40,9 @@ namespace Jar.Import
 
 					case '^':
 						{
+							outputTransaction.Currency = Currency;
 							outputTransaction.Account = Account;
+							outputTransaction.ImportBatch = BatchId;
 							Model.Connection.Insert(outputTransaction);
 							outputTransaction = new Model.Transaction();
 							break;

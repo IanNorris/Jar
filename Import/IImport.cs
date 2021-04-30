@@ -4,6 +4,6 @@
 	{
 		string[] Extensions();
 		string FormatName();
-		void Import(DataModel Model, string Filename, int Account, int Currency);
+		void Import(DataModel Model, string Filename, int Account, int Currency, int BatchId);
 	}
 }

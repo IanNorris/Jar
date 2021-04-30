@@ -37,6 +37,8 @@ namespace Jar
 
 		public SQLiteConnection CreateDatabase(string Path, string Password)
 		{
+			m_import = new Importer(this);
+
 			var ConnectionString = new SQLiteConnectionString(
 				Path,
 				true,
@@ -61,33 +63,53 @@ namespace Jar
 
 			
 			m_database.CreateTable<Account>();
+			m_database.CreateTable<Transaction>();
+			m_database.CreateTable<ImportBatch>();
 
-			//m_database.BeginTransaction();
-			//m_database.Insert(new Account { Currency = 0, Id = 0, IsOpen = true, LastBalance = 0, Name = "N", Order = 0, Type= AccountType.Current });
-			//m_database.Commit();
+			return m_database;
+		}
 
-			/*m_database.BeginTransaction();
+		public void ImportTransactionBatch(string filename, int account)
+		{
+			var accountObject = m_database.Get<Account>(account);
 
-			m_database.Insert(new Transaction()
+			if(accountObject == null)
 			{
-				Date = DateTime.UtcNow,
-				Payee = "Arbees",
-				Memo = "Dinner out",
-				Note = "Dinner with the wife",
-				Category = 123,
-				Currency = 3,
-				ConversionRate = 0,
-				Amount = 5300
+				throw new InvalidDataException($"Account {account} does not exist");
+			}
+
+			m_database.Insert(new ImportBatch
+			{
+				Account = account,
+				SourceFilename = filename,
+				ImportTime = DateTime.UtcNow,
 			});
 
-			m_database.Commit();*/
+			var batchId = (int)SQLite3.LastInsertRowid(m_database.Handle);
 
-			m_import = new Importer(this);
+			m_import.Import(filename, account, accountObject.Currency, batchId);
+		}
 
-			//var FileToImport = @"FileToImport.qif";
-			//m_import.Import(FileToImport, 0, 0);
-			
-			return m_database;
+		public int CreateAccount( string name, AccountType type, int currency )
+		{
+			var lastAccountOrder = m_database.Table<Account>().Select(a => a.Order).DefaultIfEmpty(0).Max();
+
+			var newAccount = new Account
+			{
+				Currency = currency,
+				IsOpen = true,
+				LastBalance = 0,
+				LastSettled = DateTime.UtcNow,
+				Name = name,
+				Order = lastAccountOrder + 1,
+				Type = type,
+			};
+
+			m_database.Insert(newAccount);
+
+			var accountId = (int)SQLite3.LastInsertRowid(m_database.Handle);
+
+			return accountId;
 		}
 
 		public DataModel(string SettingsPath)

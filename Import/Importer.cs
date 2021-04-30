@@ -39,7 +39,7 @@ namespace Jar.Import
 			}
 		}
 
-		public void Import(string Filename, int Account, int Currency)
+		public void Import(string Filename, int Account, int Currency, int BatchId)
 		{
 			var Extension = Path.GetExtension(Filename).ToLower();
 
@@ -50,7 +50,7 @@ namespace Jar.Import
 				throw new InvalidOperationException($"No importer for file type {Extension}");
 			}
 
-			Importer.Import(m_model, Filename, Account, Currency);
+			Importer.Import(m_model, Filename, Account, Currency, BatchId);
 		}
 	}
 }

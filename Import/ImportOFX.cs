@@ -14,7 +14,7 @@ namespace Jar.Import
 			return "Microsoft Money";
 		}
 
-		public void Import(DataModel Model, string Filename, int Account, int Currency )
+		public void Import(DataModel Model, string Filename, int Account, int Currency, int BatchId )
 		{
 			var parser = new OFXParser.OFXParser();
 			var ofxDocument = parser.GenerateExtract(Filename);
@@ -22,10 +22,9 @@ namespace Jar.Import
 			Model.Connection.BeginTransaction();
 			foreach ( var inputTransaction in ofxDocument.Transactions )
 			{
-				//TODO
-				//inputTransaction.Currency
-
 				var outputTransaction = new Model.Transaction();
+				outputTransaction.ImportBatch = BatchId;
+				outputTransaction.Currency = Currency;
 				outputTransaction.Account = Account;
 				outputTransaction.Date = inputTransaction.Date;
 				outputTransaction.Payee = inputTransaction.Description;
