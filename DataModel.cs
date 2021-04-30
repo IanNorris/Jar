@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System.Windows;
 using Newtonsoft.Json;
 using Microsoft.Win32;
+using System.Text.RegularExpressions;
 
 namespace Jar
 {
@@ -264,14 +265,26 @@ namespace Jar
 			return results;
 		}
 
-		public IEnumerable<Transaction> GetTransactions()
+		public Transaction PrepareDisplayTransaction(Transaction transaction)
 		{
-			return m_database.Table<Transaction>();
+			transaction.Payee = transaction.Payee.Replace("&amp;", "&").Replace("&quot;", "\"");
+
+			transaction.OriginalPayee = transaction.Payee;
+
+			var match = SantanderRegex.Match(transaction.Payee);
+			if(match.Success)
+			{
+				
+				transaction.Reference = match.Groups["Ref"].Value;
+				transaction.Payee = SantanderRegex.Replace(transaction.Payee, SantanderOutput);
+			}
+
+			return transaction;
 		}
 
 		public IEnumerable<Transaction> GetTransactions(System.Linq.Expressions.Expression<Func<Transaction,bool>> Predicate)
 		{
-			return m_database.Table<Transaction>().Where(Predicate);
+			return m_database.Table<Transaction>().Where(Predicate).Select(t => PrepareDisplayTransaction(t) );
 		}
 
 		public IEnumerable<Transaction> GetTransactionsBetweenDates( DateTime Start, DateTime End, int account )
@@ -280,5 +293,8 @@ namespace Jar
 
 			return results;
 		}
+
+		private Regex SantanderRegex = new Regex(@"^(?:DIRECT DEBIT PAYMENT TO |CARD PAYMENT TO |STANDING ORDER VIA FASTER PAYMENT TO |BILL PAYMENT VIA FASTER PAYMENT TO |BANK GIRO CREDIT REF |CREDIT FROM |FASTER PAYMENTS RECEIPT REF)(?<Name>.*?)(?: (?:REF|REFERENCE) (?<Ref>[\w\- \/]+))?(?:,[\d\.]+ \w{2,4}, RATE [\d\.]+\/\w{2,4} ON \d{2}-\d{2}-\d{4})?(?:, MANDATE NO \d+)?(?:, MANDAT)?(?:, \d+\.\d{2})");
+		private string SantanderOutput = "${Name}";
 	}
 }

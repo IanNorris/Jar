@@ -72,7 +72,7 @@
 				<tbody>
 				  <tr v-for="(t,index) in transactions">
 					<td>{{t.Date | asDate}}</td>
-					<td>{{t.Payee}}</td>
+					<td v-bind:title="t.OriginalPayee">{{t.Payee}} <span class="text-muted">{{t.Reference}}</span></td>
 					<td>{{t.Memo}}</td>
 					<td>{{t.Note}}</td>
 					<td>{{t.Amount | asCurrency}}</td>
