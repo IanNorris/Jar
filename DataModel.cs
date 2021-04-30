@@ -28,6 +28,7 @@ namespace Jar
 		private Settings m_settings;
 		private Importer m_import;
 		private string m_settingsPath;
+		private string m_budgetName;
 
 		public SQLiteConnection Connection { get { return m_database; } }
 		public Importer Import { get { return m_import; } }
@@ -35,12 +36,14 @@ namespace Jar
 
 		public ShowMessageDelegate ShowMessage;
 
-		public SQLiteConnection CreateDatabase(string Path, string Password)
+		public SQLiteConnection CreateDatabase(string Filename, string Password)
 		{
+			m_budgetName = Path.GetFileNameWithoutExtension(Filename);
+
 			m_import = new Importer(this);
 
 			var ConnectionString = new SQLiteConnectionString(
-				Path,
+				Filename,
 				true,
 				key: Password
 			);
@@ -243,6 +246,11 @@ namespace Jar
 			}
 
 			return null;
+		}
+
+		public string GetBudgetName()
+		{
+			return m_budgetName;
 		}
 
 		public IEnumerable<Account> GetAccounts()

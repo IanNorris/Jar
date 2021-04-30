@@ -2,6 +2,7 @@ Vue.component( 'jar-main', {
     template: '#MainTemplate',
     data: function() {
         return {
+            budgetName: '',
             showHome: true,
             showBudget: false,
             showReports: false,
@@ -23,6 +24,7 @@ Vue.component( 'jar-main', {
         },
         getAccounts: async function() {
             this.accounts = await globalDataModel.getAccounts();
+            this.budgetName = await globalDataModel.getBudgetName();
         },
         getTransactions: async function () {
             if (this.selectedAccount) {

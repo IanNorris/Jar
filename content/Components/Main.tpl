@@ -37,7 +37,7 @@
 	  <div class="sidenav-bottom">
 		<div class="dropdown show">
 		  <a class="dropdown-toggle sidenav-text" role="button" id="budgetMenuLink" data-toggle="dropdown" aria-haspopup="true"
-		  aria-expanded="false">Family Budget</a>
+		  aria-expanded="false">{{budgetName}}</a>
 		  <div class="dropdown-menu" aria-labelledby="budgetMenuLink">
 			<a class="dropdown-item">Settings</a>
 			<div class="dropdown-divider"></div>
