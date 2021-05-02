@@ -60,6 +60,7 @@ input, button, textarea, :focus
 {
 	border-collapse: collapse;
 	overflow-y: auto;
+	margin-bottom: 0;
 }
 
 .fixed-header-table thead th
@@ -101,4 +102,9 @@ input, button, textarea, :focus
 {
 	flex: 1000000;
 	min-height: 0;
+}
+
+.navbar
+{
+	height: 3.5rem;
 }
