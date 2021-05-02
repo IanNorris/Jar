@@ -54,7 +54,7 @@
 					<h2>{{selectedAccount.Name}}</h2>
 				</div>
 				<div class="table-responsive fill-vertical-space-inner">
-					<table class="table table-striped table-bordered full-height fixed-header-table">
+					<table class="table table-striped table-bordered fixed-header-table">
 						<thead>
 							<tr>
 								<th>Date</th>
