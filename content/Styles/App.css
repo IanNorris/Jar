@@ -1,3 +1,8 @@
+:root {
+	--navbar-height: 3rem;
+	--transaction-row-height: 3rem;
+}
+
 /* Disable drag support for native feel */
 a:not([draggable=true]), img:not([draggable=true])
 {
@@ -33,4 +38,67 @@ input, button, textarea, :focus
 .push-right
 {
 	margin-left: auto;
+}
+
+.no-padding-table
+{
+	padding-left: 0em;
+	padding-right: 0em;
+}
+
+.navbar-fixheight
+{
+	height: var(--navbar-height);
+}
+
+.content-layout-padding
+{
+	padding-top: var(--navbar-height);
+}
+
+.fixed-header-table
+{
+	border-collapse: collapse;
+	overflow-y: auto;
+}
+
+.fixed-header-table thead th
+{
+	position: sticky;
+	top: -2px; /*We see a few pixels of the content underneath otherwise*/
+	background: var(--white);
+}
+
+.fixed-header-table tbody td
+{
+	height: 3rem;
+}
+
+.fill-vertical-space-wrapper
+{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+}
+
+.fill-vertical-space-inner
+{
+	flex-grow: 1;
+}
+
+.full-height
+{
+	height: 100%;
+}
+
+.flexbox-height-fix
+{
+	height: 0px;
+}
+
+.fill-empty
+{
+	flex: 1000000;
+	min-height: 0;
 }
