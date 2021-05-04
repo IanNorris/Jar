@@ -69,10 +69,10 @@ Vue.component( 'jar-main', {
             return moment(date).format('L');
         },
         asCurrency: function(amount) {
-            return '£' + (amount / 100.0);
+            return '£' + (amount / 100.0).toFixed(2);
         },
         asCurrencyRoundDown: function(amount) {
-            return '£' + Math.floor((amount / 100.0));
+            return '£' + Math.floor((amount / 100.0)).toFixed(2);
         }
     }
 });
