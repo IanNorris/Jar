@@ -4,20 +4,14 @@
 		<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical bg-primary-dark sidenav-dark">
 			<!-- Links -->
 			<ul class="sidenav-inner py-1">
-				<li class="sidenav-item">
-					<a class="sidenav-link active" v-on:click="openHome">
-						<div>Home</div>
-					</a>
+				<li class="sidenav-item active" v-on:click="openHome">
+					<a class="sidenav-link"><i class="sidenav-icon fas fa-home"></i> Home</a>
 				</li>
-				<li class="sidenav-item">
-					<a class="sidenav-link" v-on:click="openBudget">
-						<div>Budget</div>
-					</a>
+				<li class="sidenav-item" v-on:click="openBudget">
+					<a class="sidenav-link"><i class="sidenav-icon fas fa-piggy-bank"></i> Budget</a>
 				</li>
-				<li class="sidenav-item">
-					<a class="sidenav-link" v-on:click="openReports">
-						<div>Reports</div>
-					</a>
+				<li class="sidenav-item" v-on:click="openReports">
+					<a class="sidenav-link"><i class="sidenav-icon fas fa-briefcase"></i> Reports</a>
 				</li>
 				<li class="sidenav-header small font-weight-semibold pl-3">
 					<div class="float-left">Accounts</div>
@@ -50,8 +44,27 @@
 		<!-- Layout container -->
 		<div class="layout-container" v-if="selectedAccount">
 			<div class="fill-vertical-space-wrapper">
-				<div id="layout-navbar" class="navbar bg-white">
-					<h2>{{selectedAccount.Name}}</h2>
+				<div id="layout-navbar" class="navbar navbar-expand-lg align-items-lg-center bg-white">
+					<div class="navbar-nav align-items-lg">
+						<h2>{{selectedAccount.Name}}</h2>
+					</div>
+					<div class="navbar-nav align-items-lg ml-auto">
+						<div class="btn-group">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Last 30 days</button>
+							<div class="dropdown-menu dropdown-menu-right">
+								<a class="dropdown-item" href="javascript:void(0)">Custom</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="javascript:void(0)">Last 7 days</a>
+								<a class="dropdown-item" href="javascript:void(0)">Last 30 days</a>
+								<a class="dropdown-item" href="javascript:void(0)">Last 3 months</a>
+								<a class="dropdown-item" href="javascript:void(0)">Last 6 months</a>
+								<a class="dropdown-item" href="javascript:void(0)">Last 12 months</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="javascript:void(0)">Current tax year</a>
+								<a class="dropdown-item" href="javascript:void(0)">Last tax year</a>
+							</div>
+						  </div>
+					</div>
 				</div>
 				<div class="table-responsive fill-vertical-space-inner">
 					<table class="table table-striped table-bordered fixed-header-table">
