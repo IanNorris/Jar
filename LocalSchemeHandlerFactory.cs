@@ -38,6 +38,9 @@ namespace Jar
 					case ".png":
 						Type = "image/png";
 						break;
+					case ".svg":
+						Type = "image/svg+xml";
+						break;
 					case ".appcache":
 					case ".manifest":
 						Type = "text/cache-manifest";

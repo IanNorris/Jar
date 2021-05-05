@@ -30,7 +30,7 @@ input, button, textarea, :focus
 
 .sidenav-bottom
 {
-	background-color: #828487;
+	background-color: var(--gray-dark);
 	width: 100%;
 	padding: 1em;
 }
@@ -107,4 +107,30 @@ input, button, textarea, :focus
 .navbar h2
 {
 	margin-bottom: 0;
+}
+
+.app-brand-logo img 
+{
+	width: 2.5rem;
+}
+
+.app-brand-text
+{
+	font-size: 2.5rem;
+}
+
+.sidenav-vertical .app-brand
+{
+	padding: 0.75rem 0.75rem 0.75rem 0.75rem;
+}
+
+.sidenav-inner
+{
+	background-image: linear-gradient(0deg, var(--gray-dark), #3688e5);
+}
+
+.sidenav-dark .sidenav-item.active > .sidenav-link:not(.sidenav-toggle)
+{
+	background-image: linear-gradient(90deg, transparent, #00000066);
+	font-weight: 700;
 }

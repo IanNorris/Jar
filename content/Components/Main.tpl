@@ -2,24 +2,34 @@
 	<div class="layout-inner flexbox-height-fix">
 		<!-- Layout sidenav -->
 		<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical bg-primary-dark sidenav-dark">
+
+			<div class="app-brand demo">
+				<span class="app-brand-logo">
+					<img src="ToReplace/savings.svg" />
+				</span>
+				<a class="app-brand-text demo sidenav-text font-weight-normal ml-2">Jar</a>
+			</div>
+
+			<div class="sidenav-divider mt-0"></div>
+
 			<!-- Links -->
 			<ul class="sidenav-inner py-1">
-				<li class="sidenav-item active" v-on:click="openHome">
+				<li class="sidenav-item" v-on:click="openHome" v-bind:class="{ active: activePage == MainPage_Home }">
 					<a class="sidenav-link"><i class="sidenav-icon fas fa-home"></i> Home</a>
 				</li>
-				<li class="sidenav-item" v-on:click="openBudget">
+				<li class="sidenav-item" v-on:click="openBudget" v-bind:class="{ active: activePage == MainPage_Budgets }">
 					<a class="sidenav-link"><i class="sidenav-icon fas fa-piggy-bank"></i> Budget</a>
 				</li>
-				<li class="sidenav-item" v-on:click="openReports">
+				<li class="sidenav-item" v-on:click="openReports" v-bind:class="{ active: activePage == MainPage_Reports }">
 					<a class="sidenav-link"><i class="sidenav-icon fas fa-briefcase"></i> Reports</a>
 				</li>
 				<li class="sidenav-header small font-weight-semibold pl-3">
 					<div class="float-left">Accounts</div>
 					<div class="pl-1 ml-auto float-right">
-						<a class="sidenav-link" v-on:click="openAccounts"><i class="fa fa-cog"></i></a>
+						<a class="sidenav-link" v-on:click="openAccounts" v-bind:class="{ active: activePage == MainPage_Accounts }"><i class="fa fa-cog"></i></a>
 					</div>
 				</li>
-				<li v-for="(account,index) in accounts" class="sidenav-item" v-if="account.IsOpen">
+				<li v-for="(account,index) in accounts" class="sidenav-item" v-if="account.IsOpen" v-bind:class="{ active: selectedAccount == accounts[index] }">
 					<a class="sidenav-link" v-on:click="selectAccount(index)">
 						<div>{{account.Name}}</div>
 						<div class="pl-1 ml-auto">

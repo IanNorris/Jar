@@ -1,25 +1,29 @@
-Vue.component( 'jar-main', {
+Vue.component('jar-main', {
     template: '#MainTemplate',
     data: function() {
         return {
             budgetName: '',
-            showHome: true,
-            showBudget: false,
-            showReports: false,
-            showAccounts: false,
-            addNewAccount: false,
+            activePage: 0,
             selectedAccount: null,
             accounts: [],
             transactions: []
         };
     },
-    created: function(){
+    created: function () {
+        this.MainPage_OffMainMenu = -1;
+        this.MainPage_Home = 0;
+        this.MainPage_Budgets = 1;
+        this.MainPage_Reports = 2;
+        this.MainPage_Accounts = 3;
+        this.MainPage_NewAccount = 4;
+        this.MainPage_Settings = 5;
+
 		this.getAccounts();
     },
     methods: {
         selectAccount: async function(index) {
             this.selectedAccount = this.accounts[index];
-
+            this.activePage = this.MainPage_OffMainMenu;
             this.getTransactions();
         },
         getAccounts: async function() {
@@ -36,31 +40,19 @@ Vue.component( 'jar-main', {
 			globalApp.showBudget = false;
         },
         openHome: function() {
-            this.showHome = true;
-            this.showBudget = false;
-            this.showReports = false;
-            this.showAccounts = false;
+            this.activePage = this.MainPage_Home;
             this.selectedAccount = null;
         },
         openBudget: function() {
-            this.showHome = false;
-            this.showBudget = true;
-            this.showReports = false;
-            this.showAccounts = false;
+            this.activePage = this.MainPage_Budgets;
             this.selectedAccount = null;
         },
         openReports: function() {
-            this.showHome = false;
-            this.showBudget = false;
-            this.showReports = true;
-            this.showAccounts = false;
+            this.activePage = this.MainPage_Reports;
             this.selectedAccount = null;
         },
         openAccounts: function() {
-            this.showHome = false;
-            this.showBudget = false;
-            this.showReports = false;
-            this.showAccounts = true;
+            this.activePage = this.MainPage_Accounts;
             this.selectedAccount = null;
         },
     },
