@@ -20,11 +20,13 @@ let onReadyEvent = function(){
 	}
 };
 
-(async function() {
+(async function () {
+	moment.locale(navigator.language);
+
 	await CefSharp.BindObjectAsync("dataModel", "dataModel");
 
 	globalDataModel = await dataModel;
-	
+
 	onReadyEvent();
 })();
 

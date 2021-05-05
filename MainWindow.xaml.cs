@@ -16,7 +16,10 @@ namespace Jar
 		{
 			m_dataModel = dataModel;
 
-			var Settings = new CefSettings();
+			var Settings = new CefSettings()
+			{
+				Locale = System.Globalization.CultureInfo.CurrentCulture.Name
+			};
 			Settings.RegisterScheme(
 				new CefCustomScheme
 				{
