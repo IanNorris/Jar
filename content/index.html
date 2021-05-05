@@ -1,81 +1,85 @@
 ﻿<!DOCTYPE html>
 <html lang="en" class="material-style layout-fixed layout-navbar-fixed layout-footer-fixed" dir="ltr">
-	<head>
-		<title>Jar Budgeting</title>
+<head>
+	<title>Jar Budgeting</title>
 
-		<meta charset="utf-8">
-		<meta http-equiv="x-ua-compatible" content="IE=edge,chrome=1">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-		<!-- Icon fonts -->
-		<link rel="stylesheet" href="vendor/appwork/vendor/fonts/fontawesome.css">
+	<!-- Icon fonts -->
+	<link rel="stylesheet" href="vendor/appwork/vendor/fonts/fontawesome.css">
 
-		<!-- Core stylesheets -->
-		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/bootstrap.css" class="theme-settings-bootstrap-css">
-		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/appwork.css" class="theme-settings-appwork-css">
-		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/theme-air.css" class="theme-settings-theme-css">
-		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/colors.css" class="theme-settings-colors-css">
-		<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/uikit.css">
-		<link rel="stylesheet" href="vendor/appwork/vendor/css/pages/authentication.css">
-		<link rel="stylesheet" href="vendor/appwork/vendor/css/pages/tasks.css">
-		<link rel="stylesheet" href="vendor/appwork/vendor/libs/dragula/dragula.css">
+	<!-- Core stylesheets -->
+	<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/bootstrap.css" class="theme-settings-bootstrap-css">
+	<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/appwork.css" class="theme-settings-appwork-css">
+	<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/theme-air.css" class="theme-settings-theme-css">
+	<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/colors.css" class="theme-settings-colors-css">
+	<link rel="stylesheet" href="vendor/appwork/vendor/css/rtl/uikit.css">
+	<link rel="stylesheet" href="vendor/appwork/vendor/css/pages/authentication.css">
+	<link rel="stylesheet" href="vendor/appwork/vendor/css/pages/tasks.css">
+	<link rel="stylesheet" href="vendor/appwork/vendor/libs/dragula/dragula.css">
+	<link rel="stylesheet" href="vendor/daterangepicker/daterangepicker.css">
 
-		<script src="vendor/appwork/vendor/js/material-ripple.js"></script>
-		<script src="vendor/appwork/vendor/js/layout-helpers.js"></script>
-		<script src="vendor/appwork/vendor/js/theme-settings.js"></script>
+	<script src="vendor/appwork/vendor/js/material-ripple.js"></script>
+	<script src="vendor/appwork/vendor/js/layout-helpers.js"></script>
+	<script src="vendor/appwork/vendor/js/theme-settings.js"></script>
 
-		<!-- Core scripts -->
-		<script src="vendor/appwork/vendor/js/pace.js"></script>
-		<script src="vendor/jquery-3.3.1.min.js"></script>
+	<!-- Core scripts -->
+	<script src="vendor/appwork/vendor/js/pace.js"></script>
+	<script src="vendor/jquery-3.3.1.min.js"></script>
 
-		<link rel="stylesheet" href="Styles/App.css">
+	<link rel="stylesheet" href="Styles/App.css">
 
-		<script type="text/x-template" id="MainTemplate" template-name="Main"></script>
-		<script type="text/x-template" id="OpenTemplate" template-name="Open"></script>
+	<script type="text/x-template" id="MainTemplate" template-name="Main"></script>
+	<script type="text/x-template" id="OpenTemplate" template-name="Open"></script>
+	<script type="text/x-template" id="DatePickerTemplate" template-name="DatePicker"></script>
 
-	</head>
-	<body>
-		<div class="page-loader">
-			<div class="bg-primary"></div>
-		</div>
-		
-		<!-- Layout wrapper -->
-		<div id="app">
-			<div><jar-main v-if="showBudget"/></div>
-			<div><jar-open v-if="showOpen" /></div>
-			
-		</div>
+</head>
+<body>
+	<div class="page-loader">
+		<div class="bg-primary"></div>
+	</div>
 
-		<!-- Core scripts -->
-		<script src="vendor/appwork/vendor/libs/popper/popper.js"></script>
-		<script src="vendor/appwork/vendor/js/bootstrap.js"></script>
-		<script src="vendor/appwork/vendor/js/sidenav.js"></script>
-		<script src="vendor/appwork/vendor/libs/dragula/dragula.js"></script>
-		
-		<script src="vendor/vue.js"></script>
-		<script src="vendor/moment-with-locales.js"></script>
-		<script src="vendor/sweetalert.min.js"></script>
-		<script src="vendor/vue-dragula.js"></script>
-		
-		<script src="Components/Open.js"></script>
-		<script src="Components/Main.js"></script>
-		
-		<script src="Scripts/App.js"></script>
+	<!-- Layout wrapper -->
+	<div id="app">
+		<div><jar-main v-if="showBudget" /></div>
+		<div><jar-open v-if="showOpen" /></div>
 
-		<script>
-			//Load all the templates
-			var jobsStarted = 0;
-			var basePath = "Components/";
-			$('[template-name]').each( function() {
-				jobsStarted++;
-			} );
-			$('[template-name]').each( function() {
-				$(this).load( basePath + $(this).attr('template-name') + '.tpl', function(){
-					if( --jobsStarted == 0 ) {
-						$('body').trigger("jarTemplatesLoaded");
-					}
-				});
-			} );
-		</script>
-	</body>
+	</div>
+
+	<!-- Core scripts -->
+	<script src="vendor/appwork/vendor/libs/popper/popper.js"></script>
+	<script src="vendor/appwork/vendor/js/bootstrap.js"></script>
+	<script src="vendor/appwork/vendor/js/sidenav.js"></script>
+	<script src="vendor/appwork/vendor/libs/dragula/dragula.js"></script>
+
+	<script src="vendor/vue.js"></script>
+	<script src="vendor/moment-with-locales.js"></script>
+	<script src="vendor/sweetalert.min.js"></script>
+	<script src="vendor/vue-dragula.js"></script>
+	<script src="vendor/daterangepicker/daterangepicker.js"></script>
+
+	<script src="Components/Open.js"></script>
+	<script src="Components/Main.js"></script>
+	<script src="Components/DatePicker.js"></script>
+
+	<script src="Scripts/App.js"></script>
+
+	<script>
+		//Load all the templates
+		var jobsStarted = 0;
+		var basePath = "Components/";
+		$('[template-name]').each(function () {
+			jobsStarted++;
+		});
+		$('[template-name]').each(function () {
+			$(this).load(basePath + $(this).attr('template-name') + '.tpl', function () {
+				if (--jobsStarted == 0) {
+					$('body').trigger("jarTemplatesLoaded");
+				}
+			});
+		});
+	</script>
+</body>
 </html>

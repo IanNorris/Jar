@@ -5,6 +5,8 @@ Vue.component('jar-main', {
             budgetName: '',
             activePage: 0,
             selectedAccount: null,
+            dateRangeStart: moment().subtract(30, 'days'),
+            dateRangeEnd: moment(),
             accounts: [],
             transactions: []
         };
@@ -20,6 +22,9 @@ Vue.component('jar-main', {
 
 		this.getAccounts();
     },
+    mounted: function () {
+       
+	},
     methods: {
         selectAccount: async function(index) {
             this.selectedAccount = this.accounts[index];
@@ -32,7 +37,7 @@ Vue.component('jar-main', {
         },
         getTransactions: async function () {
             if (this.selectedAccount) {
-                this.transactions = await globalDataModel.getTransactionsBetweenDates(moment('2020/03/01', 'YYYY/MM/DD').toDate(), moment('2022/01/01', 'YYYY/MM/DD').toDate(), this.selectedAccount.Id);
+                this.transactions = await globalDataModel.getTransactionsBetweenDates(this.dateRangeStart.toDate(), this.dateRangeEnd.toDate(), this.selectedAccount.Id);
             }
         },
         signOut: function() {
@@ -55,6 +60,13 @@ Vue.component('jar-main', {
             this.activePage = this.MainPage_Accounts;
             this.selectedAccount = null;
         },
+        dateRangeChanged: async function (start, end) {
+            this.dateRangeStart = start;
+            this.dateRangeEnd = end;
+            if (this.selectedAccount) {
+                this.getTransactions();
+            }
+		}
     },
     filters: {
         asDate: function(date) {

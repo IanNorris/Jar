@@ -59,21 +59,7 @@
 						<h2>{{selectedAccount.Name}}</h2>
 					</div>
 					<div class="navbar-nav align-items-lg ml-auto">
-						<div class="btn-group">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Last 30 days</button>
-							<div class="dropdown-menu dropdown-menu-right">
-								<a class="dropdown-item" href="javascript:void(0)">Custom</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="javascript:void(0)">Last 7 days</a>
-								<a class="dropdown-item" href="javascript:void(0)">Last 30 days</a>
-								<a class="dropdown-item" href="javascript:void(0)">Last 3 months</a>
-								<a class="dropdown-item" href="javascript:void(0)">Last 6 months</a>
-								<a class="dropdown-item" href="javascript:void(0)">Last 12 months</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="javascript:void(0)">Current tax year</a>
-								<a class="dropdown-item" href="javascript:void(0)">Last tax year</a>
-							</div>
-						  </div>
+						<datepicker v-on:daterange-changed="dateRangeChanged" v-bind:startDate="dateRangeStart" v-bind:endDate="dateRangeEnd" />
 					</div>
 				</div>
 				<div class="table-responsive fill-vertical-space-inner">
