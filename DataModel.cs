@@ -259,7 +259,7 @@ namespace Jar
 			var results = m_database.Table<Account>().ToArray();
 			foreach( var result in results )
 			{
-				result.LastBalance = m_database.Table<Transaction>().Where(t => t.Account == result.Id ).Select(t => t.Amount).Sum();
+				result.LastBalance = m_database.Table<Transaction>().Where(t => t.Account == result.Id ).Select(t => (long)t.Amount).Sum();
 			}
 
 			return results;

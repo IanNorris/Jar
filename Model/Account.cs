@@ -28,6 +28,6 @@ namespace Jar.Model
 		public int Order { get; set; }
 		public int Currency { get; set; }
 
-		public int LastBalance { get; set; }
+		public long LastBalance { get; set; }
 	}
 }

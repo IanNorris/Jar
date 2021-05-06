@@ -19,7 +19,7 @@ namespace Jar.Model
 		public string ImportedCategory { get; set; }
 		public int Currency { get; set; }
 		public int ConversionRate { get; set; }
-		public int Amount { get; set; }
+		public long Amount { get; set; }
 
 		public int IsAccepted { get; set; }
 		public int Flag { get; set; }

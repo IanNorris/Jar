@@ -56,13 +56,13 @@ namespace Jar.Import
 
 					case 'T':
 						{
-							outputTransaction.Amount = (int)Math.Round((decimal)100.0 * decimal.Parse(line.Substring(1)));
+							outputTransaction.Amount = (long)Math.Round(100 * decimal.Parse(line.Substring(1)));
 							break;
 						}
 
 					case 'U':
 						{
-							outputTransaction.Amount = (int)Math.Round((decimal)100.0 * decimal.Parse(line.Substring(1)));
+							outputTransaction.Amount = (long)Math.Round(100 * decimal.Parse(line.Substring(1)));
 							break;
 						}
 

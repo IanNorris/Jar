@@ -28,7 +28,7 @@ namespace Jar.Import
 				outputTransaction.Account = Account;
 				outputTransaction.Date = inputTransaction.Date;
 				outputTransaction.Payee = inputTransaction.Description;
-				outputTransaction.Amount = (int)Math.Round(100.0 * inputTransaction.TransactionValue);
+				outputTransaction.Amount = (long)Math.Round(100.0 * inputTransaction.TransactionValue);
 
 				Model.Connection.Insert(outputTransaction);
 			}
