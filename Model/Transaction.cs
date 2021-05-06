@@ -22,6 +22,7 @@ namespace Jar.Model
 		public int Amount { get; set; }
 
 		public int IsAccepted { get; set; }
+		public int Flag { get; set; }
 
 		public int ImportBatch { get; set; }
 		public bool ManualOrEdited { get; set; }

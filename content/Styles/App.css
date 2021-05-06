@@ -134,3 +134,73 @@ input, button, textarea, :focus
 	background-image: linear-gradient(90deg, transparent, #00000066);
 	font-weight: 700;
 }
+
+.font-danger
+{
+	color: var(--danger);
+}
+
+.font-success
+{
+	color: var(--success);
+}
+
+.font-warning
+{
+	color: var(--warning);
+}
+
+.flag-color-1
+{
+	color: var(--red);
+}
+
+.flag-color-2
+{
+	color: var(--green);
+}
+
+.flag-color-3
+{
+	color: var(--blue);
+}
+
+.flag-color-4
+{
+	color: var(--purple);
+}
+
+.flag-color-5
+{
+	color: var(--dark);
+}
+
+.table-header-status
+{
+	width: 4em;
+}
+
+.table-header-date
+{
+	width: 7em;
+}
+
+.table-header-payee
+{
+	width: 70%;
+}
+
+.table-header-memo
+{
+	width: 30%;
+}
+
+.table-header-amount
+{
+	width: 8em;
+}
+
+.table-header-balance
+{
+	width: 8em;
+}

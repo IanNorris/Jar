@@ -66,15 +66,20 @@
 					<table class="table table-striped table-bordered fixed-header-table">
 						<thead>
 							<tr>
-								<th>Date</th>
-								<th>Payee</th>
-								<th>Memo</th>
-								<th>Amount</th>
-								<th>Balance</th>
+								<th class="table-header-status">Status</th>
+								<th class="table-header-date">Date</th>
+								<th class="table-header-payee">Payee</th>
+								<th class="table-header-memo">Memo</th>
+								<th class="table-header-amount">Amount</th>
+								<th class="table-header-balance">Balance</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr v-for="(t,index) in transactions">
+								<td>
+									<i v-bind:class="{ 'fas fa-check-circle font-success': t.IsAccepted, 'far fa-question-circle': !t.IsAccepted }"></i>
+									&nbsp;<i class="fa-flag" v-bind:class="{ 'far': t.Flag == 0, 'fas flag-color-1': t.Flag == 1, 'fas flag-color-2': t.Flag == 2, 'fas flag-color-3': t.Flag == 3, 'fas flag-color-4': t.Flag == 4, 'fas flag-color-5': t.Flag == 5 }"></i>
+								</td>
 								<td>{{t.Date | asDate}}</td>
 								<td v-bind:title="t.OriginalPayee">{{t.Payee}} <span class="text-muted">{{t.Reference}}</span></td>
 								<td>{{t.Memo}}</td>
