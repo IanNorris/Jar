@@ -169,9 +169,19 @@ namespace Jar
 			return m_settings;
 		}
 
-		public bool OpenBudget( string Path, string Password )
+		public bool OpenBudget( int BudgetIndex, string Path, string Password )
 		{
-			return CreateDatabase(Path, Password) != null;
+			var result = CreateDatabase(Path, Password);
+
+			if (result != null)
+			{
+				m_settings.Budgets[BudgetIndex].LastAccessed = DateTime.UtcNow;
+				WriteSettings();
+
+				return true;
+			}
+
+			return false;
 		}
 
 		public bool CreateNewBudget(string FilePath, string Password)

@@ -27,7 +27,7 @@ Vue.component( 'jar-open', {
 			}
 		},
 		openBudget: async function() {
-			globalDataModel.openBudget( this.settings.Budgets[this.selectedBudget].Path, this.password ).then( function(result) {
+			globalDataModel.openBudget( this.selectedBudget, this.settings.Budgets[this.selectedBudget].Path, this.password ).then( function(result) {
 				if( result ) {
 					globalApp.showOpen = false;
 					globalApp.showBudget = true;
