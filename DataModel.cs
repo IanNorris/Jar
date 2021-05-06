@@ -271,12 +271,33 @@ namespace Jar
 
 			transaction.OriginalPayee = transaction.Payee;
 
+			var reference = "";
+
 			var match = SantanderRegex.Match(transaction.Payee);
-			if(match.Success)
+			if (match.Success)
 			{
-				
-				transaction.Reference = match.Groups["Ref"].Value;
+
+				reference = SantanderRegex.Replace(transaction.Payee, SantanderOutputRef);
 				transaction.Payee = SantanderRegex.Replace(transaction.Payee, SantanderOutput);
+			}
+			else
+			{
+				match = SantanderCashRegex.Match(transaction.Payee);
+				if (match.Success)
+				{
+					
+					reference = SantanderCashRegex.Replace(transaction.Payee, SantanderCashOutputRef);
+					transaction.Payee = SantanderCashRegex.Replace(transaction.Payee, SantanderCashOutput);
+				}
+			}
+
+			if (string.IsNullOrEmpty(transaction.Memo))
+			{
+				transaction.Memo = reference;
+			}
+			else
+			{
+				transaction.Reference = reference;
 			}
 
 			return transaction;
@@ -295,6 +316,10 @@ namespace Jar
 		}
 
 		private Regex SantanderRegex = new Regex(@"^(?:DIRECT DEBIT PAYMENT TO |CARD PAYMENT TO |STANDING ORDER VIA FASTER PAYMENT TO |BILL PAYMENT VIA FASTER PAYMENT TO |BANK GIRO CREDIT REF |CREDIT FROM |FASTER PAYMENTS RECEIPT REF)(?<Name>.*?)(?: (?:REF|REFERENCE) (?<Ref>[\w\- \/]+))?(?:,[\d\.]+ \w{2,4}, RATE [\d\.]+\/\w{2,4} ON \d{2}-\d{2}-\d{4})?(?:, MANDATE NO \d+)?(?:, MANDAT)?(?:, \d+\.\d{2})");
+		private Regex SantanderCashRegex = new Regex(@"^CASH WITHDRAWAL AT (?<Name>[^,]+),.*$");
 		private string SantanderOutput = "${Name}";
+		private string SantanderOutputRef = "${Ref}";
+		private string SantanderCashOutput = "CASH";
+		private string SantanderCashOutputRef = "${Name}";
 	}
 }
