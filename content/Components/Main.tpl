@@ -33,7 +33,7 @@
 					<a class="sidenav-link" v-on:click="selectAccount(index)">
 						<div>{{account.Name}}</div>
 						<div class="pl-1 ml-auto">
-							<div>{{account.LastBalance | asCurrency}}</div>
+							<div v-bind:class="{ 'font-positive-value': account.LastBalance >= 0, 'font-negative-value': account.LastBalance < 0 }">{{account.LastBalance | asCurrencyRoundDown}}</div>
 						</div>
 					</a>
 				</li>
@@ -72,8 +72,8 @@
 								<th class="table-header-date">Date</th>
 								<th class="table-header-payee">Payee</th>
 								<th class="table-header-memo">Memo</th>
-								<th class="table-header-amount">Amount</th>
-								<th class="table-header-balance">Balance</th>
+								<th class="table-header-amount table-cell-align-right">Amount</th>
+								<th class="table-header-balance table-cell-align-right">Balance</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -85,8 +85,8 @@
 								<td>{{t.Date | asDate}}</td>
 								<td v-bind:title="t.OriginalPayee">{{t.Payee}} <span class="text-muted">{{t.Reference}}</span></td>
 								<td>{{t.Memo}}</td>
-								<td>{{t.Amount | asCurrency}}</td>
-								<td>{{0 | asCurrency}}</td>
+								<td class="table-cell-align-right" v-bind:class="{ 'font-positive-value': t.Amount >= 0, 'font-negative-value': t.Amount < 0 }">{{t.Amount | asNumeric}}</td>
+								<td class="table-cell-align-right">{{0 | asNumeric}}</td>
 							</tr>
 						</tbody>
 					</table>

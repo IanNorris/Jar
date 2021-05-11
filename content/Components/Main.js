@@ -21,7 +21,7 @@ Vue.component('jar-main', {
         this.MainPage_NewAccount = 4;
         this.MainPage_Settings = 5;
 
-        this.getAccounts();
+        await this.getAccounts();
         this.sideNavWidth = await globalDataModel.getSideNavWidth();
     },
     methods: {
@@ -77,11 +77,41 @@ Vue.component('jar-main', {
         asDate: function(date) {
             return moment(date).format('L');
         },
-        asCurrency: function(amount) {
-            return '£' + (amount / 100.0).toFixed(2);
+        asCurrency: function (amount) {
+            var formatter = Intl.NumberFormat(navigator.language, {
+                style: 'currency',
+                currency: 'GBP',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            return formatter.format(amount / 100.0);
         },
-        asCurrencyRoundDown: function(amount) {
-            return '£' + Math.floor((amount / 100.0)).toFixed(2);
+        asCurrencyRoundDown: function (amount) {
+            var formatter = Intl.NumberFormat(navigator.language, {
+                style: 'currency',
+                currency: 'GBP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+
+            return formatter.format(Math.floor(amount / 100.0));
+        },
+        asNumeric: function (amount) {
+            var formatter = Intl.NumberFormat(navigator.language, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            return formatter.format(amount / 100.0);
+        },
+        asNumericRoundDown: function (amount) {
+            var formatter = Intl.NumberFormat(navigator.language, {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+
+            return formatter.format(Math.floor(amount / 100.0));
         }
     }
 });

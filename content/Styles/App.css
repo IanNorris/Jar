@@ -137,6 +137,15 @@ input, button, textarea, :focus
 	font-weight: 700;
 }
 
+.font-positive-value
+{
+}
+
+.font-negative-value
+{
+	color: var(--danger);
+}
+
 .font-danger
 {
 	color: var(--danger);
@@ -207,6 +216,11 @@ input, button, textarea, :focus
 	width: 8em;
 }
 
+.table-cell-align-right
+{
+	text-align: right;
+}
+
 /*Adjust padding on the sidenav so text fits better*/
 
 .sidenav-vertical .sidenav-item .sidenav-link, .sidenav-vertical .sidenav-header, .sidenav-vertical .sidenav-block
@@ -239,4 +253,26 @@ html:not([dir=rtl]) .pl-3, html:not([dir=rtl]) .px-3
 	bottom: 0;
 	width: 8px;
 	cursor: e-resize;
+}
+
+/*Custom scroll bars*/
+
+::-webkit-scrollbar
+{
+	width: 0.6em;
+}
+
+::-webkit-scrollbar-track
+{
+	background: #F4F4F4;
+}
+
+::-webkit-scrollbar-thumb
+{
+	background: #929292;
+}
+
+::-webkit-scrollbar-thumb:hover
+{
+	background: #828282;
 }
