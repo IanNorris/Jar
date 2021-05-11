@@ -92,10 +92,14 @@
 					</table>
 				</div>
 				<div class="fill-empty"></div>
-				<div id="layout-footer" class="footer bg-white" v-if="selectedAccount">
-					<p>Account balance: {{selectedAccount.LastBalance | asCurrency}}</p>
+				<div id="layout-footer" class="footer bg-white navbar navbar-expand-lg" v-if="selectedAccount">
+					<div class="align-items-lg">
+					</div>
+					<div class="align-items-lg ml-auto">
+						<h2>{{selectedAccount.LastBalance | asCurrency}}</h2>
+					</div>
+					</div>
 				</div>
-			</div>
 			<!-- / Content -->
 		</div>
 		<!-- Layout content -->
