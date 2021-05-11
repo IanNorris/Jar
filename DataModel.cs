@@ -128,7 +128,7 @@ namespace Jar
 					var SettingsJson = JObject.Parse(File.ReadAllText(SettingsPath));
 
 					bool HasBudgets = SettingsJson.ContainsKey("Budgets");
-					bool HasWindowsSettings = SettingsJson.ContainsKey("Window");
+					bool HasWindowsSettings = SettingsJson.ContainsKey("WindowSettings");
 
 					if(HasBudgets)
 					{
@@ -144,7 +144,7 @@ namespace Jar
 
 					if(HasWindowsSettings)
 					{
-						m_settings.WindowSettings = SettingsJson["Window"].ToObject<WindowSettings>();
+						m_settings.WindowSettings = SettingsJson["WindowSettings"].ToObject<WindowSettings>();
 					}
 				}
 				catch(Exception e)
@@ -323,6 +323,18 @@ namespace Jar
 			var results = GetTransactions(t => t.Date >= Start && t.Date < End && t.Account == account).ToList();
 
 			return results;
+		}
+
+		public double GetSideNavWidth()
+		{
+			return m_settings.WindowSettings.SizeNavSize;
+		}
+
+		public void SetSideNavWidth(double newSize)
+		{
+			m_settings.WindowSettings.SizeNavSize = (float)newSize;
+
+			WriteSettings();
 		}
 
 		private Regex SantanderRegex = new Regex(@"^(?:DIRECT DEBIT PAYMENT TO |CARD PAYMENT TO |STANDING ORDER VIA FASTER PAYMENT TO |BILL PAYMENT VIA FASTER PAYMENT TO |BANK GIRO CREDIT REF |CREDIT FROM |FASTER PAYMENTS RECEIPT REF)(?<Name>.*?)(?: (?:REF|REFERENCE) (?<Ref>[\w\- \/]+))?(?:,[\d\.]+ \w{2,4}, RATE [\d\.]+\/\w{2,4} ON \d{2}-\d{2}-\d{4})?(?:, MANDATE NO \d+)?(?:, MANDAT)?(?:, \d+\.\d{2})");

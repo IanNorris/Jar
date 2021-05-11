@@ -1,7 +1,7 @@
 <div class="layout-wrapper layout-2">
 	<div class="layout-inner flexbox-height-fix">
 		<!-- Layout sidenav -->
-		<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical bg-primary-dark sidenav-dark">
+		<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical sidenav-no-animation bg-primary-dark sidenav-dark">
 
 			<div class="app-brand demo">
 				<span class="app-brand-logo">
@@ -49,6 +49,8 @@
 					</div>
 				</div>
 			</div>
+
+			<split-resize classes="sidenav-drag" variable="--sidenav-width" :initial-value="sideNavWidth" :dragComplete="dragComplete" />
 		</div>
 		<!-- / Layout sidenav -->
 		<!-- Layout container -->

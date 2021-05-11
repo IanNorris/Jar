@@ -23,6 +23,7 @@ namespace Jar
 		public int Width = -1;
 		public int Height = -1;
 		public bool Maximized = false;
+		public float SizeNavSize = 0.0f;
 	}
 
 	public class Settings

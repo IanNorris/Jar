@@ -8,10 +8,11 @@ Vue.component('jar-main', {
             dateRangeStart: moment().subtract(30, 'days'),
             dateRangeEnd: moment(),
             accounts: [],
-            transactions: []
+            transactions: [],
+            sideNavWidth: 0.0,
         };
     },
-    created: function () {
+    created: async function () {
         this.MainPage_OffMainMenu = -1;
         this.MainPage_Home = 0;
         this.MainPage_Budgets = 1;
@@ -20,16 +21,14 @@ Vue.component('jar-main', {
         this.MainPage_NewAccount = 4;
         this.MainPage_Settings = 5;
 
-		this.getAccounts();
+        this.getAccounts();
+        this.sideNavWidth = await globalDataModel.getSideNavWidth();
     },
-    mounted: function () {
-       
-	},
     methods: {
         selectAccount: async function(index) {
             this.selectedAccount = this.accounts[index];
             this.activePage = this.MainPage_OffMainMenu;
-            this.getTransactions();
+            await this.getTransactions();
         },
         getAccounts: async function() {
             this.accounts = await globalDataModel.getAccounts();
@@ -64,10 +63,16 @@ Vue.component('jar-main', {
             this.dateRangeStart = start;
             this.dateRangeEnd = end;
             if (this.selectedAccount) {
-                this.getTransactions();
+                await this.getTransactions();
             }
+        },
+        dragComplete: function (newSize) {
+            globalDataModel.setSideNavWidth(newSize);
 		}
     },
+    computed: {
+
+	},
     filters: {
         asDate: function(date) {
             return moment(date).format('L');

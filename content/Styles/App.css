@@ -1,5 +1,7 @@
-:root {
+:root
+{
 	--navbar-height: 3rem;
+	--sidenav-width: 17rem;
 	--transaction-row-height: 3rem;
 }
 
@@ -203,4 +205,38 @@ input, button, textarea, :focus
 .table-header-balance
 {
 	width: 8em;
+}
+
+/*Adjust padding on the sidenav so text fits better*/
+
+.sidenav-vertical .sidenav-item .sidenav-link, .sidenav-vertical .sidenav-header, .sidenav-vertical .sidenav-block
+{
+	padding: .6rem 1rem;
+}
+
+html:not([dir=rtl]) .pl-3, html:not([dir=rtl]) .px-3
+{
+	padding-left: 0.5rem !important;
+}
+
+/*Drive the sidenav width from a var*/
+
+.sidenav-vertical, .sidenav-vertical .sidenav-block, .sidenav-vertical .sidenav-inner > .sidenav-item, .sidenav-vertical .sidenav-inner > .sidenav-header
+{
+	width: var(--sidenav-width);
+}
+
+.layout-fixed:not(.layout-collapsed) .layout-container, .layout-fixed-offcanvas:not(.layout-collapsed) .layout-container
+{
+	padding-left: var(--sidenav-width);
+}
+
+.sidenav-drag
+{
+	position: absolute;
+	right: -4px;
+	top: 0;
+	bottom: 0;
+	width: 8px;
+	cursor: e-resize;
 }
