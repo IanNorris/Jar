@@ -270,6 +270,7 @@ html:not([dir=rtl]) .pl-3, html:not([dir=rtl]) .px-3
 ::-webkit-scrollbar-thumb
 {
 	background: #929292;
+	border-radius: 0.4em;
 }
 
 ::-webkit-scrollbar-thumb:hover
