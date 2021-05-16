@@ -1,6 +1,5 @@
 <div class="layout-wrapper layout-2">
 	<div class="layout-inner flexbox-height-fix">
-		<!-- Layout sidenav -->
 		<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical sidenav-no-animation bg-primary-dark sidenav-dark">
 
 			<div class="app-brand demo">
@@ -12,7 +11,6 @@
 
 			<div class="sidenav-divider mt-0"></div>
 
-			<!-- Links -->
 			<ul class="sidenav-inner py-1">
 				<li class="sidenav-item" v-on:click="openHome" v-bind:class="{ active: activePage == MainPage_Home }">
 					<a class="sidenav-link"><i class="sidenav-icon fas fa-home"></i> Home</a>
@@ -52,8 +50,6 @@
 
 			<split-resize classes="sidenav-drag" variable="--sidenav-width" :initial-value="sideNavWidth" :dragComplete="dragComplete" />
 		</div>
-		<!-- / Layout sidenav -->
-		<!-- Layout container -->
 		<div class="layout-container" v-if="selectedAccount">
 			<div class="fill-vertical-space-wrapper">
 				<div id="layout-navbar" class="navbar navbar-expand-lg align-items-lg-center bg-white">
@@ -98,12 +94,8 @@
 					<div class="align-items-lg ml-auto">
 						<h2>{{selectedAccount.LastBalance | asCurrency}}</h2>
 					</div>
-					</div>
 				</div>
-			<!-- / Content -->
+			</div>
 		</div>
-		<!-- Layout content -->
 	</div>
-	<!-- / Layout container -->
 </div>
-<!-- / Layout wrapper -->

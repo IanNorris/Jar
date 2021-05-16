@@ -8,7 +8,7 @@
 /* Disable drag support for native feel */
 a:not([draggable=true]), img:not([draggable=true])
 {
-	-webkit-user-drag: none; 
+	-webkit-user-drag: none;
 	user-drag: none; /* Technically not supported in Electron yet */
 }
 
@@ -65,17 +65,17 @@ input, button, textarea, :focus
 	margin-bottom: 0;
 }
 
-.fixed-header-table thead th
-{
-	position: sticky;
-	top: -2px; /*We see a few pixels of the content underneath otherwise*/
-	background: var(--white);
-}
+	.fixed-header-table thead th
+	{
+		position: sticky;
+		top: -2px; /*We see a few pixels of the content underneath otherwise*/
+		background: var(--white);
+	}
 
-.fixed-header-table tbody td
-{
-	height: 3rem;
-}
+	.fixed-header-table tbody td
+	{
+		height: 3rem;
+	}
 
 .fill-vertical-space-wrapper
 {
@@ -111,7 +111,7 @@ input, button, textarea, :focus
 	margin-bottom: 0;
 }
 
-.app-brand-logo img 
+.app-brand-logo img
 {
 	width: 2.5rem;
 }
@@ -273,7 +273,7 @@ html:not([dir=rtl]) .pl-3, html:not([dir=rtl]) .px-3
 	border-radius: 0.4em;
 }
 
-::-webkit-scrollbar-thumb:hover
-{
-	background: #828282;
-}
+	::-webkit-scrollbar-thumb:hover
+	{
+		background: #828282;
+	}

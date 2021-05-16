@@ -1,7 +1,7 @@
 let globalDataModel = null;
 let globalApp = null;
 
-let onLoaded = function(){
+let onLoaded = function () {
 	let app = new Vue({
 		el: '#app',
 		data: {
@@ -9,13 +9,13 @@ let onLoaded = function(){
 			showBudget: false,
 		}
 	});
-	
+
 	globalApp = app;
 };
 
 let waitingFor = 2;
-let onReadyEvent = function(){
-	if( --waitingFor == 0 ) {
+let onReadyEvent = function () {
+	if (--waitingFor == 0) {
 		onLoaded();
 	}
 };
@@ -30,6 +30,6 @@ let onReadyEvent = function(){
 	onReadyEvent();
 })();
 
-$('body').on( "jarTemplatesLoaded", function( event ) {
+$('body').on("jarTemplatesLoaded", function (event) {
 	onReadyEvent();
-} );
+});

@@ -1,6 +1,6 @@
 Vue.component('datepicker', {
 	template: '#DatePickerTemplate',
-	props: [ 'startDate', 'endDate' ],
+	props: ['startDate', 'endDate'],
 	mounted: function () {
 		var element = this.$refs.button;
 		var start = this.startDate;
@@ -35,6 +35,6 @@ Vue.component('datepicker', {
 		rangeChangedCallback(start, end);
 	},
 	methods: {
-		
+
 	}
 });

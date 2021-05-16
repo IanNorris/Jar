@@ -1,11 +1,8 @@
 <div class="authentication-wrapper authentication-3">
 	<div class="authentication-inner">
-		<!-- Side container -->
-		<!-- Do not display the container on extra small, small and medium screens -->
 		<div class="d-none d-lg-flex col-lg-8 align-items-center ui-bg-cover ui-bg-overlay-container p-4"
 			 style="background-image: url(&#39;Images/Coins.webp&#39;);">
 			<div class="ui-bg-overlay bg-dark opacity-75"></div>
-			<!-- Text -->
 			<div class="w-100 text-white px-5">
 				<h1 class="display-2 font-weight-bolder mb-4">START YOUR JARS BUDGET</h1>
 				<div class="text-large font-weight-light">
@@ -14,18 +11,12 @@
 					purpose so you&#39;ll always feel in control of your money.
 				</div>
 			</div>
-			<!-- /.Text -->
 		</div>
-		<!-- / Side container -->
-		<!-- Form container -->
 		<div class="d-flex col-lg-4 align-items-center bg-white p-5">
-			<!-- Inner container -->
-			<!-- Have to add `.d-flex` to control width via `.col-*` classes -->
 			<div v-if="!newBudgetObj" class="d-flex col-sm-7 col-md-5 col-lg-12 px-0 px-xl-4 mx-auto">
 				<div class="w-100">
 					<div v-if="settings && settings.Budgets.length">
 						<h4 class="text-center font-weight-normal mb-0">Select a budget</h4>
-						<!-- Form -->
 						<form class="my-5" v-on:submit.prevent="openBudget">
 							<div class="mb-2">
 								<div class="list-group">
@@ -114,6 +105,5 @@
 				</div>
 			</div>
 		</div>
-		<!-- / Form container -->
 	</div>
 </div>
