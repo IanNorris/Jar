@@ -29,5 +29,9 @@ namespace Jar.Model
 		public int Currency { get; set; }
 
 		public long LastBalance { get; set; }
+
+		//
+		//NOTE: Adding new fields defaults to NULL
+		//
 	}
 }

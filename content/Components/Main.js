@@ -1,3 +1,5 @@
+"use strict";
+
 Vue.component('jar-main', {
 	template: '#MainTemplate',
 	data: function () {
@@ -8,7 +10,7 @@ Vue.component('jar-main', {
 			dateRangeStart: moment().subtract(30, 'days'),
 			dateRangeEnd: moment(),
 			accounts: [],
-			transactions: [],
+			selectedAccountTransactions: [],
 			sideNavWidth: 0.0,
 		};
 	},
@@ -22,7 +24,7 @@ Vue.component('jar-main', {
 		this.MainPage_Settings = 5;
 
 		await this.getAccounts();
-		this.sideNavWidth = await globalDataModel.getSideNavWidth();
+		this.sideNavWidth = await settings.GetSideNavWidth();
 	},
 	methods: {
 		selectAccount: async function (index) {
@@ -31,12 +33,12 @@ Vue.component('jar-main', {
 			await this.getTransactions();
 		},
 		getAccounts: async function () {
-			this.accounts = await globalDataModel.getAccounts();
-			this.budgetName = await globalDataModel.getBudgetName();
+			this.accounts = await accounts.GetAccounts();
+			this.budgetName = await globalDataModel.GetBudgetName();
 		},
 		getTransactions: async function () {
 			if (this.selectedAccount) {
-				this.transactions = await globalDataModel.getTransactionsBetweenDates(this.dateRangeStart.toDate(), this.dateRangeEnd.toDate(), this.selectedAccount.Id);
+				this.selectedAccountTransactions = await transactions.GetTransactionsBetweenDates(this.dateRangeStart.toDate(), this.dateRangeEnd.toDate(), this.selectedAccount.Id);
 			}
 		},
 		signOut: function () {
@@ -67,7 +69,7 @@ Vue.component('jar-main', {
 			}
 		},
 		dragComplete: function (newSize) {
-			globalDataModel.setSideNavWidth(newSize);
+			settings.SetSideNavWidth(newSize);
 		}
 	},
 	computed: {

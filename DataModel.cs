@@ -1,182 +1,89 @@
-﻿using SQLite;
-using Jar.Model;
-using System;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Collections.Generic;
-using Jar.Import;
-using Newtonsoft.Json.Linq;
-using System.Windows;
-using Newtonsoft.Json;
 using Microsoft.Win32;
-using System.Text.RegularExpressions;
+using Jar.DataModels;
+using static Jar.MessageBox;
+using Jar.Model;
+using Settings = Jar.DataModels.Settings;
 
 namespace Jar
 {
-	public enum MessageIcon
-	{
-		Warning,
-		Error,
-		Success,
-		Info
-	}
-
 	public class DataModel
 	{
-		public delegate void ShowMessageDelegate(string Text, string Title, MessageIcon Icon, bool ShowCancel, bool DangerMode);
+		public delegate void RegisterObjectDelegate(string name, object data);
 
-		private SQLiteConnection m_database;
-		private Settings m_settings;
-		private Importer m_import;
-		private string m_settingsPath;
+		private Database _database;
+		private EventBus _eventBus;
+
+		private Settings _settings;
+		private Accounts _accounts;
+		private AccountCheckpoints _accountCheckpoints;
+		private Transactions _transactions;
+
 		private string m_budgetName;
 
-		public SQLiteConnection Connection { get { return m_database; } }
-		public Importer Import { get { return m_import; } }
-		public Settings Settings { get { return m_settings; } }
+		public Accounts GetAccounts() => _accounts;
+		public AccountCheckpoints GetAccountCheckpoints() => _accountCheckpoints;
+		public Transactions GetTransactions() => _transactions;
 
-		public ShowMessageDelegate ShowMessage;
 
-		public SQLiteConnection CreateDatabase(string Filename, string Password)
+		public ShowMessageDelegate _showMessage;
+
+		public void BuildDataModel()
+		{
+			_accounts.SetDatabase(_database);
+			_accountCheckpoints.SetDatabase(_database);
+			_transactions.SetDatabase(_database);
+		}
+
+		public bool CreateDatabase(string Filename, string Password)
 		{
 			m_budgetName = Path.GetFileNameWithoutExtension(Filename);
-
-			m_import = new Importer(this);
-
-			var ConnectionString = new SQLiteConnectionString(
-				Filename,
-				true,
-				key: Password
-			);
-
-			try
-			{
-				m_database = new SQLiteConnection(ConnectionString);
-				m_database.CreateTable<Transaction>();
-			}
-			catch(Exception)
-			{
-				if (ShowMessage != null)
-				{
-					ShowMessage("Invalid password, your budget is corrupted or you selected a file that is not a budget.", "Unable to open budget", MessageIcon.Error, false, false);
-				}
-
-				m_database = null;
-				return null;
-			}
-
 			
-			m_database.CreateTable<Account>();
-			m_database.CreateTable<Transaction>();
-			m_database.CreateTable<ImportBatch>();
-
-			return m_database;
-		}
-
-		public void ImportTransactionBatch(string filename, int account)
-		{
-			var accountObject = m_database.Get<Account>(account);
-
-			if(accountObject == null)
+			_database = new Database(_showMessage);
+			if (_database.CreateDatabase(Filename, Password))
 			{
-				throw new InvalidDataException($"Account {account} does not exist");
+				BuildDataModel();
+
+				return true;
 			}
 
-			m_database.Insert(new ImportBatch
-			{
-				Account = account,
-				SourceFilename = filename,
-				ImportTime = DateTime.UtcNow,
-			});
-
-			var batchId = (int)SQLite3.LastInsertRowid(m_database.Handle);
-
-			m_import.Import(filename, account, accountObject.Currency, batchId);
+			return false;
 		}
 
-		public int CreateAccount( string name, AccountType type, int currency )
-		{
-			var lastAccountOrder = m_database.Table<Account>().Select(a => a.Order).DefaultIfEmpty(0).Max();
 
-			var newAccount = new Account
+		public DataModel(string settingsPath)
+		{
+			//Temporary until the web UI is spun up
+			_showMessage = (text, title, icon, showCancel, dangerMode) =>
 			{
-				Currency = currency,
-				IsOpen = true,
-				LastBalance = 0,
-				LastSettled = DateTime.UtcNow,
-				Name = name,
-				Order = lastAccountOrder + 1,
-				Type = type,
+				System.Windows.MessageBox.Show(text, title, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
 			};
 
-			m_database.Insert(newAccount);
+			_settings = new Settings();
+			_settings.ReadSettings(_showMessage, settingsPath);
 
-			var accountId = (int)SQLite3.LastInsertRowid(m_database.Handle);
+			_eventBus = new EventBus();
 
-			return accountId;
+			_accounts = new Accounts(_eventBus);
+			_accountCheckpoints = new AccountCheckpoints(_eventBus);
+			_transactions = new Transactions(_eventBus);
 		}
 
-		public DataModel(string SettingsPath)
+		public void RegisterObjects(RegisterObjectDelegate registerObject)
 		{
-			m_settingsPath = SettingsPath;
-			m_settings = new Settings();
-
-			if ( File.Exists(SettingsPath) )
-			{
-				try
-				{
-					var SettingsJson = JObject.Parse(File.ReadAllText(SettingsPath));
-
-					bool HasBudgets = SettingsJson.ContainsKey("Budgets");
-					bool HasWindowsSettings = SettingsJson.ContainsKey("WindowSettings");
-
-					if(HasBudgets)
-					{
-						var JsonList = SettingsJson["Budgets"].Children().ToList();
-						foreach(var JsonBudget in JsonList )
-						{
-							var Budget = JsonBudget.ToObject<Budget>();
-							Budget.Name = Path.GetFileNameWithoutExtension(Budget.Path);
-														
-							m_settings.Budgets.Add(Budget);
-						}
-					}
-
-					if(HasWindowsSettings)
-					{
-						m_settings.WindowSettings = SettingsJson["WindowSettings"].ToObject<WindowSettings>();
-					}
-				}
-				catch(Exception e)
-				{
-					MessageBox.Show($"Settings file {SettingsPath} is corrupt.\nYou can attempt to load your budget again by opening it. Technical details:\n{e.Message}", "Error", MessageBoxButton.OK);
-				}
-			}
-
-			m_settings.Budgets = m_settings.Budgets.OrderByDescending(b => b.LastAccessed ).ToList();
-
-			WriteSettings();
-		}
-
-		public void WriteSettings()
-		{
-			var String = JsonConvert.SerializeObject(m_settings, Formatting.Indented);
-			File.WriteAllText(m_settingsPath, String);
-		}
-
-		public Settings GetSettings()
-		{
-			return m_settings;
+			registerObject("dataModel", this);
+			registerObject("settings", _settings);
+			registerObject("accounts", _accounts);
+			registerObject("accountCheckpoints", _accountCheckpoints);
+			registerObject("transactions", _transactions);
 		}
 
 		public bool OpenBudget( int BudgetIndex, string Path, string Password )
 		{
-			var result = CreateDatabase(Path, Password);
-
-			if (result != null)
+			if (CreateDatabase(Path, Password))
 			{
-				m_settings.Budgets[BudgetIndex].LastAccessed = DateTime.UtcNow;
-				WriteSettings();
+				_settings.SetBudgetAsLatest(BudgetIndex);
 
 				return true;
 			}
@@ -186,7 +93,7 @@ namespace Jar
 
 		public bool CreateNewBudget(string FilePath, string Password)
 		{
-			if(CreateDatabase(FilePath, Password) != null )
+			if(CreateDatabase(FilePath, Password))
 			{
 				var NewBudget = new Budget();
 				NewBudget.Path = FilePath;
@@ -195,9 +102,7 @@ namespace Jar
 				NewBudget.RememberPassword = false;
 				NewBudget.Password = Password;
 
-				m_settings.Budgets.Add(NewBudget);
-
-				WriteSettings();
+				_settings.AddBudget(NewBudget);
 
 				return true;
 			}
@@ -225,7 +130,7 @@ namespace Jar
 				NewBudget.LastAccessed = DateTime.UtcNow;
 				NewBudget.RememberPassword = false;
 
-				Settings.Budgets.Add(NewBudget);
+				_settings.AddBudget(NewBudget);
 
 				return true;
 			}
@@ -264,84 +169,5 @@ namespace Jar
 			return m_budgetName;
 		}
 
-		public IEnumerable<Account> GetAccounts()
-		{
-			var results = m_database.Table<Account>().ToArray();
-			foreach( var result in results )
-			{
-				result.LastBalance = m_database.Table<Transaction>().Where(t => t.Account == result.Id ).Select(t => (long)t.Amount).Sum();
-			}
-
-			return results;
-		}
-
-		public Transaction PrepareDisplayTransaction(Transaction transaction)
-		{
-			transaction.Payee = transaction.Payee.Replace("&amp;", "&").Replace("&quot;", "\"");
-
-			transaction.OriginalPayee = transaction.Payee;
-
-			var reference = "";
-
-			var match = SantanderRegex.Match(transaction.Payee);
-			if (match.Success)
-			{
-
-				reference = SantanderRegex.Replace(transaction.Payee, SantanderOutputRef);
-				transaction.Payee = SantanderRegex.Replace(transaction.Payee, SantanderOutput);
-			}
-			else
-			{
-				match = SantanderCashRegex.Match(transaction.Payee);
-				if (match.Success)
-				{
-					
-					reference = SantanderCashRegex.Replace(transaction.Payee, SantanderCashOutputRef);
-					transaction.Payee = SantanderCashRegex.Replace(transaction.Payee, SantanderCashOutput);
-				}
-			}
-
-			if (string.IsNullOrEmpty(transaction.Memo))
-			{
-				transaction.Memo = reference;
-			}
-			else
-			{
-				transaction.Reference = reference;
-			}
-
-			return transaction;
-		}
-
-		public IEnumerable<Transaction> GetTransactions(System.Linq.Expressions.Expression<Func<Transaction,bool>> Predicate)
-		{
-			return m_database.Table<Transaction>().Where(Predicate).Select(t => PrepareDisplayTransaction(t) );
-		}
-
-		public IEnumerable<Transaction> GetTransactionsBetweenDates( DateTime Start, DateTime End, int account )
-		{
-			var results = GetTransactions(t => t.Date >= Start && t.Date < End && t.Account == account).ToList();
-
-			return results;
-		}
-
-		public double GetSideNavWidth()
-		{
-			return m_settings.WindowSettings.SizeNavSize;
-		}
-
-		public void SetSideNavWidth(double newSize)
-		{
-			m_settings.WindowSettings.SizeNavSize = (float)newSize;
-
-			WriteSettings();
-		}
-
-		private Regex SantanderRegex = new Regex(@"^(?:DIRECT DEBIT PAYMENT TO |CARD PAYMENT TO |STANDING ORDER VIA FASTER PAYMENT TO |BILL PAYMENT VIA FASTER PAYMENT TO |BANK GIRO CREDIT REF |CREDIT FROM |FASTER PAYMENTS RECEIPT REF)(?<Name>.*?)(?: (?:REF|REFERENCE) (?<Ref>[\w\- \/]+))?(?:,[\d\.]+ \w{2,4}, RATE [\d\.]+\/\w{2,4} ON \d{2}-\d{2}-\d{4})?(?:, MANDATE NO \d+)?(?:, MANDAT)?(?:, \d+\.\d{2})");
-		private Regex SantanderCashRegex = new Regex(@"^CASH WITHDRAWAL AT (?<Name>[^,]+),.*$");
-		private string SantanderOutput = "${Name}";
-		private string SantanderOutputRef = "${Ref}";
-		private string SantanderCashOutput = "CASH";
-		private string SantanderCashOutputRef = "${Name}";
 	}
 }

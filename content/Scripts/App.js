@@ -1,3 +1,5 @@
+"use strict";
+
 let globalDataModel = null;
 let globalApp = null;
 
@@ -23,7 +25,11 @@ let onReadyEvent = function () {
 (async function () {
 	moment.locale(navigator.language);
 
-	await CefSharp.BindObjectAsync("dataModel", "dataModel");
+	await CefSharp.BindObjectAsync("dataModel");
+	await CefSharp.BindObjectAsync("settings");
+	await CefSharp.BindObjectAsync("accounts");
+	await CefSharp.BindObjectAsync("accountCheckpoints");
+	await CefSharp.BindObjectAsync("transactions");
 
 	globalDataModel = await dataModel;
 

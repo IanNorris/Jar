@@ -1,9 +1,12 @@
-﻿namespace Jar.Import
+﻿using System.Collections.Generic;
+using Jar.Model;
+
+namespace Jar.Import
 {
 	public interface IImport
 	{
 		string[] Extensions();
 		string FormatName();
-		void Import(DataModel Model, string Filename, int Account, int Currency, int BatchId);
+		List<Transaction> Import(string Filename, int Account, int Currency, int BatchId);
 	}
 }

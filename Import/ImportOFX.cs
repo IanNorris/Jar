@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Jar.Model;
 
 namespace Jar.Import
 {
@@ -14,25 +16,26 @@ namespace Jar.Import
 			return "Microsoft Money";
 		}
 
-		public void Import(DataModel Model, string Filename, int Account, int Currency, int BatchId )
+		public List<Transaction> Import(string Filename, int Account, int Currency, int BatchId )
 		{
 			var parser = new OFXParser.OFXParser();
 			var ofxDocument = parser.GenerateExtract(Filename);
 
-			Model.Connection.BeginTransaction();
+			var outputList = new List<Transaction>();
 			foreach ( var inputTransaction in ofxDocument.Transactions )
 			{
 				var outputTransaction = new Model.Transaction();
-				outputTransaction.ImportBatch = BatchId;
+				outputTransaction.ImportBatchId = BatchId;
 				outputTransaction.Currency = Currency;
-				outputTransaction.Account = Account;
+				outputTransaction.AccountId = Account;
 				outputTransaction.Date = inputTransaction.Date;
 				outputTransaction.Payee = inputTransaction.Description;
 				outputTransaction.Amount = (long)Math.Round(100.0 * inputTransaction.TransactionValue);
 
-				Model.Connection.Insert(outputTransaction);
+				outputList.Add(outputTransaction);
 			}
-			Model.Connection.Commit();
+
+			return outputList;
 		}
 	}
 }

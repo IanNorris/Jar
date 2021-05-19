@@ -15,12 +15,12 @@
 		<div class="d-flex col-lg-4 align-items-center bg-white p-5">
 			<div v-if="!newBudgetObj" class="d-flex col-sm-7 col-md-5 col-lg-12 px-0 px-xl-4 mx-auto">
 				<div class="w-100">
-					<div v-if="settings && settings.Budgets.length">
+					<div v-if="budgets.length">
 						<h4 class="text-center font-weight-normal mb-0">Select a budget</h4>
 						<form class="my-5" v-on:submit.prevent="openBudget">
 							<div class="mb-2">
 								<div class="list-group">
-									<a v-for="(budget,index) in settings.Budgets" href="javascript:void(0)"
+									<a v-for="(budget,index) in budgets" href="javascript:void(0)"
 									   class="list-group-item list-group-item-action flex-column align-items-start"
 									   v-bind:class="{ 'active': index == selectedBudget }" v-on:click="selectBudget( index )">
 										<div class="d-flex justify-content-between w-100">
@@ -55,7 +55,7 @@
 							<a href="javascript:void(0)" v-on:click="getNewBudgetPath">Create one</a>
 						</div>
 					</div>
-					<div v-if="settings &amp;&amp; settings.Budgets.length == 0">
+					<div v-if="budgets.length == 0">
 						<h4 class="text-center font-weight-normal mb-5">New here?</h4>
 						<div class="text-center text-muted">
 							<a href="javascript:void(0)" v-on:click="getNewBudgetPath">Create a new budget</a>

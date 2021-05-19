@@ -10,5 +10,9 @@ namespace Jar.Model
 		public int Account { get; set; }
 		public DateTime ImportTime { get; set; }
 		public string SourceFilename { get; set; }
+
+		//
+		//NOTE: Adding new fields defaults to NULL
+		//
 	}
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Jar.Model;
 using Microsoft.VisualBasic.FileIO;
 
 namespace Jar.Import
@@ -15,9 +17,10 @@ namespace Jar.Import
 			return "CSV";
 		}
 
-		public void Import(DataModel Model, string Filename, int Account, int Currency, int BatchId)
+		public List<Transaction> Import(string Filename, int Account, int Currency, int BatchId)
 		{
-			Model.Connection.BeginTransaction();
+			var outputList = new List<Transaction>();
+
 			using (TextFieldParser parser = new TextFieldParser(Filename))
 			{
 				parser.TextFieldType = FieldType.Delimited;
@@ -35,9 +38,9 @@ namespace Jar.Import
 					}
 
 					var outputTransaction = new Model.Transaction();
-					outputTransaction.ImportBatch = BatchId;
+					outputTransaction.ImportBatchId = BatchId;
 					outputTransaction.Currency = Currency;
-					outputTransaction.Account = Account;
+					outputTransaction.AccountId = Account;
 					outputTransaction.Date = DateTime.Parse(fields[1]);
 					outputTransaction.Payee = fields[2];
 
@@ -51,11 +54,11 @@ namespace Jar.Import
 						outputTransaction.Amount = (long)Math.Round(100 * decimal.Parse(fields[6]));
 					}
 
-					Model.Connection.Insert(outputTransaction);
+					outputList.Add(outputTransaction);
 				}
 			}
 
-			Model.Connection.Commit();
+			return outputList;
 		}
 	}
 }

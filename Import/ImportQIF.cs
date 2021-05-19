@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using Jar.Model;
 
 namespace Jar.Import
 {
@@ -15,13 +17,13 @@ namespace Jar.Import
 			return "Quicken";
 		}
 
-		public void Import(DataModel Model, string Filename, int Account, int Currency, int BatchId)
+		public List<Transaction> Import(string Filename, int Account, int Currency, int BatchId)
 		{
-			Model.Connection.BeginTransaction();
+			var outputList = new List<Transaction>();
 
 			var lines = File.ReadAllLines(Filename);
 
-			var outputTransaction = new Model.Transaction();
+			var outputTransaction = new Transaction();
 
 			foreach (var line in lines)
 			{
@@ -41,9 +43,9 @@ namespace Jar.Import
 					case '^':
 						{
 							outputTransaction.Currency = Currency;
-							outputTransaction.Account = Account;
-							outputTransaction.ImportBatch = BatchId;
-							Model.Connection.Insert(outputTransaction);
+							outputTransaction.AccountId = Account;
+							outputTransaction.ImportBatchId = BatchId;
+							outputList.Add(outputTransaction);
 							outputTransaction = new Model.Transaction();
 							break;
 						}
@@ -87,7 +89,7 @@ namespace Jar.Import
 				}
 			}
 
-			Model.Connection.Commit();
+			return outputList;
 		}
 	}
 }

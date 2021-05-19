@@ -1,7 +1,9 @@
-﻿using CefSharp;
-using CefSharp.Wpf;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
+using CefSharp;
+using CefSharp.Wpf;
 
 namespace Jar
 {
@@ -10,11 +12,14 @@ namespace Jar
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		DataModel m_dataModel;
+		MessageBox _messageBox;
+		DataModel _dataModel;
 
 		public MainWindow(DataModel dataModel)
 		{
-			m_dataModel = dataModel;
+			_messageBox = new MessageBox();
+			_dataModel = dataModel;
+
 
 			var Settings = new CefSettings()
 			{
@@ -29,8 +34,13 @@ namespace Jar
 			);
 
 			Cef.Initialize(Settings);
+			
+
+			_messageBox.BindBrowser(m_browser);
 
 			InitializeComponent();
+
+			m_browser.JavascriptObjectRepository.NameConverter = null;
 		}
 
 		[Conditional("DEBUG")]
@@ -51,33 +61,16 @@ namespace Jar
 			}
 		}
 
-		const string ErrorMessageFormat = @"swal({{
-				text: ""{0}"",
-				title: ""{1}"",
-				icon: ""{2}"",
-				closeOnEsc: true,
-				dangerMode: {3},
-				buttons: {{
-					cancel: {4},
-					confirm: true
-				}}
-			}});";
 		
-		private static string BuildMessageCommand( string Text, string Title, MessageIcon Icon, bool ShowCancel, bool DangerMode )
-		{
-			return string.Format(ErrorMessageFormat, Text, Title, Icon.ToString().ToLower(), DangerMode.ToString().ToLower(), ShowCancel.ToString().ToLower());
-		}
-
-		private void ShowMessage(string Text, string Title, MessageIcon Icon, bool ShowCancel, bool DangerMode )
-		{
-			string JS = BuildMessageCommand(Text, Title, Icon, ShowCancel, DangerMode);
-			m_browser.GetMainFrame().ExecuteJavaScriptAsync(JS);
-		}
 
 		private void m_browser_Loaded(object sender, RoutedEventArgs e)
 		{
-			m_browser.JavascriptObjectRepository.Register("dataModel", m_dataModel);
-			m_dataModel.ShowMessage = ShowMessage;
+			_dataModel._showMessage = _messageBox.ShowMessage;
+
+			_dataModel.RegisterObjects((name, obj) =>
+			{
+				m_browser.JavascriptObjectRepository.Register(name, obj);
+			});
 		}
 	}
 }

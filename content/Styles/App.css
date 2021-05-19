@@ -198,10 +198,15 @@ input, button, textarea, :focus
 
 .table-header-payee
 {
-	width: 70%;
+	width: 40%;
 }
 
 .table-header-memo
+{
+	width: 30%;
+}
+
+.table-header-jar
 {
 	width: 30%;
 }
