@@ -5,6 +5,7 @@ using Jar.DataModels;
 using static Jar.MessageBox;
 using Jar.Model;
 using Settings = Jar.DataModels.Settings;
+using System.Threading.Tasks;
 
 namespace Jar
 {
@@ -79,7 +80,7 @@ namespace Jar
 			registerObject("transactions", _transactions);
 		}
 
-		public bool OpenBudget( int BudgetIndex, string Path, string Password )
+		public async Task<bool> OpenBudget( int BudgetIndex, string Path, string Password )
 		{
 			if (CreateDatabase(Path, Password))
 			{

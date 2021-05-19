@@ -20,6 +20,7 @@ namespace Jar
 			_messageBox = new MessageBox();
 			_dataModel = dataModel;
 
+			CefSharpSettings.ConcurrentTaskExecution = true;
 
 			var Settings = new CefSettings()
 			{

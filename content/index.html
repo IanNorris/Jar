@@ -18,6 +18,7 @@
 	<link rel="stylesheet" href="vendor/appwork/vendor/css/pages/tasks.css">
 	<link rel="stylesheet" href="vendor/appwork/vendor/libs/dragula/dragula.css">
 	<link rel="stylesheet" href="vendor/daterangepicker/daterangepicker.css">
+	<link rel="stylesheet" href="vendor/spinkit/spinkit.min.css">
 
 	<script src="vendor/appwork/vendor/js/material-ripple.js"></script>
 	<script src="vendor/appwork/vendor/js/layout-helpers.js"></script>
@@ -41,6 +42,15 @@
 	<div id="app">
 		<div><jar-main v-if="showBudget" /></div>
 		<div><jar-open v-if="showOpen" /></div>
+		<div v-if="showLoader" class="full-screen-loader">
+			<div class="full-screen-loader-center">
+				<div class="sk-swing">
+					<div class="sk-swing-dot"></div>
+					<div class="sk-swing-dot"></div>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 	<script src="vendor/appwork/vendor/libs/popper/popper.js"></script>

@@ -25,10 +25,14 @@ Vue.component('jar-open', {
 			}
 		},
 		openBudget: async function () {
-			var result = globalDataModel.OpenBudget(this.selectedBudget, this.budgets[this.selectedBudget].Path, this.password);
+			this.$parent.showLoader = true;
+			var result = await globalDataModel.OpenBudget(this.selectedBudget, this.budgets[this.selectedBudget].Path, this.password);
 			if (result) {
 				globalApp.showOpen = false;
 				globalApp.showBudget = true;
+			}
+			else {
+				this.$parent.showLoader = false;
 			}
 		},
 		newBudget: async function () {

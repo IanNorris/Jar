@@ -278,7 +278,35 @@ html:not([dir=rtl]) .pl-3, html:not([dir=rtl]) .px-3
 	border-radius: 0.4em;
 }
 
-	::-webkit-scrollbar-thumb:hover
-	{
-		background: #828282;
-	}
+::-webkit-scrollbar-thumb:hover
+{
+	background: #828282;
+}
+
+/*Loader*/
+
+
+.full-screen-loader
+{
+	z-index: 999999;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #3c97fe59;
+}
+
+
+
+.full-screen-loader-center
+{
+	--sk-size: 10em;
+	top: 50%;
+	left: 50%;
+	margin-left: calc(-0.5*var(--sk-size));
+	position: absolute;
+	margin-top: calc(-0.5*var(--sk-size));
+	--sk-color: white;
+}
+

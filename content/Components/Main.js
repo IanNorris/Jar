@@ -25,6 +25,8 @@ Vue.component('jar-main', {
 
 		await this.getAccounts();
 		this.sideNavWidth = await settings.GetSideNavWidth();
+
+		this.$parent.showLoader = false;
 	},
 	methods: {
 		selectAccount: async function (index) {

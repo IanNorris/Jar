@@ -9,6 +9,7 @@ let onLoaded = function () {
 		data: {
 			showOpen: true,
 			showBudget: false,
+			showLoader: false,
 		}
 	});
 
