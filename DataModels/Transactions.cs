@@ -62,6 +62,8 @@ namespace Jar.DataModels
 				var newBalance = runningTotal + result.Balance;
 				result.Balance = newBalance;
 
+				PrepareDisplayTransaction(result);
+
 				previousTotal = newBalance;
 			}
 
@@ -126,7 +128,7 @@ namespace Jar.DataModels
 			_import.Import(filename, account, accountObject.Currency, batchId);
 		}
 
-		private Transaction PrepareDisplayTransaction(Transaction transaction)
+		private void PrepareDisplayTransaction(Transaction transaction)
 		{
 			transaction.Payee = transaction.Payee.Replace("&amp;", "&").Replace("&quot;", "\"");
 
@@ -160,8 +162,6 @@ namespace Jar.DataModels
 			{
 				transaction.Reference = reference;
 			}
-
-			return transaction;
 		}
 
 		private Database _database;
