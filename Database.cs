@@ -41,6 +41,7 @@ namespace Jar
 			_database.CreateTable<Account>(CreateFlags.ImplicitIndex);
 			_database.CreateTable<Transaction>(CreateFlags.ImplicitIndex);
 			_database.CreateTable<ImportBatch>(CreateFlags.ImplicitIndex);
+			_database.CreateTable<AccountCheckpoint>(CreateFlags.ImplicitIndex);
 		}
 
 		public long GetLastInsertedRowId()

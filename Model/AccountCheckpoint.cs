@@ -12,10 +12,12 @@ namespace Jar.Model
 	{
 		[PrimaryKey, AutoIncrement]
 		public int Id { get; set; }
-		public int AccountId { get; set; }	
+		public int AccountId { get; set; }
+		public int? PreviousCheckpointId { get; set; }
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
-		public int Balance { get; set; }
+		public long StartBalance { get; set; }
+		public long EndBalance { get; set; }
 
 		//
 		//NOTE: Adding new fields defaults to NULL

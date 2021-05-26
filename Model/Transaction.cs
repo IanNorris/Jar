@@ -18,7 +18,7 @@ namespace Jar.Model
 		public string Memo { get; set; }
 		public string Reference { get; set; }
 		public int JarId { get; set; }
-		public int CheckpointId { get; set; }
+		public int? CheckpointId { get; set; }
 		public string ImportedCategory { get; set; }
 		public int Currency { get; set; }
 		public int ConversionRate { get; set; }

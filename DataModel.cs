@@ -35,6 +35,11 @@ namespace Jar
 			_accounts.SetDatabase(_database);
 			_accountCheckpoints.SetDatabase(_database);
 			_transactions.SetDatabase(_database);
+
+			foreach (var account in _accounts.GetAccounts())
+			{
+				_accountCheckpoints.UpdateAccountCheckpoints(account.Id);
+			}
 		}
 
 		public bool CreateDatabase(string Filename, string Password)
@@ -67,8 +72,8 @@ namespace Jar
 			_eventBus = new EventBus();
 
 			_accounts = new Accounts(_eventBus);
-			_accountCheckpoints = new AccountCheckpoints(_eventBus);
 			_transactions = new Transactions(_eventBus);
+			_accountCheckpoints = new AccountCheckpoints(_transactions, _eventBus);
 		}
 
 		public void RegisterObjects(RegisterObjectDelegate registerObject)

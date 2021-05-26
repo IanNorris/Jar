@@ -84,7 +84,7 @@
 								<td>{{t.Memo}}</td>
 								<td>{{t.Jar}}</td>
 								<td class="table-cell-align-right" v-bind:class="{ 'font-positive-value': t.Amount >= 0, 'font-negative-value': t.Amount < 0 }">{{t.Amount | asNumeric}}</td>
-								<td class="table-cell-align-right">{{0 | asNumeric}}</td>
+								<td class="table-cell-align-right">{{t.Balance | asNumeric}}</td>
 							</tr>
 						</tbody>
 					</table>

@@ -1,12 +1,16 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using Jar.Model;
 using SQLite;
 
 namespace Jar.DataModels
 {
 	public class AccountCheckpoints
 	{
-		public AccountCheckpoints(EventBus eventBus)
+		public AccountCheckpoints(Transactions transactions, EventBus eventBus)
 		{
+			_transactions = transactions;
 		}
 
 		public void SetDatabase(Database database)
@@ -14,6 +18,100 @@ namespace Jar.DataModels
 			_database = database;
 		}
 
+		public AccountCheckpoint GetCheckpoint(DateTime startDate)
+		{
+			return _database.Connection.Table<AccountCheckpoint>().Where(c => c.StartDate == startDate).Take(1).FirstOrDefault();
+		}
+
+		public void UpdateAccountCheckpoints(int account)
+		{
+			var firstTransaction = _transactions.GetFirstTransactionAfter(account, DateTime.MinValue);
+			var lastTransaction = _transactions.GetLastTransaction(account);
+
+			if(firstTransaction == null || lastTransaction == null)
+			{
+				return;
+			}
+
+			if(firstTransaction.Id == lastTransaction.Id)
+			{
+				return;
+			}
+
+			var previousBalance = 0L;
+			AccountCheckpoint lastCheckpoint = null;
+			AccountCheckpoint newCheckpoint = null;
+
+			var transactionsOutsideCheckpoints = _database.Connection.Query<int>(@"SELECT COUNT() FROM 
+	(SELECT [Transaction].*, [AccountCheckpoint].Id AS LinkedCheckpointId, StartDate, EndDate 
+		FROM [Transaction] 
+		INNER JOIN AccountCheckpoint ON [Transaction].CheckpointId = [AccountCheckpoint].Id)
+WHERE NOT (Date >= StartDate AND Date < EndDate AND CheckpointId = LinkedCheckpointId)").First();
+
+			var transactionsWithoutCheckpoints = _database.Connection.Query<int>(@"SELECT COUNT() FROM [Transaction] WHERE CheckpointId IS NULL").First();
+
+			if (transactionsWithoutCheckpoints == 0 && transactionsOutsideCheckpoints == 0)
+			{
+				return;
+			}
+
+			//Need to rebuild.
+
+			_database.Connection.Table<AccountCheckpoint>().Delete();
+
+			var existingCheckpoints = _database.Connection.Table<AccountCheckpoint>().Count();
+			if (existingCheckpoints != 0)
+			{
+				throw new InvalidDataException("No checkpoints should exist");
+			}
+
+			var startPeriod = GetStartOfMonth(firstTransaction.Date);
+			var endPeriod = GetEndOfMonth(lastTransaction.Date);
+
+			while(startPeriod < endPeriod)
+			{
+				var nextPeriod = startPeriod.AddMonths(1);
+
+				var transactionsInRange = _transactions.GetTransactionsBetweenDates(startPeriod, nextPeriod, account).ToList();
+				
+				var transactionTotal = transactionsInRange.Sum(t => t.Amount);
+
+				newCheckpoint = new AccountCheckpoint()
+				{
+					StartDate = startPeriod,
+					EndDate = nextPeriod,
+					StartBalance = previousBalance,
+					EndBalance = previousBalance + transactionTotal,
+					AccountId = account,
+					PreviousCheckpointId = lastCheckpoint?.Id
+				};
+
+				_database.Connection.Insert(newCheckpoint);
+
+				foreach (var transaction in transactionsInRange)
+				{
+					transaction.CheckpointId = newCheckpoint.Id;
+				}
+
+				_database.Connection.UpdateAll(transactionsInRange, true);
+
+				startPeriod = nextPeriod;
+				lastCheckpoint = newCheckpoint;
+				previousBalance = newCheckpoint.EndBalance;
+			}
+		}
+
+		private DateTime GetStartOfMonth(DateTime date)
+		{
+			return new DateTime(date.Year, date.Month, 1);
+		}
+
+		private DateTime GetEndOfMonth(DateTime date)
+		{
+			return new DateTime(date.Date.Year, date.Date.Month, 1).AddMonths(1);
+		}
+
 		private Database _database;
+		private Transactions _transactions;
 	}
 }

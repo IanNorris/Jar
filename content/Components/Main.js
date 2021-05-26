@@ -40,7 +40,7 @@ Vue.component('jar-main', {
 		},
 		getTransactions: async function () {
 			if (this.selectedAccount) {
-				this.selectedAccountTransactions = await transactions.GetTransactionsBetweenDates(this.dateRangeStart.toDate(), this.dateRangeEnd.toDate(), this.selectedAccount.Id);
+				this.selectedAccountTransactions = await transactions.GetDisplayTransactions(this.dateRangeStart.toDate(), this.dateRangeEnd.toDate(), this.selectedAccount.Id);
 			}
 		},
 		signOut: function () {

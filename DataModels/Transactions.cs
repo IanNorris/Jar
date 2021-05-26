@@ -21,16 +21,88 @@ namespace Jar.DataModels
 			_database = database;
 		}
 
-		public IEnumerable<Transaction> GetTransactions(Expression<Func<Transaction, bool>> Predicate)
+		public IEnumerable<DisplayTransaction> GetDisplayTransactions(DateTime start, DateTime end, int account)
 		{
-			return _database.Connection.Table<Transaction>().Where(Predicate).Select(t => PrepareDisplayTransaction(t));
+			long runningTotal = 0;
+			int? currentCheckpointId = null;
+			long previousTotal = long.MinValue;
+
+			var preTransactions = GetTransactionsBetweenDates(new DateTime(start.Year, start.Month, 1), start, account).OrderBy(t => t.Date);
+
+			foreach(var transaction in preTransactions)
+			{
+				if (transaction.CheckpointId != currentCheckpointId)
+				{
+					runningTotal = 0;
+					currentCheckpointId = transaction.CheckpointId;
+				}
+
+				runningTotal += transaction.Amount;
+			}
+
+			//We borrow the Balance field from the transaction temporarily
+			//as the StartBalance from the account checkpoint
+			var results = _database.Connection.Query<DisplayTransaction>(@"SELECT [Transaction].*, StartBalance AS Balance FROM [Transaction] INNER JOIN [AccountCheckpoint] On [Transaction].CheckpointId = [AccountCheckpoint].Id WHERE Date >= ? AND Date < ? AND [Transaction].AccountId = ? ORDER BY Date ASC", new object[] { start, end, account });
+
+			foreach(var result in results)
+			{
+				if(result.CheckpointId != currentCheckpointId)
+				{
+					if(result.Balance != previousTotal && previousTotal != long.MinValue)
+					{
+						throw new InvalidDataException($"Balance pre transaction for #{result.Id} of {result.Balance} does not match previous sum of {previousTotal}.");
+					}
+
+					runningTotal = 0;
+					currentCheckpointId = result.CheckpointId;
+				}
+
+				runningTotal += result.Amount;
+
+				var newBalance = runningTotal + result.Balance;
+				result.Balance = newBalance;
+
+				previousTotal = newBalance;
+			}
+
+			return results;
+
+			/*long runningTotal = 0;
+			return transactions.Join(_database.Connection.Table<AccountCheckpoint>().AsQueryable(), t => t.Id, c => c.Id, (t, c) =>
+			{
+				runningTotal += t.Amount;
+				return new DisplayTransaction() { Transaction = PrepareDisplayTransaction(t), Balance = (c?.StartBalance ?? 0) + runningTotal };
+			});*/
+		}
+
+		public IEnumerable<Transaction> GetTransactions(Expression<Func<Transaction, bool>> predicate)
+		{
+			return _database.Connection.Table<Transaction>().Where(predicate).OrderBy( t => t.Date );
 		}
 
 		public IEnumerable<Transaction> GetTransactionsBetweenDates(DateTime Start, DateTime End, int account)
 		{
-			var results = GetTransactions(t => t.Date >= Start && t.Date < End && t.AccountId == account && !t.Deleted).ToList();
+			var results = GetTransactions(t => t.Date >= Start && t.Date < End && t.AccountId == account && !t.Deleted);
 
 			return results;
+		}
+
+		public Transaction GetFirstTransactionAfter(int account, DateTime start)
+		{
+			return _database.Connection.Table<Transaction>()
+				.Where(t => t.AccountId == account && t.Date >= start && !t.Deleted)
+				.OrderBy(t => t.Date)
+				.Take(1)
+				.FirstOrDefault();
+		}
+
+		public Transaction GetLastTransaction(int account)
+		{
+			return _database.Connection.Table<Transaction>()
+				.Where(t => t.AccountId == account && !t.Deleted)
+				.OrderByDescending(t => t.Date)
+				.Take(1)
+				.FirstOrDefault();
 		}
 
 		public void ImportTransactionBatch(string filename, int account)
