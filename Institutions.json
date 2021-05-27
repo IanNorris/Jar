@@ -1,0 +1,157 @@
+{
+	"Santander": {
+		"Filters": [
+			{
+				"Name": "Cash",
+				"Regex": "^CASH WITHDRAWAL AT (?<Name>[^,]+),.*$",
+				"PayeeOutput": "CASH",
+				"ReferenceOutput": "${Name}",
+				"MustStartWith": "CASH WITHDRAWAL AT ",
+				"Example": "CASH WITHDRAWAL AT PORKINGTONS BANK PLC ATM ASDA ROYSTONVASEY, ROYTON VASEY,20.00 GBP , ON 17-10-, 20.00"
+			},
+			{
+				"Name": "CashbackGeneric",
+				"Regex": "^\\d+ Direct Debit Payment[s]? at (?<Amount>[\\d,%]+) Cashback, [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "Cashback",
+				"ReferenceOutput": "${Amount}",
+				"MustContain": "Direct Debit Payment at",
+				"Example": "7 Direct Debit Payments at 1,00% Cashback, 1.23GBP"
+			},
+			{
+				"Name": "CashbackSpecific",
+				"Regex": "^\\d+ Direct Debit Payment[s]? for (?<Reason>.*) at (?<Amount>[\\d,%]+) Cashback, [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "Cashback",
+				"ReferenceOutput": "${Reason} at ${Amount}",
+				"MustContain": "Direct Debit Payment for",
+				"Example": "1 Direct Debit Payment for Water at 1,00% Cashback, 0.13"
+			},
+			{
+				"Name": "GiroCredit",
+				"Regex": "^BANK GIRO CREDIT REF (?<Name>.*), (?<Ref>.*), [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "${Ref}",
+				"MustStartWith": "BANK GIRO CREDIT REF",
+				"Example": "BANK GIRO CREDIT REF MCDONALDS, 01234FRIES, 280.75"
+			},
+			{
+				"Name": "BillPayment",
+				"Regex": "^BILL PAYMENT (?:VIA FASTER PAYMENT )?TO (?<Name>.*) REFERENCE (?<Ref>[^,]*) ?(?:, MANDATE)?(?: NO)?(?: \\d+)?, [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "${Ref}",
+				"MustStartWith": "BILL PAYMENT TO",
+				"Example": "BILL PAYMENT VIA FASTER PAYMENT TO BILL GATES REFERENCE PIZZA , MANDATE NO 10, 32.45"
+			},
+			{
+				"Comment": "This is a special case for larger transactions where there are commas in the amount, making the parsing ambiguous.",
+				"Name": "CardPaymentWithCommaSeparatedAmount",
+				"Regex": "^CARD PAYMENT TO (?<Name>[^,]+),[\\d\\.,]+ (?:\\w{3}), RATE [\\d\\.]+\/(?:\\w{3}) ON [\\d\\-]+(?: [\\w\\- ]+)?, [\\d\\.]{7,}(?:\\w{3})?",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "",
+				"MustStartWith": "CARD PAYMENT TO",
+				"Example": "CARD PAYMENT TO Google,10.99 GBP, RATE 1.00/GBP ON 02-04-2017, 10.99GBP"
+			},
+			{
+				"Name": "CardPaymentWithRef",
+				"Regex": "^CARD PAYMENT TO (?<Name>.+)(?:\\*(?<Ref>.+)),[\\d\\.]+ (?:\\w{3}), RATE [\\d\\.]+\\/(?:\\w{3}) ON [\\d\\-]+(?: [\\w\\- ]+)?, [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "${Ref}",
+				"MustStartWith": "CARD PAYMENT TO",
+				"Example": "CARD PAYMENT TO GOOGLE *Google Store,0.99 GBP, RATE 1.00/GBP ON 01-03-2010, 0.99GBP"
+			},
+			{
+				"Name": "CardPaymentWithoutRef",
+				"Regex": "^CARD PAYMENT TO (?<Name>.+),[\\d\\.]+ (?:\\w{3}), RATE [\\d\\.]+\\/(?:\\w{3}) ON [\\d\\-]+(?: [\\w\\- ]+)?, [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "",
+				"MustStartWith": "CARD PAYMENT TO",
+				"Example": "CARD PAYMENT TO Google,10.99 GBP, RATE 1.00/GBP ON 02-04-2017, 10.99GBP"
+			},
+			{
+				"Name": "Cheque",
+				"Regex": "^CHEQUE PAID IN AT (?<Name>[^,]+), [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "Cheque",
+				"ReferenceOutput": "${Name}",
+				"MustStartWith": "CHEQUE PAID IN AT ",
+				"Example": "CHEQUE PAID IN AT MY BANK, 100000000.00"
+			},
+			{
+				"Name": "CreditWithRef",
+				"Regex": "^CREDIT FROM (?<Name>.+)\\*(?<Ref>.+) ON [\\d\\-]+, [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "${Ref}",
+				"MustStartWith": "CREDIT FROM ",
+				"Example": "CREDIT FROM AMZ*AmazonSeller ON 2017-09-11, 23.45GBP"
+			},
+			{
+				"Name": "CreditWithoutRef",
+				"Regex": "^CREDIT FROM (?<Name>.+) ON [\\d\\-]+, [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "",
+				"MustStartWith": "CREDIT FROM ",
+				"Example": "CREDIT FROM AMZ ON 2017-09-11, 23.45GBP"
+			},
+			{
+				"Name": "DirectDebit",
+				"Regex": "^DIRECT DEBIT PAYMENT TO (?<Name>.+) REF (?<Ref>.+), MANDATE NO \\d+, [\\d\\.]+(?:\\w{3})?$",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "${Ref}",
+				"MustStartWith": "DIRECT DEBIT PAYMENT TO ",
+				"Example": "DIRECT DEBIT PAYMENT TO OXFAM REF 12345, MANDATE NO 0003, 100.00"
+			},
+			{
+				"Name": "FasterPayments",
+				"Regex": "^FASTER PAYMENTS RECEIPT REF.(?<Ref>.+) FROM (?<Name>.*), [\\d\\.]+(?:\\w{3})?$",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "${Ref}",
+				"MustStartWith": "FASTER PAYMENTS RECEIPT ",
+				"Example": "FASTER PAYMENTS RECEIPT REF.LOTTERY WINNINGS FROM THE LOTTERY, 5000.00"
+			},
+			{
+				"Name": "Interest",
+				"Regex": "^INTEREST PAID AFTER TAX (?<Tax>[\\d\\.]+) DEDUCTED, [\\d\\.]+(?:\\w{3})?$",
+				"PayeeOutput": "Account Interest",
+				"ReferenceOutput": "${Tax} tax deducted",
+				"MustStartWith": "INTEREST PAID AFTER TAX ",
+				"Example": "INTEREST PAID AFTER TAX 0.00 DEDUCTED, 1.23"
+			},
+			{
+				"Name": "StandingOrder",
+				"Regex": "^STANDING ORDER (?:VIA FASTER PAYMENT )TO (?<Name>.+) REFERENCE (?<Ref>.+) , (?:MANDATE|MANDAT|MANDATE NO]), [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "${Ref}",
+				"MustStartWith": "STANDING ORDER ",
+				"Example": "STANDING ORDER VIA FASTER PAYMENT TO THE GYM REFERENCE JOEBLOGGS , MANDAT, 54.99"
+			},
+			{
+				"Name": "Cash",
+				"Regex": "^(?<Name>.+) ATM (?<Location>.+), .+,[\\d\\.]+(?: \\w{3})?",
+				"PayeeOutput": "Cash",
+				"ReferenceOutput": "${Name} ${Location}",
+				"MustStartWith": "STANDING ORDER ",
+				"Example": "PORKLEYS BANK PLC ATM MILTON KEYNES, MILTON KEYNES,10.00 GBP , ON 11-01-13, 10.00GBP"
+			},
+
+
+
+
+			{
+				"Comment": "Must be almost last!",
+				"Name": "Fallthrough",
+				"Regex": "(?<Name>.+) REF (?<Ref>.*)",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "${Ref}",
+				"MustContain": " REF ",
+				"Example": "THING REF 123"
+			},
+			{
+				"Comment": "Must be last!",
+				"Name": "CashFallthrough",
+				"Regex": "^(?<Name>.+) ATM (?<Location>.+)",
+				"PayeeOutput": "Cash",
+				"ReferenceOutput": "${Name} ${Location}",
+				"MustContain": " ATM ",
+				"Example": "TESCO PERSONAL FINANCE ATM TESCO MILTON KE"
+			},
+		]
+	}
+}

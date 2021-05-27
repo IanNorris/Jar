@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Jar.Import;
 using Jar.Model;
+using Newtonsoft.Json;
 
 namespace Jar.DataModels
 {
@@ -13,6 +15,8 @@ namespace Jar.DataModels
 	{
 		public Transactions(EventBus eventBus)
 		{
+			LoadInstitutions();
+
 			_import = new Importer();
 		}
 
@@ -130,48 +134,60 @@ namespace Jar.DataModels
 
 		private void PrepareDisplayTransaction(Transaction transaction)
 		{
-			transaction.Payee = transaction.Payee.Replace("&amp;", "&").Replace("&quot;", "\"");
-
 			transaction.OriginalPayee = transaction.Payee;
+			transaction.Payee = transaction.Payee.Replace("&amp;", "&").Replace("&quot;", "\"").Replace("\uFFFD", "");
 
 			var reference = "";
 
-			var match = SantanderRegex.Match(transaction.Payee);
-			if (match.Success)
+			var finished = false;
+			foreach(var institution in Institutions)
 			{
-
-				reference = SantanderRegex.Replace(transaction.Payee, SantanderOutputRef);
-				transaction.Payee = SantanderRegex.Replace(transaction.Payee, SantanderOutput);
-			}
-			else
-			{
-				match = SantanderCashRegex.Match(transaction.Payee);
-				if (match.Success)
+				foreach(var filter in institution.Value.Filters)
 				{
+					var match = filter.CompiledRegex.Match(transaction.Payee);
+					if (match.Success)
+					{
+						reference = filter.CompiledRegex.Replace(transaction.Payee, filter.ReferenceOutput).Trim();
+						transaction.Payee = filter.CompiledRegex.Replace(transaction.Payee, filter.PayeeOutput).Trim();
+						finished = true;
+						break;
+					}
+				}
 
-					reference = SantanderCashRegex.Replace(transaction.Payee, SantanderCashOutputRef);
-					transaction.Payee = SantanderCashRegex.Replace(transaction.Payee, SantanderCashOutput);
+				if(finished)
+				{
+					break;
 				}
 			}
 
 			if (string.IsNullOrEmpty(transaction.Memo))
 			{
-				transaction.Memo = reference;
+				transaction.Memo = reference.Trim();
 			}
 			else
 			{
-				transaction.Reference = reference;
+				transaction.Reference = reference.Trim();
+			}
+		}
+
+		private void LoadInstitutions()
+		{
+			var path = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Institutions.json");
+			var jsonContent = File.ReadAllText(path);
+			Institutions = JsonConvert.DeserializeObject<Dictionary<string, Institution>>(jsonContent);
+
+			foreach(var institution in Institutions)
+			{
+				foreach(var filter in institution.Value.Filters)
+				{
+					filter.CompiledRegex = new Regex(filter.Regex, RegexOptions.Compiled);
+				}
 			}
 		}
 
 		private Database _database;
 		private Importer _import;
 
-		private Regex SantanderRegex = new Regex(@"^(?:DIRECT DEBIT PAYMENT TO |CARD PAYMENT TO |STANDING ORDER VIA FASTER PAYMENT TO |BILL PAYMENT VIA FASTER PAYMENT TO |BANK GIRO CREDIT REF |CREDIT FROM |FASTER PAYMENTS RECEIPT REF)(?<Name>.*?)(?: (?:REF|REFERENCE) (?<Ref>[\w\- \/]+))?(?:,[\d\.]+ \w{2,4}, RATE [\d\.]+\/\w{2,4} ON \d{2}-\d{2}-\d{4})?(?:, MANDATE NO \d+)?(?:, MANDAT)?(?:, \d+\.\d{2})");
-		private Regex SantanderCashRegex = new Regex(@"^CASH WITHDRAWAL AT (?<Name>[^,]+),.*$");
-		private string SantanderOutput = "${Name}";
-		private string SantanderOutputRef = "${Ref}";
-		private string SantanderCashOutput = "CASH";
-		private string SantanderCashOutputRef = "${Name}";
+		private Dictionary<string, Institution> Institutions;
 	}
 }
