@@ -4,7 +4,7 @@
 			{
 				"Name": "Cash",
 				"Regex": "^CASH WITHDRAWAL AT (?<Name>[^,]+),.*$",
-				"PayeeOutput": "CASH",
+				"PayeeOutput": "Cash",
 				"ReferenceOutput": "${Name}",
 				"MustStartWith": "CASH WITHDRAWAL AT ",
 				"Example": "CASH WITHDRAWAL AT PORKINGTONS BANK PLC ATM ASDA ROYSTONVASEY, ROYTON VASEY,20.00 GBP , ON 17-10-, 20.00"
