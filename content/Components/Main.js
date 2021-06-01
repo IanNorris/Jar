@@ -75,7 +75,11 @@ Vue.component('jar-main', {
 		}
 	},
 	computed: {
-
+		shouldHeightFix: function () {
+			if (this.activePage == this.MainPage_Accounts) {
+				return true;
+			}
+		}
 	},
 	filters: {
 		asDate: function (date) {

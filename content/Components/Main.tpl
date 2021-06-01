@@ -1,5 +1,5 @@
 <div class="layout-wrapper layout-2">
-	<div class="layout-inner flexbox-height-fix">
+	<div class="layout-inner" v-bind="{ 'flexbox-height-fix': shouldHeightFix }">
 		<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical sidenav-no-animation bg-primary-dark sidenav-dark">
 
 			<div class="app-brand demo">
@@ -50,6 +50,7 @@
 
 			<split-resize classes="sidenav-drag" variable="--sidenav-width" :initial-value="sideNavWidth" :dragComplete="dragComplete" />
 		</div>
+		<jar-budget v-if="activePage == MainPage_Budgets" />
 		<div class="layout-container" v-if="selectedAccount">
 			<div class="fill-vertical-space-wrapper">
 				<div id="layout-navbar" class="navbar navbar-expand-lg align-items-lg-center bg-white">
