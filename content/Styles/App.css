@@ -5,6 +5,13 @@
 	--transaction-row-height: 3rem;
 }
 
+/* Not sure why this isn't working from bootstrap*/
+
+.rounded-pill
+{
+	border-radius: 50rem !important;
+}
+
 /* Disable drag support for native feel */
 a:not([draggable=true]), img:not([draggable=true])
 {
@@ -250,6 +257,14 @@ html:not([dir=rtl]) .pl-3, html:not([dir=rtl]) .px-3
 	padding-left: var(--sidenav-width);
 }
 
+.container, .container-fluid
+{
+	padding-right: 1rem;
+	padding-top: 0.5rem;
+	padding-bottom: 1rem;
+	padding-left: calc(1rem + var(--sidenav-width));
+}
+
 .sidenav-drag
 {
 	position: absolute;
@@ -310,3 +325,38 @@ html:not([dir=rtl]) .pl-3, html:not([dir=rtl]) .px-3
 	--sk-color: white;
 }
 
+/* Budgets */
+
+.muted-header
+{
+	color: #a3a4a6;
+}
+
+.month-bar
+{
+	border-radius: 0;
+	padding: 0;
+	display: flex;
+	justify-content: space-around;
+	flex-flow: row wrap;
+	border-bottom: 1px solid rgba(24,28,33,0.12);
+}
+
+.month-bar .btn
+{
+	flex: 1;
+	padding: 0.25rem 0.5rem;
+	border-bottom: 0.25rem solid transparent;
+}
+
+.month-bar .btn.active
+{
+	border-bottom: 0.25rem solid var(--blue);
+	margin-bottom: -1px;
+}
+
+.month-bar .btn.disabled
+{
+	border-bottom: 0.25rem solid transparent !important;
+	color: #4E515577 !important;
+}
