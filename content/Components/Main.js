@@ -76,9 +76,10 @@ Vue.component('jar-main', {
 	},
 	computed: {
 		shouldHeightFix: function () {
-			if (this.activePage == this.MainPage_Accounts) {
+			if (this.activePage == this.MainPage_OffMainMenu) {
 				return true;
 			}
+			return false;
 		}
 	},
 	filters: {

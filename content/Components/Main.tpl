@@ -1,5 +1,5 @@
 <div class="layout-wrapper layout-2">
-	<div class="layout-inner" v-bind="{ 'flexbox-height-fix': shouldHeightFix }">
+	<div class="layout-inner" v-bind:class="{ 'flexbox-height-fix': shouldHeightFix }">
 		<div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical sidenav-no-animation bg-primary-dark sidenav-dark">
 
 			<div class="app-brand demo">
