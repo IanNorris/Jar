@@ -15,6 +15,7 @@ Vue.component('datepicker', {
 		}
 
 		$(element).daterangepicker({
+			showDropdowns: true,
 			startDate: start,
 			endDate: end,
 			ranges: {
