@@ -56,7 +56,8 @@ namespace Jar
 			{
 				m_browser.MenuHandler = new MenuHandler();
 
-				m_browser.Load($@"local://index.html");
+				//This uses our custom scheme. The domain is ignored.
+				m_browser.Load($@"local://lh/index.html");
 
 				ShowDevTools();
 			}

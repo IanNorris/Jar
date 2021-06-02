@@ -32,6 +32,10 @@ namespace Jar
 					case ".js":
 						Type = "text/javascript";
 						break;
+					case ".json":
+					case ".map":
+						Type = "application/json";
+						break;
 					case ".css":
 						Type = "text/css";
 						break;
