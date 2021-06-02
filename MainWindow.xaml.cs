@@ -67,6 +67,7 @@ namespace Jar
 
 		private void m_browser_Loaded(object sender, RoutedEventArgs e)
 		{
+			_messageBox.BindBrowser(m_browser);
 			_dataModel._showMessage = _messageBox.ShowMessage;
 
 			_dataModel.RegisterObjects((name, obj) =>
