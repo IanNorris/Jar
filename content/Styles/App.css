@@ -233,8 +233,23 @@ input, button, textarea, :focus
 	text-align: right;
 }
 
-/*Adjust padding on the sidenav so text fits better*/
+/* Override position setting from CSS so we can keep a consistent theme for dropdowns */
 
+.daterangepicker-noposition
+{
+	top: 100%;
+	right: 0 !important;
+	left: auto;
+}
+
+.daterangepicker > a
+{
+	font-size: 12px;
+	padding: 8px 12px;
+	cursor: pointer;
+}
+
+/*Adjust padding on the sidenav so text fits better*/
 .sidenav-vertical .sidenav-item .sidenav-link, .sidenav-vertical .sidenav-header, .sidenav-vertical .sidenav-block
 {
 	padding: .6rem 1rem;
