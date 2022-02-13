@@ -31,10 +31,6 @@ let entryPoint = async function () {
 
 	moment.locale(navigator.language);
 
-	let result = await Accounts.MyMagicFunction("abc", "123");
-	console.log(result);
-
-
 	onReadyEvent();
 }
 

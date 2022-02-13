@@ -16,11 +16,6 @@ namespace Jar.DataModels
 			_database = database;
 		}
 
-		public string MyMagicFunction(string Foo, string Bar)
-		{
-			return $"Magic = {Foo} / {Bar}";
-		}
-
 		public IEnumerable<Account> GetAccounts()
 		{
 			var results = _database.Connection.Table<Account>().ToArray();
