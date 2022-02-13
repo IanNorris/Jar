@@ -5,11 +5,20 @@
 	--transaction-row-height: 3rem;
 }
 
-/* Not sure why this isn't working from bootstrap*/
+/* Not sure why this isn't working from bootstrap */
 
 .rounded-pill
 {
 	border-radius: 50rem !important;
+}
+
+/* Disable all animations for a snappier feel */
+
+.no-transition
+{
+	-webkit-transition: none !important;
+	-moz-transition: none !important;
+	transition: none !important;
 }
 
 /* Disable drag support for native feel */
@@ -374,4 +383,10 @@ html:not([dir=rtl]) .pl-3, html:not([dir=rtl]) .px-3
 {
 	border-bottom: 0.25rem solid transparent !important;
 	color: #4E515577 !important;
+}
+
+.budget-section
+{
+	font-size: 1.5rem;
+	line-height: 1.0;
 }
