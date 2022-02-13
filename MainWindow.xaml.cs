@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 using Jar.DataModels;
 using Microsoft.Web.WebView2.Core;
@@ -77,15 +78,18 @@ namespace Jar
 			var environment = await CoreWebView2Environment.CreateAsync(null, path);
 			await m_browser.EnsureCoreWebView2Async(environment);
 
-			_messageBox.BindBrowser(async (code) =>
-			{
-				await m_browser.ExecuteScriptAsync(code);
-			});
+			_messageBox.BindBrowser(ExecuteJavascript);
+			_dataModel.BindBrowser(ExecuteJavascript);
 
 			_dataModel._showMessage = async (text, title, icon, showCancel, dangerMode) =>
 			{
 				await _messageBox.ShowMessage(text, Title, icon, showCancel, dangerMode);
 			};
+		}
+
+		private async Task ExecuteJavascript(string code)
+		{
+			await m_browser.ExecuteScriptAsync(code);
 		}
 
 		private async void m_browser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
@@ -107,7 +111,6 @@ namespace Jar
 
 		private async void m_browser_ContentLoading(object sender, CoreWebView2ContentLoadingEventArgs e)
 		{
-			await m_browser.ExecuteScriptAsync(_dataModel.CreateDataModelPayload() + "\n entryPoint();");
 		}
 	}
 }

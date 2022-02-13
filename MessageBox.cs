@@ -12,7 +12,6 @@ namespace Jar
 
 	public class MessageBox
 	{
-		public delegate Task ExecuteJavascriptDelegate(string Code);
 		public delegate void ShowMessageDelegate(string Text, string Title, MessageIcon Icon, bool ShowCancel, bool DangerMode);
 
 		const string ErrorMessageFormat = @"swal({{
@@ -27,7 +26,7 @@ namespace Jar
 				}}
 			}});";
 
-		public void BindBrowser(ExecuteJavascriptDelegate callback)
+		public void BindBrowser(WebBinding.ExecuteJavascriptDelegate callback)
 		{
 			_callback = callback;
 		}
@@ -43,6 +42,6 @@ namespace Jar
 			await _callback(JS);
 		}
 
-		private ExecuteJavascriptDelegate _callback;
+		private WebBinding.ExecuteJavascriptDelegate _callback;
 	}
 }

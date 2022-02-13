@@ -3,7 +3,9 @@
 let hasInitialized = false;
 let globalApp = null;
 
-let onLoaded = function () {
+let onLoaded = async function () {
+	moment.locale(navigator.language);
+
 	let app = new Vue({
 		el: '#app',
 		data: {
@@ -17,27 +19,21 @@ let onLoaded = function () {
 };
 
 let waitingFor = 2;
-let onReadyEvent = function () {
+let onReadyEvent = async function () {
 	if (--waitingFor == 0) {
-		onLoaded();
+		await onLoaded();
 	}
 };
 
-let entryPoint = async function () {
-	if (hasInitialized) {
-		return;
-	}
-	hasInitialized = true;
+$('body').on("jarTemplatesLoaded", async function (event) {
+	await onReadyEvent();
 
-	moment.locale(navigator.language);
-
-	onReadyEvent();
-}
-
-$('body').on("jarTemplatesLoaded", function (event) {
-	onReadyEvent();
+	//Tell the backend to inject the API bindings
+	//This will also call onReadyEvent as well.
+	window.chrome.webview.postMessage({
+		Target: "",
+		Function: "InjectBindings",
+		Payload: "{ CallbackName: \"onReadyEvent\" }",
+		Callback: 0
+	});
 });
-
-if (Accounts) {
-	entryPoint();
-}

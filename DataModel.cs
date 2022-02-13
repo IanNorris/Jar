@@ -27,9 +27,15 @@ namespace Jar
 		public Transactions Transactions { get; private set; }
 		public Budgets Budgets { get; private set; }
 
-		public string BudgetName { get; private set; }
+		private string _budgetName;
 
 		public ShowMessageDelegate _showMessage;
+		public WebBinding.ExecuteJavascriptDelegate _executeJS;
+
+		public string GetBudgetName()
+		{
+			return _budgetName;
+		}
 
 		public void BuildDataModel()
 		{
@@ -46,7 +52,7 @@ namespace Jar
 
 		public bool CreateDatabase(string Filename, string Password)
 		{
-			BudgetName = Path.GetFileNameWithoutExtension(Filename);
+			_budgetName = Path.GetFileNameWithoutExtension(Filename);
 
 			_database = new Database(_showMessage);
 			if (_database.CreateDatabase(Filename, Password))
@@ -76,6 +82,11 @@ namespace Jar
 			Transactions = new Transactions(_eventBus);
 			AccountCheckpoints = new AccountCheckpoints(Transactions, _eventBus);
 			Budgets = new Budgets(_eventBus);
+		}
+
+		public void BindBrowser(WebBinding.ExecuteJavascriptDelegate executeJS)
+		{
+			_executeJS = executeJS;
 		}
 
 		public string CreateDataModelPayloadForFunction(string parentName, MethodInfo method)
@@ -142,6 +153,13 @@ namespace Jar
 			}
 
 			return sb.ToString();
+		}
+
+		public async void InjectBindings(string CallbackName)
+		{
+			var payload = CreateDataModelPayload();
+			await _executeJS(payload);
+			await _executeJS($"{CallbackName}();");
 		}
 
 		public async Task<bool> OpenBudget(int BudgetIndex, string Path, string Password)
@@ -227,11 +245,6 @@ namespace Jar
 			}
 
 			return null;
-		}
-
-		public string GetBudgetName()
-		{
-			return BudgetName;
 		}
 
 		public async Task<string> CallMethodOnObject(object This, MethodInfo targetFunction, string payload)
