@@ -22,6 +22,7 @@ namespace Jar
 
 		static readonly Guid LocalLowGuid = new Guid("A520A1A4-1780-4FF6-BD18-167343C5AF16");
 
+		//https://stackoverflow.com/questions/4494290/detect-the-location-of-appdata-locallow
 		private string GetKnownFolderPath(Guid knownFolderId)
 		{
 			IntPtr pszPath = IntPtr.Zero;
