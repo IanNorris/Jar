@@ -1,5 +1,5 @@
-﻿using CefSharp;
-using CefSharp.Wpf;
+﻿
+using System.Threading.Tasks;
 
 namespace Jar
 {
@@ -13,6 +13,7 @@ namespace Jar
 
 	public class MessageBox
 	{
+		public delegate Task ExecuteJavascriptDelegate(string Code);
 		public delegate void ShowMessageDelegate(string Text, string Title, MessageIcon Icon, bool ShowCancel, bool DangerMode);
 
 		const string ErrorMessageFormat = @"swal({{
@@ -27,9 +28,9 @@ namespace Jar
 				}}
 			}});";
 
-		public void BindBrowser(ChromiumWebBrowser browser)
+		public void BindBrowser(ExecuteJavascriptDelegate callback)
 		{
-			_browser = browser;
+			_callback = callback;
 		}
 
 		private static string BuildMessageCommand(string Text, string Title, MessageIcon Icon, bool ShowCancel, bool DangerMode)
@@ -37,12 +38,12 @@ namespace Jar
 			return string.Format(ErrorMessageFormat, Text, Title, Icon.ToString().ToLower(), DangerMode.ToString().ToLower(), ShowCancel.ToString().ToLower());
 		}
 
-		public void ShowMessage(string Text, string Title, MessageIcon Icon, bool ShowCancel, bool DangerMode)
+		public async Task ShowMessage(string Text, string Title, MessageIcon Icon, bool ShowCancel, bool DangerMode)
 		{
 			string JS = BuildMessageCommand(Text, Title, Icon, ShowCancel, DangerMode);
-			_browser.GetMainFrame().ExecuteJavaScriptAsync(JS);
+			await _callback(JS);
 		}
 
-		private ChromiumWebBrowser _browser;
+		private ExecuteJavascriptDelegate _callback;
 	}
 }

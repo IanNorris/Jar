@@ -4,7 +4,6 @@ Vue.component('jar-open', {
 	template: '#OpenTemplate',
 	data: function () {
 		return {
-			settings: null,
 			budgets: [],
 			selectedBudget: 0,
 			password: '',
@@ -14,8 +13,7 @@ Vue.component('jar-open', {
 		};
 	},
 	async created() {
-		this.settings = await settings;
-		this.budgets = await this.settings.GetBudgets();
+		this.budgets = await Settings.GetBudgets();
 	},
 	methods: {
 		selectBudget: function (index) {
@@ -26,7 +24,7 @@ Vue.component('jar-open', {
 		},
 		openBudget: async function () {
 			this.$parent.showLoader = true;
-			var result = await globalDataModel.OpenBudget(this.selectedBudget, this.budgets[this.selectedBudget].Path, this.password);
+			var result = await OpenBudget(this.selectedBudget, this.budgets[this.selectedBudget].Path, this.password);
 			if (result) {
 				globalApp.showOpen = false;
 				globalApp.showBudget = true;
@@ -36,19 +34,19 @@ Vue.component('jar-open', {
 			}
 		},
 		newBudget: async function () {
-			this.newBudgetObj = await globalDataModel.NewBudget();
+			this.newBudgetObj = await NewBudget();
 		},
 		openExistingBudget: async function () {
-			await globalDataModel.OpenExistingBudget();
+			await OpenExistingBudget();
 		},
 		getNewBudgetPath: async function () {
 			let self = this;
-			self.newBudgetObj = await globalDataModel.GetNewBudgetPath();
+			self.newBudgetObj = await GetNewBudgetPath();
 			self.newBudgetObj.Password = "";
 		},
 		createNewBudget: async function () {
 			let self = this;
-			var result = await globalDataModel.CreateNewBudget(self.newBudgetObj.Path, this.password);
+			var result = await CreateNewBudget(self.newBudgetObj.Path, this.password);
 			if (result) {
 				globalApp.showOpen = false;
 				globalApp.showBudget = true;

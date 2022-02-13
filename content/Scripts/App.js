@@ -1,6 +1,6 @@
 "use strict";
 
-let globalDataModel = null;
+let hasInitialized = false;
 let globalApp = null;
 
 let onLoaded = function () {
@@ -23,21 +23,25 @@ let onReadyEvent = function () {
 	}
 };
 
-(async function () {
+let entryPoint = async function () {
+	if (hasInitialized) {
+		return;
+	}
+	hasInitialized = true;
+
 	moment.locale(navigator.language);
 
-	await CefSharp.BindObjectAsync("dataModel");
-	await CefSharp.BindObjectAsync("settings");
-	await CefSharp.BindObjectAsync("accounts");
-	await CefSharp.BindObjectAsync("accountCheckpoints");
-	await CefSharp.BindObjectAsync("transactions");
-	await CefSharp.BindObjectAsync("budgets");
+	let result = await Accounts.MyMagicFunction("abc", "123");
+	console.log(result);
 
-	globalDataModel = await dataModel;
 
 	onReadyEvent();
-})();
+}
 
 $('body').on("jarTemplatesLoaded", function (event) {
 	onReadyEvent();
 });
+
+if (Accounts) {
+	entryPoint();
+}

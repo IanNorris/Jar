@@ -24,7 +24,7 @@ Vue.component('jar-main', {
 		this.MainPage_Settings = 5;
 
 		await this.getAccounts();
-		this.sideNavWidth = await settings.GetSideNavWidth();
+		this.sideNavWidth = await Settings.GetSideNavWidth();
 
 		this.$parent.showLoader = false;
 	},
@@ -35,12 +35,12 @@ Vue.component('jar-main', {
 			await this.getTransactions();
 		},
 		getAccounts: async function () {
-			this.accounts = await accounts.GetAccounts();
-			this.budgetName = await globalDataModel.GetBudgetName();
+			this.accounts = await Accounts.GetAccounts();
+			this.budgetName = await GetBudgetName();
 		},
 		getTransactions: async function () {
 			if (this.selectedAccount) {
-				this.selectedAccountTransactions = await transactions.GetDisplayTransactions(this.dateRangeStart.toDate(), this.dateRangeEnd.toDate(), this.selectedAccount.Id);
+				this.selectedAccountTransactions = await Transactions.GetDisplayTransactions(this.dateRangeStart.toDate(), this.dateRangeEnd.toDate(), this.selectedAccount.Id);
 			}
 		},
 		signOut: function () {
@@ -71,7 +71,7 @@ Vue.component('jar-main', {
 			}
 		},
 		dragComplete: function (newSize) {
-			settings.SetSideNavWidth(newSize);
+			Settings.SetSideNavWidth(newSize);
 		}
 	},
 	computed: {
