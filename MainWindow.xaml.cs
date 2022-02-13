@@ -81,15 +81,27 @@ namespace Jar
 			{
 				await m_browser.ExecuteScriptAsync(code);
 			});
+
+			_dataModel._showMessage = async (text, title, icon, showCancel, dangerMode) =>
+			{
+				await _messageBox.ShowMessage(text, Title, icon, showCancel, dangerMode);
+			};
 		}
 
 		private async void m_browser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
 		{
 			var message = JsonConvert.DeserializeObject<MessageWrapper>(e.WebMessageAsJson);
-			var returnValue = _dataModel.OnMessageReceived(message);
-			if (returnValue != null)
+			try
 			{
-				await m_browser.ExecuteScriptAsync($"callCallback({message.Callback}, {returnValue});");
+				var returnValue = await _dataModel.OnMessageReceived(message);
+				if (returnValue != null)
+				{
+					await m_browser.ExecuteScriptAsync($"callCallback({message.Callback}, null, {returnValue});");
+				}
+			}
+			catch (Exception ex)
+			{
+				await m_browser.ExecuteScriptAsync($"callCallback({message.Callback}, {ex.ToString()}, null);");
 			}
 		}
 

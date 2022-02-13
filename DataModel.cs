@@ -234,7 +234,7 @@ namespace Jar
 			return BudgetName;
 		}
 
-		public string CallMethodOnObject(object This, MethodInfo targetFunction, string payload)
+		public async Task<string> CallMethodOnObject(object This, MethodInfo targetFunction, string payload)
 		{
 			var payloadReader = JObject.Parse(payload);
 
@@ -258,6 +258,16 @@ namespace Jar
 			var returnValue = targetFunction.Invoke(This, parametersOut);
 			if (targetFunction.ReturnType != typeof(void))
 			{
+				if(targetFunction.ReturnType.IsGenericType && targetFunction.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+				{
+					await (returnValue as Task);
+
+					var resultProperty = targetFunction.ReturnType.GetProperty("Result");
+					var result = resultProperty.GetValue(returnValue);
+
+					return JsonConvert.SerializeObject(result);
+				}
+
 				return JsonConvert.SerializeObject(returnValue);
 			}
 			else
@@ -266,14 +276,14 @@ namespace Jar
 			}
 		}
 
-		public string OnMessageReceived(MessageWrapper message)
+		public async Task<string> OnMessageReceived(MessageWrapper message)
 		{
 			if (string.IsNullOrEmpty(message.Target))
 			{
 				var targetFunction = GetType().GetMethod(message.Function);
 				if (targetFunction != null)
 				{
-					return CallMethodOnObject(this, targetFunction, message.Payload);
+					return await CallMethodOnObject(this, targetFunction, message.Payload);
 				}
 				else
 				{
@@ -288,7 +298,7 @@ namespace Jar
 				var targetFunction = targetProperty.PropertyType.GetMethod(message.Function);
 				if (targetFunction != null && targetFunction.IsPublic)
 				{
-					return CallMethodOnObject(targetProperty.GetValue(this), targetFunction, message.Payload);
+					return await CallMethodOnObject(targetProperty.GetValue(this), targetFunction, message.Payload);
 				}
 				else
 				{
