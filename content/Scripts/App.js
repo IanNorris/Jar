@@ -31,6 +31,7 @@ let onReadyEvent = function () {
 	await CefSharp.BindObjectAsync("accounts");
 	await CefSharp.BindObjectAsync("accountCheckpoints");
 	await CefSharp.BindObjectAsync("transactions");
+	await CefSharp.BindObjectAsync("budgets");
 
 	globalDataModel = await dataModel;
 

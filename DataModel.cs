@@ -20,12 +20,14 @@ namespace Jar
 		private Accounts _accounts;
 		private AccountCheckpoints _accountCheckpoints;
 		private Transactions _transactions;
+		private Budgets _budgets;
 
 		private string m_budgetName;
 
 		public Accounts GetAccounts() => _accounts;
 		public AccountCheckpoints GetAccountCheckpoints() => _accountCheckpoints;
 		public Transactions GetTransactions() => _transactions;
+		public Budgets GetBudgets() => _budgets;
 
 
 		public ShowMessageDelegate _showMessage;
@@ -35,6 +37,7 @@ namespace Jar
 			_accounts.SetDatabase(_database);
 			_accountCheckpoints.SetDatabase(_database);
 			_transactions.SetDatabase(_database);
+			_budgets.SetDatabase(_database);
 
 			foreach (var account in _accounts.GetAccounts())
 			{
@@ -74,6 +77,7 @@ namespace Jar
 			_accounts = new Accounts(_eventBus);
 			_transactions = new Transactions(_eventBus);
 			_accountCheckpoints = new AccountCheckpoints(_transactions, _eventBus);
+			_budgets = new Budgets(_eventBus);
 		}
 
 		public void RegisterObjects(RegisterObjectDelegate registerObject)
@@ -83,6 +87,7 @@ namespace Jar
 			registerObject("accounts", _accounts);
 			registerObject("accountCheckpoints", _accountCheckpoints);
 			registerObject("transactions", _transactions);
+			registerObject("budgets", _budgets);
 		}
 
 		public async Task<bool> OpenBudget( int BudgetIndex, string Path, string Password )
