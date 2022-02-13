@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 using Jar.DataModels;
 using Microsoft.Web.WebView2.Core;
@@ -13,8 +15,32 @@ namespace Jar
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		const string ProductName = "JarBudget";
+
 		MessageBox _messageBox;
 		DataModel _dataModel;
+
+		static readonly Guid LocalLowGuid = new Guid("A520A1A4-1780-4FF6-BD18-167343C5AF16");
+
+		private string GetKnownFolderPath(Guid knownFolderId)
+		{
+			IntPtr pszPath = IntPtr.Zero;
+			try
+			{
+				int hr = SHGetKnownFolderPath(knownFolderId, 0, IntPtr.Zero, out pszPath);
+				if (hr >= 0)
+					return Marshal.PtrToStringAuto(pszPath);
+				throw Marshal.GetExceptionForHR(hr);
+			}
+			finally
+			{
+				if (pszPath != IntPtr.Zero)
+					Marshal.FreeCoTaskMem(pszPath);
+			}
+		}
+
+		[DllImport("shell32.dll")]
+		static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
 
 		public MainWindow(DataModel dataModel)
 		{
@@ -45,7 +71,11 @@ namespace Jar
 
 		private async void m_browser_Initialized(object sender, EventArgs e)
 		{
-			await m_browser.EnsureCoreWebView2Async();
+			string LocalLowPath = GetKnownFolderPath(LocalLowGuid);
+			var path = Path.Combine(LocalLowPath, ProductName);
+
+			var environment = await CoreWebView2Environment.CreateAsync(null, path);
+			await m_browser.EnsureCoreWebView2Async(environment);
 
 			_messageBox.BindBrowser(async (code) =>
 			{
