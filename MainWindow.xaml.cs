@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
-using CefSharp;
-using CefSharp.Wpf;
+using Jar.DataModels;
+using Microsoft.Web.WebView2.Core;
+using Newtonsoft.Json;
 
 namespace Jar
 {
@@ -20,60 +21,51 @@ namespace Jar
 			_messageBox = new MessageBox();
 			_dataModel = dataModel;
 
-			CefSharpSettings.ConcurrentTaskExecution = true;
-
-			var Settings = new CefSettings()
-			{
-				Locale = System.Globalization.CultureInfo.CurrentCulture.Name
-			};
-			Settings.RegisterScheme(
-				new CefCustomScheme
-				{
-					SchemeName = "local",
-					SchemeHandlerFactory = new LocalSchemeHandlerFactory()
-				}
-			);
-
-			Cef.Initialize(Settings);
-			
-
-			_messageBox.BindBrowser(m_browser);
-
 			InitializeComponent();
-
-			m_browser.JavascriptObjectRepository.NameConverter = null;
 		}
 
 		[Conditional("DEBUG")]
 		public void ShowDevTools()
 		{
-			m_browser.ShowDevTools();
+			m_browser.CoreWebView2.OpenDevToolsWindow();
 		}
 
-		private void m_browser_IsBrowserInitializedChanged(object sender, DependencyPropertyChangedEventArgs e)
+		private void m_browser_IsBrowserInitializedChanged(object sender, CoreWebView2InitializationCompletedEventArgs e)
 		{
-			if ((bool)e.NewValue)
+			var Base = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
+			m_browser.CoreWebView2.SetVirtualHostNameToFolderMapping("jars.lh", Base, CoreWebView2HostResourceAccessKind.DenyCors);
+
+			m_browser.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+
+			m_browser.Source = new Uri("http://jars.lh/index.html");
+			ShowDevTools();
+
+			
+		}
+
+		private async void m_browser_Initialized(object sender, EventArgs e)
+		{
+			await m_browser.EnsureCoreWebView2Async();
+
+			_messageBox.BindBrowser(async (code) =>
 			{
-				m_browser.MenuHandler = new MenuHandler();
+				await m_browser.ExecuteScriptAsync(code);
+			});
+		}
 
-				//This uses our custom scheme. The domain is ignored.
-				m_browser.Load($@"local://lh/index.html");
-
-				ShowDevTools();
+		private async void m_browser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
+		{
+			var message = JsonConvert.DeserializeObject<MessageWrapper>(e.WebMessageAsJson);
+			var returnValue = _dataModel.OnMessageReceived(message);
+			if(returnValue != null)
+			{
+				await m_browser.ExecuteScriptAsync($"callCallback({message.Callback}, {returnValue});");
 			}
 		}
 
-		
-
-		private void m_browser_Loaded(object sender, RoutedEventArgs e)
+		private async void m_browser_ContentLoading(object sender, CoreWebView2ContentLoadingEventArgs e)
 		{
-			_messageBox.BindBrowser(m_browser);
-			_dataModel._showMessage = _messageBox.ShowMessage;
-
-			_dataModel.RegisterObjects((name, obj) =>
-			{
-				m_browser.JavascriptObjectRepository.Register(name, obj);
-			});
+			await m_browser.ExecuteScriptAsync(_dataModel.CreateDataModelPayload() + "\n entryPoint();");
 		}
 	}
 }
