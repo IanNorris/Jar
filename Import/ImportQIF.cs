@@ -27,12 +27,12 @@ namespace Jar.Import
 
 			foreach (var line in lines)
 			{
-				if(line.Length == 0)
+				if (line.Length == 0)
 				{
 					continue;
 				}
 
-				switch(line[0])
+				switch (line[0])
 				{
 					case '!': //Header
 					case 'C': //Cleared status

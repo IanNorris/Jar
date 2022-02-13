@@ -28,12 +28,12 @@ namespace Jar.DataModels
 			var firstTransaction = _transactions.GetFirstTransactionAfter(account, DateTime.MinValue);
 			var lastTransaction = _transactions.GetLastTransaction(account);
 
-			if(firstTransaction == null || lastTransaction == null)
+			if (firstTransaction == null || lastTransaction == null)
 			{
 				return;
 			}
 
-			if(firstTransaction.Id == lastTransaction.Id)
+			if (firstTransaction.Id == lastTransaction.Id)
 			{
 				return;
 			}
@@ -57,9 +57,9 @@ WHERE AccountId = ? AND NOT (Date >= StartDate AND Date < EndDate AND Checkpoint
 
 			//Need to rebuild.
 
-			_database.Connection.Table<AccountCheckpoint>().Delete( c => c.AccountId == account );
+			_database.Connection.Table<AccountCheckpoint>().Delete(c => c.AccountId == account);
 
-			var existingCheckpoints = _database.Connection.Table<AccountCheckpoint>().Where( c => c.AccountId == account ).Count();
+			var existingCheckpoints = _database.Connection.Table<AccountCheckpoint>().Where(c => c.AccountId == account).Count();
 			if (existingCheckpoints != 0)
 			{
 				throw new InvalidDataException($"No checkpoints should exist for account {account}.");
@@ -70,12 +70,12 @@ WHERE AccountId = ? AND NOT (Date >= StartDate AND Date < EndDate AND Checkpoint
 
 			var transactionsToUpdate = new List<Transaction>();
 
-			while(startPeriod < endPeriod)
+			while (startPeriod < endPeriod)
 			{
 				var nextPeriod = startPeriod.AddMonths(1);
 
 				var transactionsInRange = _transactions.GetTransactionsBetweenDates(startPeriod, nextPeriod, account).ToList();
-				
+
 				var transactionTotal = transactionsInRange.Sum(t => t.Amount);
 
 				newCheckpoint = new AccountCheckpoint()

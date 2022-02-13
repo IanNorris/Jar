@@ -14,18 +14,18 @@ namespace Jar.Import
 		public Importer()
 		{
 			var ImportTypes = from AssemblyType in Assembly.GetExecutingAssembly().GetTypes()
-								where AssemblyType.GetInterfaces().Contains(typeof(IImport))
-								select Activator.CreateInstance(AssemblyType) as IImport;
+							  where AssemblyType.GetInterfaces().Contains(typeof(IImport))
+							  select Activator.CreateInstance(AssemblyType) as IImport;
 
-			foreach( var Importer in ImportTypes )
+			foreach (var Importer in ImportTypes)
 			{
 				var Extensions = Importer.Extensions();
-				foreach( var Extension in Extensions )
+				foreach (var Extension in Extensions)
 				{
 					var LowerExtension = Extension.ToLower();
 					IImport Existing = null;
 
-					if( m_importers.TryGetValue(LowerExtension, out Existing) )
+					if (m_importers.TryGetValue(LowerExtension, out Existing))
 					{
 						throw new InvalidOperationException($"Already an importer for file type {LowerExtension}");
 					}

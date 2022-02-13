@@ -33,7 +33,7 @@ namespace Jar.DataModels
 
 			var preTransactions = GetTransactionsBetweenDates(new DateTime(start.Year, start.Month, 1), start, account).OrderBy(t => t.Date);
 
-			foreach(var transaction in preTransactions)
+			foreach (var transaction in preTransactions)
 			{
 				if (transaction.CheckpointId != currentCheckpointId)
 				{
@@ -48,11 +48,11 @@ namespace Jar.DataModels
 			//as the StartBalance from the account checkpoint
 			var results = _database.Connection.Query<DisplayTransaction>(@"SELECT [Transaction].*, StartBalance AS Balance FROM [Transaction] INNER JOIN [AccountCheckpoint] On [Transaction].CheckpointId = [AccountCheckpoint].Id WHERE Date >= ? AND Date < ? AND [Transaction].AccountId = ? ORDER BY Date ASC", new object[] { start, end, account });
 
-			foreach(var result in results)
+			foreach (var result in results)
 			{
-				if(result.CheckpointId != currentCheckpointId)
+				if (result.CheckpointId != currentCheckpointId)
 				{
-					if(result.Balance != previousTotal && previousTotal != long.MinValue)
+					if (result.Balance != previousTotal && previousTotal != long.MinValue)
 					{
 						throw new InvalidDataException($"Balance pre transaction for #{result.Id} of {result.Balance} does not match previous sum of {previousTotal}.");
 					}
@@ -83,7 +83,7 @@ namespace Jar.DataModels
 
 		public IEnumerable<Transaction> GetTransactions(Expression<Func<Transaction, bool>> predicate)
 		{
-			return _database.Connection.Table<Transaction>().Where(predicate).OrderBy( t => t.Date );
+			return _database.Connection.Table<Transaction>().Where(predicate).OrderBy(t => t.Date);
 		}
 
 		public IEnumerable<Transaction> GetTransactionsBetweenDates(DateTime Start, DateTime End, int account)
@@ -140,9 +140,9 @@ namespace Jar.DataModels
 			var reference = "";
 
 			var finished = false;
-			foreach(var institution in Institutions)
+			foreach (var institution in Institutions)
 			{
-				foreach(var filter in institution.Value.Filters)
+				foreach (var filter in institution.Value.Filters)
 				{
 					var match = filter.CompiledRegex.Match(transaction.Payee);
 					if (match.Success)
@@ -154,7 +154,7 @@ namespace Jar.DataModels
 					}
 				}
 
-				if(finished)
+				if (finished)
 				{
 					break;
 				}
@@ -176,9 +176,9 @@ namespace Jar.DataModels
 			var jsonContent = File.ReadAllText(path);
 			Institutions = JsonConvert.DeserializeObject<Dictionary<string, Institution>>(jsonContent);
 
-			foreach(var institution in Institutions)
+			foreach (var institution in Institutions)
 			{
-				foreach(var filter in institution.Value.Filters)
+				foreach (var filter in institution.Value.Filters)
 				{
 					filter.CompiledRegex = new Regex(filter.Regex, RegexOptions.Compiled);
 				}

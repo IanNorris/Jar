@@ -1,7 +1,7 @@
-﻿using Jar.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Jar.Model;
 
 namespace Jar.DataModels
 {
@@ -21,7 +21,7 @@ namespace Jar.DataModels
 			var results = _database.Connection.Table<Account>().ToArray();
 			foreach (var result in results)
 			{
-				result.LastBalance = _database.Connection.Table<Transaction>().Where(t => t.AccountId == result.Id).Select(t => (long)t.Amount).Sum();
+				result.LastBalance = _database.Connection.Table<Transaction>().Where(t => t.AccountId == result.Id).Select(t => t.Amount).Sum();
 			}
 
 			return results;

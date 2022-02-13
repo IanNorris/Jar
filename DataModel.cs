@@ -1,16 +1,16 @@
 ﻿using System;
 using System.IO;
-using Microsoft.Win32;
-using Jar.DataModels;
-using static Jar.MessageBox;
-using Jar.Model;
-using Settings = Jar.DataModels.Settings;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Text;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using Jar.DataModels;
+using Jar.Model;
+using Microsoft.Win32;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using static Jar.MessageBox;
+using Settings = Jar.DataModels.Settings;
 
 namespace Jar
 {
@@ -47,7 +47,7 @@ namespace Jar
 		public bool CreateDatabase(string Filename, string Password)
 		{
 			BudgetName = Path.GetFileNameWithoutExtension(Filename);
-			
+
 			_database = new Database(_showMessage);
 			if (_database.CreateDatabase(Filename, Password))
 			{
@@ -105,14 +105,14 @@ namespace Jar
 		{
 			var sb = new StringBuilder();
 
-			foreach(var property in GetType().GetProperties())
+			foreach (var property in GetType().GetProperties())
 			{
 				sb.AppendLine($"let {property.Name} = {{");
 
 				bool firstMethod = true;
-				foreach(var method in property.PropertyType.GetMethods())
+				foreach (var method in property.PropertyType.GetMethods())
 				{
-					if(!firstMethod)
+					if (!firstMethod)
 					{
 						sb.AppendLine(",\n");
 					}
@@ -121,7 +121,7 @@ namespace Jar
 						firstMethod = false;
 					}
 
-					if(method.IsPublic)
+					if (method.IsPublic)
 					{
 						sb.Append($"\t{method.Name}: ");
 						sb.Append(CreateDataModelPayloadForFunction(property.Name, method));
@@ -131,7 +131,7 @@ namespace Jar
 				sb.AppendLine("\n};\n");
 			}
 
-			foreach(var localMethod in GetType().GetMethods())
+			foreach (var localMethod in GetType().GetMethods())
 			{
 				if (localMethod.IsPublic)
 				{
@@ -144,7 +144,7 @@ namespace Jar
 			return sb.ToString();
 		}
 
-		public async Task<bool> OpenBudget( int BudgetIndex, string Path, string Password )
+		public async Task<bool> OpenBudget(int BudgetIndex, string Path, string Password)
 		{
 			if (CreateDatabase(Path, Password))
 			{
@@ -158,7 +158,7 @@ namespace Jar
 
 		public bool CreateNewBudget(string FilePath, string Password)
 		{
-			if(CreateDatabase(FilePath, Password))
+			if (CreateDatabase(FilePath, Password))
 			{
 				var NewBudget = new Budget();
 				NewBudget.Path = FilePath;
@@ -268,7 +268,7 @@ namespace Jar
 
 		public string OnMessageReceived(MessageWrapper message)
 		{
-			if(string.IsNullOrEmpty(message.Target))
+			if (string.IsNullOrEmpty(message.Target))
 			{
 				var targetFunction = GetType().GetMethod(message.Function);
 				if (targetFunction != null)
@@ -283,17 +283,17 @@ namespace Jar
 
 			var targetProperty = GetType().GetProperty(message.Target);
 
-			if(targetProperty != null)
+			if (targetProperty != null)
 			{
 				var targetFunction = targetProperty.PropertyType.GetMethod(message.Function);
-				if(targetFunction != null && targetFunction.IsPublic)
+				if (targetFunction != null && targetFunction.IsPublic)
 				{
 					return CallMethodOnObject(targetProperty.GetValue(this), targetFunction, message.Payload);
 				}
 				else
 				{
 					throw new InvalidDataException($"{message.Function} function does not exist on {message.Target} or is not public.");
-				}	
+				}
 			}
 			else
 			{

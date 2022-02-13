@@ -75,7 +75,7 @@ namespace Jar.DataModels
 					{
 						Id = 1,
 						Name = "Utilities",
-						
+
 						CarryOver = false,
 						Type = JarType.Transaction,
 						TargetValue = 0,

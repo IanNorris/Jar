@@ -31,7 +31,7 @@ namespace Jar.Import
 					//Processing row
 					string[] fields = parser.ReadFields();
 
-					if(firstRow)
+					if (firstRow)
 					{
 						firstRow = false;
 						continue;
@@ -44,7 +44,7 @@ namespace Jar.Import
 					outputTransaction.Date = DateTime.Parse(fields[1]);
 					outputTransaction.Payee = fields[2];
 
-					if(!string.IsNullOrWhiteSpace(fields[5]))
+					if (!string.IsNullOrWhiteSpace(fields[5]))
 					{
 						outputTransaction.Amount = -(long)Math.Round(100 * decimal.Parse(fields[5]));
 					}

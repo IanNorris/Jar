@@ -1,6 +1,6 @@
 ﻿using System;
-using SQLite;
 using Jar.Model;
+using SQLite;
 using static Jar.MessageBox;
 
 namespace Jar
@@ -14,7 +14,7 @@ namespace Jar
 
 		public bool CreateDatabase(string Filename, string Password)
 		{
-			var ConnectionString = new SQLiteConnectionString( Filename, true, key: Password );
+			var ConnectionString = new SQLiteConnectionString(Filename, true, key: Password);
 
 			try
 			{

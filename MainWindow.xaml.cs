@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using Jar.DataModels;
@@ -67,7 +66,7 @@ namespace Jar
 			m_browser.Source = new Uri("http://jars.lh/index.html");
 			ShowDevTools();
 
-			
+
 		}
 
 		private async void m_browser_Initialized(object sender, EventArgs e)
@@ -88,7 +87,7 @@ namespace Jar
 		{
 			var message = JsonConvert.DeserializeObject<MessageWrapper>(e.WebMessageAsJson);
 			var returnValue = _dataModel.OnMessageReceived(message);
-			if(returnValue != null)
+			if (returnValue != null)
 			{
 				await m_browser.ExecuteScriptAsync($"callCallback({message.Callback}, {returnValue});");
 			}
