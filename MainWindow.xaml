@@ -7,6 +7,6 @@
 		mc:Ignorable="d"
         Title="Jar Budgeting" Height="1080" Width="1920" MinWidth="1280" MinHeight="700">
     <Grid>
-        <wpf:WebView2 Grid.Row="0" Name="m_browser" CoreWebView2InitializationCompleted="m_browser_IsBrowserInitializedChanged" Initialized="m_browser_Initialized" WebMessageReceived="m_browser_WebMessageReceived" ContentLoading="m_browser_ContentLoading" />
+        <wpf:WebView2 Grid.Row="0" Name="m_browser" CoreWebView2InitializationCompleted="m_browser_IsBrowserInitializedChanged" Initialized="m_browser_Initialized" WebMessageReceived="m_browser_WebMessageReceived" />
     </Grid>
 </Window>

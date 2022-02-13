@@ -108,9 +108,5 @@ namespace Jar
 				await m_browser.ExecuteScriptAsync($"callCallback({message.Callback}, {ex.ToString()}, null);");
 			}
 		}
-
-		private async void m_browser_ContentLoading(object sender, CoreWebView2ContentLoadingEventArgs e)
-		{
-		}
 	}
 }

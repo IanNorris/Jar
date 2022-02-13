@@ -162,7 +162,7 @@ namespace Jar
 			await _executeJS($"{CallbackName}();");
 		}
 
-		public async Task<bool> OpenBudget(int BudgetIndex, string Path, string Password)
+		public bool OpenBudget(int BudgetIndex, string Path, string Password)
 		{
 			if (CreateDatabase(Path, Password))
 			{
