@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Jar.Model;
+using JarPluginApi;
 
 namespace Jar.Import
 {
 	public class ImportQIF : IImport
 	{
+		public ImportType Type()
+		{
+			return ImportType.File;
+		}
+
 		public string[] Extensions()
 		{
 			return new string[] { ".qif" };
@@ -46,7 +51,7 @@ namespace Jar.Import
 							outputTransaction.AccountId = Account;
 							outputTransaction.ImportBatchId = BatchId;
 							outputList.Add(outputTransaction);
-							outputTransaction = new Model.Transaction();
+							outputTransaction = new Transaction();
 							break;
 						}
 

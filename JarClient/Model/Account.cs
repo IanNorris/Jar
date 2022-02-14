@@ -1,5 +1,4 @@
 ﻿using System;
-
 using SQLite;
 
 namespace Jar.Model
@@ -30,6 +29,8 @@ namespace Jar.Model
 		public int Currency { get; set; }
 
 		public long LastBalance { get; set; }
+
+		public string OnlinePluginName { get; set; }
 
 		//
 		//NOTE: Adding new fields defaults to NULL

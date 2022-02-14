@@ -1,4 +1,4 @@
-﻿using Jar.Model;
+﻿using JarPluginApi;
 
 namespace Jar.DataModels
 {

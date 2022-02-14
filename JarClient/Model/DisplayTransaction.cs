@@ -1,4 +1,5 @@
-﻿
+﻿using JarPluginApi;
+
 namespace Jar.Model
 {
 	public class DisplayTransaction : Transaction

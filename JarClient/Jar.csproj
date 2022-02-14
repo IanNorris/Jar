@@ -26,6 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JarPluginApi\JarPluginApi.csproj" />
+    <ProjectReference Include="..\Plugins\JarPlugin.StarlingBank\JarPlugin.StarlingBank.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Content\**\*" LinkBase="Content\">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

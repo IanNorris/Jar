@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Jar.Model;
+using JarPluginApi;
 
 namespace Jar.DataModels
 {

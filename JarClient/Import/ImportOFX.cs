@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using Jar.Model;
+using JarPluginApi;
 
 namespace Jar.Import
 {
 	public class ImportOFX : IImport
 	{
+		public ImportType Type()
+		{
+			return ImportType.File;
+		}
+
 		public string[] Extensions()
 		{
 			return new string[] { ".ofx" };
@@ -24,7 +30,7 @@ namespace Jar.Import
 			var outputList = new List<Transaction>();
 			foreach (var inputTransaction in ofxDocument.Transactions)
 			{
-				var outputTransaction = new Model.Transaction();
+				var outputTransaction = new Transaction();
 				outputTransaction.ImportBatchId = BatchId;
 				outputTransaction.Currency = Currency;
 				outputTransaction.AccountId = Account;

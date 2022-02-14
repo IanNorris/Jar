@@ -1,8 +1,6 @@
-﻿using System;
+﻿using SQLite;
 
-using SQLite;
-
-namespace Jar.Model
+namespace JarPluginApi
 {
 	public class Transaction
 	{
@@ -14,13 +12,13 @@ namespace Jar.Model
 
 		public DateTime Date { get; set; }
 		public DateTime EditDate { get; set; } = DateTime.UtcNow;
-		public string Payee { get; set; }
-		public string OriginalPayee { get; set; }
-		public string Memo { get; set; }
-		public string Reference { get; set; }
+		public string? Payee { get; set; }
+		public string? OriginalPayee { get; set; }
+		public string? Memo { get; set; }
+		public string? Reference { get; set; }
 		public int JarId { get; set; }
 		public int? CheckpointId { get; set; }
-		public string ImportedCategory { get; set; }
+		public string? ImportedCategory { get; set; }
 		public int Currency { get; set; }
 		public int ConversionRate { get; set; }
 		public long Amount { get; set; }

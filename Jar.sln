@@ -1,23 +1,57 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31005.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jar", "Jar.csproj", "{8371C34A-ACA7-410B-A948-BEE5FCDC070E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jar", "JarClient\Jar.csproj", "{8371C34A-ACA7-410B-A948-BEE5FCDC070E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F6B756DC-963A-44B8-8E23-BAA143D0BC12} = {F6B756DC-963A-44B8-8E23-BAA143D0BC12}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JarPlugin.StarlingBank", "Plugins\JarPlugin.StarlingBank\JarPlugin.StarlingBank.csproj", "{266CC079-E762-4A98-BD83-498C57990DEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{4947B9CE-F44C-402C-B38E-F04A7D0237A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JarPluginApi", "JarPluginApi\JarPluginApi.csproj", "{F6B756DC-963A-44B8-8E23-BAA143D0BC12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8371C34A-ACA7-410B-A948-BEE5FCDC070E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8371C34A-ACA7-410B-A948-BEE5FCDC070E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8371C34A-ACA7-410B-A948-BEE5FCDC070E}.Debug|x64.ActiveCfg = Debug|x64
 		{8371C34A-ACA7-410B-A948-BEE5FCDC070E}.Debug|x64.Build.0 = Debug|x64
+		{8371C34A-ACA7-410B-A948-BEE5FCDC070E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8371C34A-ACA7-410B-A948-BEE5FCDC070E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8371C34A-ACA7-410B-A948-BEE5FCDC070E}.Release|x64.ActiveCfg = Release|x64
 		{8371C34A-ACA7-410B-A948-BEE5FCDC070E}.Release|x64.Build.0 = Release|x64
+		{266CC079-E762-4A98-BD83-498C57990DEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{266CC079-E762-4A98-BD83-498C57990DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{266CC079-E762-4A98-BD83-498C57990DEB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{266CC079-E762-4A98-BD83-498C57990DEB}.Debug|x64.Build.0 = Debug|Any CPU
+		{266CC079-E762-4A98-BD83-498C57990DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{266CC079-E762-4A98-BD83-498C57990DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{266CC079-E762-4A98-BD83-498C57990DEB}.Release|x64.ActiveCfg = Release|Any CPU
+		{266CC079-E762-4A98-BD83-498C57990DEB}.Release|x64.Build.0 = Release|Any CPU
+		{F6B756DC-963A-44B8-8E23-BAA143D0BC12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6B756DC-963A-44B8-8E23-BAA143D0BC12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6B756DC-963A-44B8-8E23-BAA143D0BC12}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F6B756DC-963A-44B8-8E23-BAA143D0BC12}.Debug|x64.Build.0 = Debug|Any CPU
+		{F6B756DC-963A-44B8-8E23-BAA143D0BC12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6B756DC-963A-44B8-8E23-BAA143D0BC12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6B756DC-963A-44B8-8E23-BAA143D0BC12}.Release|x64.ActiveCfg = Release|Any CPU
+		{F6B756DC-963A-44B8-8E23-BAA143D0BC12}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{266CC079-E762-4A98-BD83-498C57990DEB} = {4947B9CE-F44C-402C-B38E-F04A7D0237A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {00C9E94E-1D7F-48CF-85F7-B5B14211A2EB}

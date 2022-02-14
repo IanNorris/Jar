@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Jar.Import;
 using Jar.Model;
+using JarPluginApi;
 using Newtonsoft.Json;
 
 namespace Jar.DataModels
@@ -129,7 +130,7 @@ namespace Jar.DataModels
 
 			var batchId = (int)_database.GetLastInsertedRowId();
 
-			_import.Import(filename, account, accountObject.Currency, batchId);
+			_import.ImportFile(filename, account, accountObject.Currency, batchId);
 		}
 
 		private void PrepareDisplayTransaction(Transaction transaction)

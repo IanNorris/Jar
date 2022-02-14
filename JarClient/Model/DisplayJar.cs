@@ -1,5 +1,4 @@
-﻿
-using Jar.DataModels;
+﻿using Jar.DataModels;
 
 namespace Jar.Model
 {

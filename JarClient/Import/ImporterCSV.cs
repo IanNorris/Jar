@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Jar.Model;
+using JarPluginApi;
 using Microsoft.VisualBasic.FileIO;
 
 namespace Jar.Import
 {
 	class ImporterCSV : IImport
 	{
+		public ImportType Type()
+		{
+			return ImportType.File;
+		}
+
 		public string[] Extensions()
 		{
 			return new string[] { ".csv" };
@@ -37,7 +42,7 @@ namespace Jar.Import
 						continue;
 					}
 
-					var outputTransaction = new Model.Transaction();
+					var outputTransaction = new Transaction();
 					outputTransaction.ImportBatchId = BatchId;
 					outputTransaction.Currency = Currency;
 					outputTransaction.AccountId = Account;

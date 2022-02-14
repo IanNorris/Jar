@@ -1,5 +1,6 @@
 ﻿using System;
 using Jar.Model;
+using JarPluginApi;
 using SQLite;
 using static Jar.MessageBox;
 
