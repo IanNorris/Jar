@@ -6,6 +6,11 @@ namespace JarPlugin.StarlingBank.Import
 {
 	class ImporterStarling : IImport
 	{
+		public ImporterStarling(IConfigService configService)
+		{
+			_configService = configService;
+		}
+
 		public ImportType Type()
 		{
 			return ImportType.Online;
@@ -25,5 +30,7 @@ namespace JarPlugin.StarlingBank.Import
 		{
 			throw new NotImplementedException();
 		}
+
+		private IConfigService _configService;
 	}
 }

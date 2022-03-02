@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Jar.DataModels;
+using Jar.Import;
 using Jar.Model;
+using Jar.Services;
+using JarPluginApi;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -27,6 +31,11 @@ namespace Jar
 		public Transactions Transactions { get; private set; }
 		public Budgets Budgets { get; private set; }
 
+		public PluginService PluginService { get; private set; }
+		public InternalConfigService ConfigService { get; private set; }
+
+		public Importer Importer { get; private set; }
+
 		private string _budgetName;
 
 		public ShowMessageDelegate _showMessage;
@@ -37,8 +46,12 @@ namespace Jar
 			return _budgetName;
 		}
 
-		public void BuildDataModel()
+		public void BuildDataModel(string Password)
 		{
+			ConfigService = new InternalConfigService();
+
+			RegisterPlugins();
+
 			Accounts.SetDatabase(_database);
 			AccountCheckpoints.SetDatabase(_database);
 			Transactions.SetDatabase(_database);
@@ -57,7 +70,7 @@ namespace Jar
 			_database = new Database(_showMessage);
 			if (_database.CreateDatabase(Filename, Password))
 			{
-				BuildDataModel();
+				BuildDataModel(Password);
 
 				return true;
 			}
@@ -322,6 +335,39 @@ namespace Jar
 			{
 				throw new InvalidDataException($"{message.Target} is not a valid target interface");
 			}
+		}
+
+		private void RegisterPlugins()
+		{
+			PluginService = new PluginService();
+
+			Importer = new Importer();
+
+			AddPluginRegistries();
+
+			var pluginNames = new HashSet<string>();
+
+			PluginService.LoadPlugins(t =>
+			{
+				var pluginName = t.AssemblyQualifiedName.Split(',')[0];
+
+				if(pluginNames.Contains(pluginName))
+				{
+					throw new InvalidDataException($"More than one plugin called {pluginName}");
+				}
+				pluginNames.Add(pluginName);
+
+				var configService = new ConfigService(ConfigService, pluginName);
+
+				return new PluginContext(
+					configService
+				);
+			});
+		}
+
+		private void AddPluginRegistries()
+		{
+			PluginService.AddPluginRegistry(Importer);
 		}
 	}
 }
