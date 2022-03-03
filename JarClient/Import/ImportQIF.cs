@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using JarPluginApi;
 
 namespace Jar.Import
@@ -22,11 +23,11 @@ namespace Jar.Import
 			return "Quicken";
 		}
 
-		public List<Transaction> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
+		public async Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
 		{
 			var outputList = new List<Transaction>();
 
-			var lines = File.ReadAllLines(Filename);
+			var lines = await File.ReadAllLinesAsync(Filename);
 
 			var outputTransaction = new Transaction();
 

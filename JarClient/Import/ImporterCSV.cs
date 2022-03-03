@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using JarPluginApi;
 using Microsoft.VisualBasic.FileIO;
 
@@ -22,7 +23,7 @@ namespace Jar.Import
 			return "CSV";
 		}
 
-		public List<Transaction> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
+		public Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
 		{
 			var outputList = new List<Transaction>();
 
@@ -63,7 +64,7 @@ namespace Jar.Import
 				}
 			}
 
-			return outputList;
+			return Task.FromResult(outputList);
 		}
 	}
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Jar.Import;
 using Jar.Model;
 using JarPluginApi;
@@ -14,11 +15,11 @@ namespace Jar.DataModels
 {
 	public class Transactions
 	{
-		public Transactions(EventBus eventBus)
+		public Transactions(EventBus eventBus, Importer importer)
 		{
-			LoadInstitutions();
+			_import = importer;
 
-			_import = new Importer();
+			LoadInstitutions();
 		}
 
 		public void SetDatabase(Database database)
@@ -112,7 +113,7 @@ namespace Jar.DataModels
 				.FirstOrDefault();
 		}
 
-		public void ImportTransactionBatch(string accountName, string filename, int account)
+		public async Task ImportTransactionBatchFromFile(string accountName, string filename, int account)
 		{
 			var accountObject = _database.Connection.Get<Account>(account);
 
@@ -130,7 +131,28 @@ namespace Jar.DataModels
 
 			var batchId = (int)_database.GetLastInsertedRowId();
 
-			_import.ImportFile(accountName, filename, account, accountObject.Currency, batchId);
+			var transactions = await _import.ImportFile(accountName, filename, account, accountObject.Currency, batchId);
+		}
+
+		public async Task ImportTransactionBatchOnline(string accountName, string pluginName, int account)
+		{
+			var accountObject = _database.Connection.Get<Account>(account);
+
+			if (accountObject == null)
+			{
+				throw new InvalidDataException($"Account {account} does not exist");
+			}
+
+			_database.Connection.Insert(new ImportBatch
+			{
+				Account = account,
+				SourceFilename = pluginName,
+				ImportTime = DateTime.UtcNow,
+			});
+
+			var batchId = (int)_database.GetLastInsertedRowId();
+
+			var transactions = await _import.ImportOnline(accountName, pluginName, account, accountObject.Currency, batchId);
 		}
 
 		private void PrepareDisplayTransaction(Transaction transaction)

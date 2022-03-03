@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Jar.Model;
 using JarPluginApi;
 
@@ -22,7 +23,7 @@ namespace Jar.Import
 			return "Microsoft Money";
 		}
 
-		public List<Transaction> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
+		public Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
 		{
 			var parser = new OFXParser.OFXParser();
 			var ofxDocument = parser.GenerateExtract(Filename);
@@ -41,7 +42,7 @@ namespace Jar.Import
 				outputList.Add(outputTransaction);
 			}
 
-			return outputList;
+			return Task.FromResult(outputList);
 		}
 	}
 }

@@ -46,7 +46,17 @@ namespace Jar
 			return _budgetName;
 		}
 
-		public void BuildDataModel(string Password)
+		public void RunTemporaryDatabasePayload()
+		{
+#if DEBUG
+		/*	if(System.Windows.MessageBox.Show("Run debug payload?", "Debug", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question) == System.Windows.MessageBoxResult.Yes )
+			{
+		
+			}*/
+#endif
+		}
+
+		public async Task BuildDataModel(string Password)
 		{
 			Configurations.SetDatabase(_database, Password);
 
@@ -57,20 +67,31 @@ namespace Jar
 			Transactions.SetDatabase(_database);
 			Budgets.SetDatabase(_database);
 
-			foreach (var account in Accounts.GetAccounts())
+			var accounts = Accounts.GetAccounts();
+			foreach (var account in accounts)
 			{
 				AccountCheckpoints.UpdateAccountCheckpoints(account.Id);
 			}
+
+			RunTemporaryDatabasePayload();
+
+			foreach (var account in accounts)
+			{
+				if (account.OnlinePluginName != null)
+				{
+					await Transactions.ImportTransactionBatchOnline(account.Name, account.OnlinePluginName, account.Id);
+				}
+			}
 		}
 
-		public bool CreateDatabase(string Filename, string Password)
+		public async Task<bool> CreateDatabase(string Filename, string Password)
 		{
 			_budgetName = Path.GetFileNameWithoutExtension(Filename);
 
 			_database = new Database(_showMessage);
 			if (_database.CreateDatabase(Filename, Password))
 			{
-				BuildDataModel(Password);
+				await BuildDataModel(Password);
 
 				return true;
 			}
@@ -91,9 +112,10 @@ namespace Jar
 			Settings.ReadSettings(_showMessage, settingsPath);
 
 			_eventBus = new EventBus();
+			Importer = new Importer();
 			Configurations = new Configurations(_eventBus);
 			Accounts = new Accounts(_eventBus);
-			Transactions = new Transactions(_eventBus);
+			Transactions = new Transactions(_eventBus, Importer);
 			AccountCheckpoints = new AccountCheckpoints(Transactions, _eventBus);
 			Budgets = new Budgets(_eventBus);
 		}
@@ -176,9 +198,9 @@ namespace Jar
 			await _executeJS($"{CallbackName}();");
 		}
 
-		public bool OpenBudget(int BudgetIndex, string Path, string Password)
+		public async Task<bool> OpenBudget(int BudgetIndex, string Path, string Password)
 		{
-			if (CreateDatabase(Path, Password))
+			if (await CreateDatabase(Path, Password))
 			{
 				Settings.SetBudgetAsLatest(BudgetIndex);
 
@@ -188,9 +210,9 @@ namespace Jar
 			return false;
 		}
 
-		public bool CreateNewBudget(string FilePath, string Password)
+		public async Task<bool> CreateNewBudget(string FilePath, string Password)
 		{
-			if (CreateDatabase(FilePath, Password))
+			if (await CreateDatabase(FilePath, Password))
 			{
 				var NewBudget = new Budget();
 				NewBudget.Path = FilePath;
@@ -341,8 +363,6 @@ namespace Jar
 		private void RegisterPlugins()
 		{
 			PluginService = new PluginService();
-
-			Importer = new Importer();
 
 			AddPluginRegistries();
 

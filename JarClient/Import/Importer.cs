@@ -1,28 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using JarPluginApi;
 
 namespace Jar.Import
 {
 	public class Importer : IPluginRegistry<IImport>
 	{
-		private Dictionary<string, IImport> m_importers = new Dictionary<string, IImport>();
+		private Dictionary<string, IImport> m_fileImporters = new Dictionary<string, IImport>();
+		private Dictionary<string, IImport> m_onlineImporters = new Dictionary<string, IImport>();
 
 		public Importer()
 		{
 		}
 
-		public List<Transaction> ImportFile(string AccountName, string Filename, int Account, int Currency, int BatchId)
+		public async Task<List<Transaction>> ImportOnline(string AccountName, string PluginName, int Account, int Currency, int BatchId)
+		{
+			if (!m_onlineImporters.TryGetValue(PluginName, out var importer))
+			{
+				throw new InvalidOperationException($"No importer matching plugin {PluginName}");
+			}
+
+			return await importer.Import(AccountName, null, Account, Currency, BatchId);
+		}
+
+		public async Task<List<Transaction>> ImportFile(string AccountName, string Filename, int Account, int Currency, int BatchId)
 		{
 			var Extension = Path.GetExtension(Filename).ToLower();
 
-			if (!m_importers.TryGetValue(Extension, out var importer))
+			if (!m_fileImporters.TryGetValue(Extension, out var importer))
 			{
 				throw new InvalidOperationException($"No importer for file type {Extension}");
 			}
 
-			return importer.Import(AccountName, Filename, Account, Currency, BatchId);
+			return await importer.Import(AccountName, Filename, Account, Currency, BatchId);
 		}
 
 		public override void OnPluginLoaded(IImport importer)
@@ -35,17 +47,17 @@ namespace Jar.Import
 					var LowerExtension = Extension.ToLower();
 					IImport Existing = null;
 
-					if (m_importers.TryGetValue(LowerExtension, out Existing))
+					if (m_fileImporters.TryGetValue(LowerExtension, out Existing))
 					{
 						throw new InvalidOperationException($"Already an importer for file type {LowerExtension}");
 					}
 
-					m_importers.Add(LowerExtension, importer);
+					m_fileImporters.Add(LowerExtension, importer);
 				}
 			}
-			else
+			else if (importer.Type() == ImportType.Online)
 			{
-
+				m_onlineImporters.Add(importer.GetType().AssemblyQualifiedName.Split(',')[0], importer);
 			}
 		}
 	}

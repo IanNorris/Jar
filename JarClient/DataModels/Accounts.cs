@@ -28,7 +28,7 @@ namespace Jar.DataModels
 			return results;
 		}
 
-		public int CreateAccount(string name, AccountType type, int currency)
+		public int CreateAccount(string name, AccountType type, int currency, string onlinePluginName)
 		{
 			var lastAccountOrder = _database.Connection.Table<Account>().Select(a => a.Order).DefaultIfEmpty(0).Max();
 
@@ -41,6 +41,7 @@ namespace Jar.DataModels
 				Name = name,
 				Order = lastAccountOrder + 1,
 				Type = type,
+				OnlinePluginName = onlinePluginName,
 			};
 
 			_database.Connection.Insert(newAccount);
