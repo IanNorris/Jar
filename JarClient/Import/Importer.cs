@@ -13,7 +13,7 @@ namespace Jar.Import
 		{
 		}
 
-		public List<Transaction> ImportFile(string Filename, int Account, int Currency, int BatchId)
+		public List<Transaction> ImportFile(string AccountName, string Filename, int Account, int Currency, int BatchId)
 		{
 			var Extension = Path.GetExtension(Filename).ToLower();
 
@@ -22,7 +22,7 @@ namespace Jar.Import
 				throw new InvalidOperationException($"No importer for file type {Extension}");
 			}
 
-			return importer.Import(Filename, Account, Currency, BatchId);
+			return importer.Import(AccountName, Filename, Account, Currency, BatchId);
 		}
 
 		public override void OnPluginLoaded(IImport importer)

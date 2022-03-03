@@ -30,9 +30,9 @@ namespace Jar
 		public AccountCheckpoints AccountCheckpoints { get; private set; }
 		public Transactions Transactions { get; private set; }
 		public Budgets Budgets { get; private set; }
+		public Configurations Configurations { get; private set; }
 
 		public PluginService PluginService { get; private set; }
-		public InternalConfigService ConfigService { get; private set; }
 
 		public Importer Importer { get; private set; }
 
@@ -48,7 +48,7 @@ namespace Jar
 
 		public void BuildDataModel(string Password)
 		{
-			ConfigService = new InternalConfigService();
+			Configurations.SetDatabase(_database, Password);
 
 			RegisterPlugins();
 
@@ -91,6 +91,7 @@ namespace Jar
 			Settings.ReadSettings(_showMessage, settingsPath);
 
 			_eventBus = new EventBus();
+			Configurations = new Configurations(_eventBus);
 			Accounts = new Accounts(_eventBus);
 			Transactions = new Transactions(_eventBus);
 			AccountCheckpoints = new AccountCheckpoints(Transactions, _eventBus);
@@ -357,7 +358,7 @@ namespace Jar
 				}
 				pluginNames.Add(pluginName);
 
-				var configService = new ConfigService(ConfigService, pluginName);
+				var configService = new ConfigService(Configurations, pluginName, null);
 
 				return new PluginContext(
 					configService

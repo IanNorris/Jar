@@ -9,6 +9,15 @@ namespace JarPlugin.StarlingBank.Import
 		public ImporterStarling(IConfigService configService)
 		{
 			_configService = configService;
+
+			var testValue = _configService.GetConfigValue("TestValue");
+
+			if(testValue == null)
+			{
+				_configService.SetConfigValue("TestValue", "Hello World!", true);
+			}
+
+			
 		}
 
 		public ImportType Type()
@@ -26,7 +35,7 @@ namespace JarPlugin.StarlingBank.Import
 			return "Starling Bank";
 		}
 
-		public List<Transaction> Import(string Filename, int Account, int Currency, int BatchId)
+		public List<Transaction> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
 		{
 			throw new NotImplementedException();
 		}

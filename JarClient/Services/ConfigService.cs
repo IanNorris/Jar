@@ -1,41 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Jar.DataModels;
 using JarPluginApi;
 
 namespace Jar.Services
 {
 	public class ConfigService : IConfigService
 	{
-		public ConfigService(InternalConfigService configService, string PluginName)
+		public ConfigService(Configurations configurations, string PluginName, string AccountName)
 		{
-			_configService = configService;
+			_configurations = configurations;
 			_pluginName = PluginName;
+			_accountName = AccountName;
 		}
 
-		public string GetConfigValue(string Name, int ArrayIndex)
+		public IEnumerable<Configuration> GetConfigValues(string Name)
 		{
-			return _configService.GetConfigValue(_pluginName, Name, ArrayIndex);
+			return _configurations.GetConfigurationValues(_pluginName, _accountName, Name);
 		}
 
-		public void DeleteConfigValue(string Name, int ArrayIndex)
+		public string GetConfigValue(string Name)
 		{
-			_configService.DeleteConfigValue(_pluginName, Name, ArrayIndex);
-		}
-
-		public List<int> GetConfigValueIndices(string Name)
-		{
-			return _configService.GetConfigValueIndices(_pluginName, Name);
+			var values = _configurations.GetConfigurationValues(_pluginName, _accountName, Name);
+			return values.FirstOrDefault()?.Value;
 		}
 
 		public void SetConfigValue(string Name, string Value, int ArrayIndex, bool IsCredential)
 		{
-			_configService.SetConfigValue(_pluginName, Name, Value, ArrayIndex, IsCredential);
+			_configurations.UpsertConfiguration(_pluginName, _accountName, Name, ArrayIndex, Value, IsCredential);
+		}
+
+		public void SetConfigValue(string Name, string Value, bool IsCredential)
+		{
+			_configurations.UpsertConfiguration(_pluginName, _accountName, Name, 0, Value, IsCredential);
 		}
 
 		private string _pluginName;
-		private InternalConfigService _configService;
+		private string _accountName;
+		private Configurations _configurations;
 	}
 }

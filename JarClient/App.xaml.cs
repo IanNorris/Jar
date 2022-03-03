@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
+using Sodium;
 
 namespace Jar
 {
@@ -12,6 +13,8 @@ namespace Jar
 		{
 			const string AppDataName = "JarBudgeting";
 			const string Settings = "Settings.json";
+
+			SodiumCore.Init();
 
 			var AppDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppDataName);
 			Directory.CreateDirectory(AppDataPath);

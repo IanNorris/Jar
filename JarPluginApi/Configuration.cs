@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace Jar.Model
+namespace JarPluginApi
 {
     public class Configuration
     {
@@ -9,16 +9,16 @@ namespace Jar.Model
 
         public int ArrayIndex { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public string Plugin { get; set; }
+        public string? Plugin { get; set; }
 
-        public string Account { get; set; }
+        public string? Account { get; set; }
 
-        //The value here is re-encrypted with the master password
+        //The value here is re-encrypted with the master password if this is a credential
         //so if the database is ever dumped (accidentally or on purpose)
         //then the credential is not in plain text.
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
         public bool IsCredential { get; set; }
     }

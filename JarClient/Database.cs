@@ -39,6 +39,7 @@ namespace Jar
 
 		private void PrepareDatabase()
 		{
+			_database.CreateTable<Configuration>(CreateFlags.ImplicitIndex);
 			_database.CreateTable<Account>(CreateFlags.ImplicitIndex);
 			_database.CreateTable<Transaction>(CreateFlags.ImplicitIndex);
 			_database.CreateTable<ImportBatch>(CreateFlags.ImplicitIndex);

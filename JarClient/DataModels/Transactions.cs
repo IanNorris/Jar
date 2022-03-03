@@ -112,7 +112,7 @@ namespace Jar.DataModels
 				.FirstOrDefault();
 		}
 
-		public void ImportTransactionBatch(string filename, int account)
+		public void ImportTransactionBatch(string accountName, string filename, int account)
 		{
 			var accountObject = _database.Connection.Get<Account>(account);
 
@@ -130,7 +130,7 @@ namespace Jar.DataModels
 
 			var batchId = (int)_database.GetLastInsertedRowId();
 
-			_import.ImportFile(filename, account, accountObject.Currency, batchId);
+			_import.ImportFile(accountName, filename, account, accountObject.Currency, batchId);
 		}
 
 		private void PrepareDisplayTransaction(Transaction transaction)
