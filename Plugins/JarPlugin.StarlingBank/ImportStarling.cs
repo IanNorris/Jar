@@ -26,7 +26,7 @@ namespace JarPlugin.StarlingBank.Import
 
 		public async Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
 		{
-			var pat = _configService.GetConfigValue("PAT");
+			var pat = _configService.GetConfigValue(AccountName, "PAT");
 
 			_client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", pat);
 

@@ -7,36 +7,34 @@ namespace Jar.Services
 {
 	public class ConfigService : IConfigService
 	{
-		public ConfigService(Configurations configurations, string PluginName, string AccountName)
+		public ConfigService(Configurations configurations, string PluginName)
 		{
 			_configurations = configurations;
 			_pluginName = PluginName;
-			_accountName = AccountName;
 		}
 
-		public IEnumerable<Configuration> GetConfigValues(string Name)
+		public IEnumerable<Configuration> GetConfigValues(string AccountName, string Name)
 		{
-			return _configurations.GetConfigurationValues(_pluginName, _accountName, Name);
+			return _configurations.GetConfigurationValues(_pluginName, AccountName, Name);
 		}
 
-		public string GetConfigValue(string Name)
+		public string GetConfigValue(string AccountName, string Name)
 		{
-			var values = _configurations.GetConfigurationValues(_pluginName, _accountName, Name);
+			var values = _configurations.GetConfigurationValues(_pluginName, AccountName, Name);
 			return values.FirstOrDefault()?.Value;
 		}
 
-		public void SetConfigValue(string Name, string Value, int ArrayIndex, bool IsCredential)
+		public void SetConfigValue(string AccountName, string Name, string Value, int ArrayIndex, bool IsCredential)
 		{
-			_configurations.UpsertConfiguration(_pluginName, _accountName, Name, ArrayIndex, Value, IsCredential);
+			_configurations.UpsertConfiguration(_pluginName, AccountName, Name, ArrayIndex, Value, IsCredential);
 		}
 
-		public void SetConfigValue(string Name, string Value, bool IsCredential)
+		public void SetConfigValue(string AccountName, string Name, string Value, bool IsCredential)
 		{
-			_configurations.UpsertConfiguration(_pluginName, _accountName, Name, 0, Value, IsCredential);
+			_configurations.UpsertConfiguration(_pluginName, AccountName, Name, 0, Value, IsCredential);
 		}
 
 		private string _pluginName;
-		private string _accountName;
 		private Configurations _configurations;
 	}
 }

@@ -49,9 +49,9 @@ namespace Jar
 		public void RunTemporaryDatabasePayload()
 		{
 #if DEBUG
-		/*	if(System.Windows.MessageBox.Show("Run debug payload?", "Debug", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question) == System.Windows.MessageBoxResult.Yes )
+			/*if(System.Windows.MessageBox.Show("Run debug payload?", "Debug", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question) == System.Windows.MessageBoxResult.Yes )
 			{
-		
+				
 			}*/
 #endif
 		}
@@ -378,7 +378,7 @@ namespace Jar
 				}
 				pluginNames.Add(pluginName);
 
-				var configService = new ConfigService(Configurations, pluginName, null);
+				var configService = new ConfigService(Configurations, pluginName);
 
 				return new PluginContext(
 					configService
