@@ -12,6 +12,10 @@ namespace Jar.DataModels
 		public AccountCheckpoints(Transactions transactions, EventBus eventBus)
 		{
 			_transactions = transactions;
+
+			_eventBus = eventBus;
+
+			_eventBus.OnTransactionMateriallyChanged += OnTransactionMateriallyChanged;
 		}
 
 		public void SetDatabase(Database database)
@@ -22,6 +26,15 @@ namespace Jar.DataModels
 		public AccountCheckpoint GetCheckpoint(DateTime startDate)
 		{
 			return _database.Connection.Table<AccountCheckpoint>().Where(c => c.StartDate == startDate).Take(1).FirstOrDefault();
+		}
+
+		public void OnTransactionMateriallyChanged(List<Transaction> transactions, bool dateChanged, bool amountChanged, bool categoryChanged)
+		{
+			var accounts = transactions.Select( t => t.AccountId ).Distinct().ToArray();
+			foreach(var account in accounts)
+			{
+				UpdateAccountCheckpoints(account);
+			}
 		}
 
 		public void UpdateAccountCheckpoints(int account)
@@ -118,5 +131,6 @@ WHERE AccountId = ? AND NOT (Date >= StartDate AND Date < EndDate AND Checkpoint
 
 		private Database _database;
 		private Transactions _transactions;
+		private EventBus _eventBus;
 	}
 }

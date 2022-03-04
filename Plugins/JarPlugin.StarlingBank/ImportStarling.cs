@@ -1,4 +1,7 @@
-﻿using JarPluginApi;
+﻿using JarPlugin.StarlingBank.Models;
+using JarPluginApi;
+using Microsoft.VisualBasic.FileIO;
+using Newtonsoft.Json;
 
 namespace JarPlugin.StarlingBank.Import
 {
@@ -24,33 +27,114 @@ namespace JarPlugin.StarlingBank.Import
 			return "Starling Bank";
 		}
 
+		public void ThrowOnError<T>(RestResult<T> result, string message) where T : StarlingError
+		{
+			if (!(result.IsSuccess && result.Result.Success))
+			{
+				var errors = string.Join("\r\n", result.Result.Errors);
+				throw new InvalidDataException($"{message}.\nStatus code {result.StatusCode.ToString("G")} {result.StatusCode.ToString("D")}\n{errors}");
+			}
+		}
+
+		public void ThrowOnError(RestResult<string> result, string message)
+		{
+			if (!result.IsSuccess)
+			{
+				//We did something wrong
+				if ((int)result.StatusCode >= 400 && (int)result.StatusCode < 500)
+				{
+					var errorPayload = JsonConvert.DeserializeObject<StarlingError>(result.Result, RestClient.GetSerializationPolicy(camelCaseJson: true));
+
+					if (errorPayload != null && errorPayload.Errors != null)
+					{
+						var errors = string.Join("\r\n", errorPayload.Errors);
+						throw new InvalidDataException($"{message}.\nStatus code {result.StatusCode.ToString("G")} {result.StatusCode.ToString("D")}\n{errors}");
+					}
+				}
+
+				throw new InvalidDataException($"{message}.\nStatus code {result.StatusCode.ToString("G")} {result.StatusCode.ToString("D")}");
+			}
+		}
+
+		public List<Transaction> ReadCsv(string csvBody, int Account, int Currency, int BatchId)
+		{
+			var outputList = new List<Transaction>();
+
+			using var memoryStream = new MemoryStream();
+			using var streamWriter = new StreamWriter(memoryStream);
+
+			streamWriter.Write(csvBody);
+			streamWriter.Flush();
+
+			memoryStream.Position = 0;
+
+			using var parser = new TextFieldParser(memoryStream);
+
+			parser.TextFieldType = FieldType.Delimited;
+			parser.SetDelimiters(",");
+			bool firstRow = true;
+			while (!parser.EndOfData)
+			{
+				string[] fields = parser.ReadFields();
+
+				if (firstRow)
+				{
+					firstRow = false;
+					continue;
+				}
+
+				var date = fields[0];
+				var counterParty = fields[1];
+				var reference = fields[2];
+				var type = fields[3];
+				var amount = fields[4];
+				var balance = fields[5];
+				var spendingCategory = fields[6];
+				var notes = fields[7];
+
+				var outputTransaction = new Transaction();
+				outputTransaction.ImportBatchId = BatchId;
+				outputTransaction.Currency = Currency;
+				outputTransaction.AccountId = Account;
+				outputTransaction.Date = DateTime.Parse(date);
+				outputTransaction.Payee = counterParty;
+				outputTransaction.Reference = reference;
+				outputTransaction.Amount = (long)Math.Round(100 * decimal.Parse(amount));
+				outputTransaction.ReferenceBalanceFromImport = (long)Math.Round(100 * decimal.Parse(balance));
+				outputTransaction.ImportedCategory = spendingCategory;
+				outputTransaction.Memo = notes;
+
+				outputList.Add(outputTransaction);
+			}
+
+			return outputList;
+		}
+
 		public async Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
 		{
 			var pat = _configService.GetConfigValue(AccountName, "PAT");
+			var devModeString = _configService.GetConfigValue(AccountName, "DevAccount");
+			bool.TryParse(devModeString, out var devMode);
+			var endpoint = devMode ? SandboxServiceEndpoint : ServiceEndpoint;
 
-			_client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", pat);
+			using var client = new RestClient(endpoint, pat, deserializeOnError: true, true);
 
-			var result = await _client.GetAsync($"{ServiceEndpoint}{AccountsEndpoint}");
+			var result = await client.GetObjectAsync<StarlingAccounts>(AccountsEndpoint);
 
-			var resultBody = await result.Content.ReadAsStringAsync();
+			ThrowOnError(result, "Failed to get account list");
 
-			if ( result.StatusCode != System.Net.HttpStatusCode.OK )
+			var accountUid = result?.Result?.Accounts.FirstOrDefault()?.AccountUid;
+			if (accountUid == null)
 			{
-				throw new HttpRequestException($"Got {result.StatusCode} {resultBody}");
+				throw new InvalidDataException("accountUid is null");
 			}
 
-			const string BalanceEndpoint = $"/api/v2/account-holder/joint";
+			var startDate = DateTime.Now.AddYears(-1);
+			var csvFile = await client.GetStringAsync("text/csv", DownloadStatementEndpoint, accountUid, startDate.ToString("yyyy-MM-dd"));
 
-			var result2 = await _client.GetAsync($"{ServiceEndpoint}{BalanceEndpoint}");
+			ThrowOnError(csvFile, "Failed to get transactions");
 
-			var resultBody2 = await result2.Content.ReadAsStringAsync();
-
-			if (result2.StatusCode != System.Net.HttpStatusCode.OK)
-			{
-				throw new HttpRequestException($"Got {result2.StatusCode} {resultBody2}");
-			}
-
-			return new List<Transaction>();
+			return ReadCsv(csvFile.Result, Account, Currency, BatchId);
 		}
 
 		private IConfigService _configService;
@@ -61,5 +145,6 @@ namespace JarPlugin.StarlingBank.Import
 		private const string SandboxServiceEndpoint = "https://api-sandbox.starlingbank.com";
 
 		private const string AccountsEndpoint = "/api/v2/accounts";
+		private const string DownloadStatementEndpoint = "/api/v2/accounts/{0}/statement/downloadForDateRange?start={1}";
 	}
 }

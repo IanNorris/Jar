@@ -17,6 +17,7 @@ namespace Jar.DataModels
 	{
 		public Transactions(EventBus eventBus, Importer importer)
 		{
+			_eventBus = eventBus;
 			_import = importer;
 
 			LoadInstitutions();
@@ -99,7 +100,7 @@ namespace Jar.DataModels
 		{
 			return _database.Connection.Table<Transaction>()
 				.Where(t => t.AccountId == account && t.Date >= start && !t.Deleted)
-				.OrderBy(t => t.Date)
+				.OrderBy(t => t.Date).ThenBy(t => t.Id)
 				.Take(1)
 				.FirstOrDefault();
 		}
@@ -108,9 +109,70 @@ namespace Jar.DataModels
 		{
 			return _database.Connection.Table<Transaction>()
 				.Where(t => t.AccountId == account && !t.Deleted)
-				.OrderByDescending(t => t.Date)
+				.OrderByDescending(t => t.Date).ThenByDescending(t => t.Id)
 				.Take(1)
 				.FirstOrDefault();
+		}
+
+		public void RemoveDuplicateTransactions(List<Transaction> transactions, int account)
+		{
+			DateTime startRange = DateTime.MaxValue;
+			DateTime endRange = DateTime.MinValue;
+
+			foreach (var transaction in transactions)
+			{
+				if(transaction.Date < startRange)
+				{
+					startRange = transaction.Date;
+				}
+
+				if (transaction.Date > endRange)
+				{
+					endRange = transaction.Date;
+				}
+			}
+
+			endRange = endRange.AddDays(1).AddMilliseconds(-1);
+
+			var existingTransactions = GetTransactionsBetweenDates(startRange, endRange, account).ToList();
+			for(int transactionIndex = 0; transactionIndex < transactions.Count;)
+			{
+				var transaction = transactions[transactionIndex];
+
+				var existingMatchingTransactions = existingTransactions.Where( et => et.Date == transaction.Date && et.Payee == transaction.Payee && et.Amount == transaction.Amount );
+				if (existingMatchingTransactions.Any())
+				{
+					if(existingMatchingTransactions.Count() > 1)
+					{
+						throw new NotImplementedException();
+					}
+					else
+					{
+						transactions.RemoveAt(transactionIndex);
+					}
+				}
+				else
+				{
+					transactionIndex++;
+				}
+			}
+		}
+
+		public void ProcessAndCommitTransactionBatch(List<Transaction> transactions, int account)
+		{
+			if (transactions.Any())
+			{
+				RemoveDuplicateTransactions(transactions, account);
+
+				if (transactions.Any())
+				{
+					_database.Connection.InsertAll(transactions);
+
+					_database.Connection.Commit();
+					
+					_eventBus.OnTransactionMateriallyChanged(transactions, true, true, true);
+				}
+			}
 		}
 
 		public async Task ImportTransactionBatchFromFile(string accountName, string filename, int account)
@@ -122,16 +184,30 @@ namespace Jar.DataModels
 				throw new InvalidDataException($"Account {account} does not exist");
 			}
 
-			_database.Connection.Insert(new ImportBatch
+			try
 			{
-				Account = account,
-				SourceFilename = filename,
-				ImportTime = DateTime.UtcNow,
-			});
+				_database.Connection.BeginTransaction();
 
-			var batchId = (int)_database.GetLastInsertedRowId();
+				_database.Connection.Insert(new ImportBatch
+				{
+					Account = account,
+					SourceFilename = filename,
+					ImportTime = DateTime.UtcNow,
+				});
 
-			var transactions = await _import.ImportFile(accountName, filename, account, accountObject.Currency, batchId);
+				var batchId = (int)_database.GetLastInsertedRowId();
+
+				var transactions = await _import.ImportFile(accountName, filename, account, accountObject.Currency, batchId);
+
+				ProcessAndCommitTransactionBatch(transactions, account);
+			}
+			finally
+			{
+				if(_database.Connection.IsInTransaction)
+				{
+					_database.Connection.Rollback();
+				}
+			}
 		}
 
 		public async Task ImportTransactionBatchOnline(string accountName, string pluginName, int account)
@@ -143,16 +219,30 @@ namespace Jar.DataModels
 				throw new InvalidDataException($"Account {account} does not exist");
 			}
 
-			_database.Connection.Insert(new ImportBatch
+			try
 			{
-				Account = account,
-				SourceFilename = pluginName,
-				ImportTime = DateTime.UtcNow,
-			});
+				_database.Connection.BeginTransaction();
 
-			var batchId = (int)_database.GetLastInsertedRowId();
+				_database.Connection.Insert(new ImportBatch
+				{
+					Account = account,
+					SourceFilename = pluginName,
+					ImportTime = DateTime.UtcNow,
+				});
 
-			var transactions = await _import.ImportOnline(accountName, pluginName, account, accountObject.Currency, batchId);
+				var batchId = (int)_database.GetLastInsertedRowId();
+
+				var transactions = await _import.ImportOnline(accountName, pluginName, account, accountObject.Currency, batchId);
+
+				ProcessAndCommitTransactionBatch(transactions, account);
+			}
+			finally
+			{
+				if (_database.Connection.IsInTransaction)
+				{
+					_database.Connection.Rollback();
+				}
+			}
 		}
 
 		private void PrepareDisplayTransaction(Transaction transaction)
@@ -210,6 +300,7 @@ namespace Jar.DataModels
 
 		private Database _database;
 		private Importer _import;
+		private EventBus _eventBus;
 
 		private Dictionary<string, Institution> Institutions;
 	}
