@@ -13,13 +13,13 @@
 
 			<ul class="sidenav-inner py-1">
 				<li class="sidenav-item" v-on:click="openHome" v-bind:class="{ active: activePage == MainPage_Home }">
-					<a class="sidenav-link"><i class="sidenav-icon fas fa-home"></i> Home</a>
+					<a class="sidenav-link"><i class="sidenav-icon fa-solid fa-home"></i> Home</a>
 				</li>
 				<li class="sidenav-item" v-on:click="openBudget" v-bind:class="{ active: activePage == MainPage_Budgets }">
-					<a class="sidenav-link"><i class="sidenav-icon fas fa-piggy-bank"></i> Budget</a>
+					<a class="sidenav-link"><i class="sidenav-icon fa-solid fa-piggy-bank"></i> Budget</a>
 				</li>
 				<li class="sidenav-item" v-on:click="openReports" v-bind:class="{ active: activePage == MainPage_Reports }">
-					<a class="sidenav-link"><i class="sidenav-icon fas fa-briefcase"></i> Reports</a>
+					<a class="sidenav-link"><i class="sidenav-icon fa-solid fa-briefcase"></i> Reports</a>
 				</li>
 				<li class="sidenav-header small font-weight-semibold pl-3">
 					<div class="float-left">Accounts</div>
@@ -77,8 +77,8 @@
 						<tbody>
 							<tr v-for="(t,index) in selectedAccountTransactions">
 								<td>
-									<i v-bind:class="{ 'fas fa-check-circle font-success': t.IsAccepted, 'far fa-question-circle': !t.IsAccepted }"></i>
-									&nbsp;<i class="fa-flag" v-bind:class="{ 'far': t.Flag == 0, 'fas flag-color-1': t.Flag == 1, 'fas flag-color-2': t.Flag == 2, 'fas flag-color-3': t.Flag == 3, 'fas flag-color-4': t.Flag == 4, 'fas flag-color-5': t.Flag == 5 }"></i>
+									<i v-bind:class="{ 'fa-solid fa-check-circle font-success': t.IsAccepted, 'far fa-question-circle': !t.IsAccepted }"></i>
+									&nbsp;<i class="fa-flag" v-bind:class="{ 'far': t.Flag == 0, 'fa-solid flag-color-1': t.Flag == 1, 'fa-solid flag-color-2': t.Flag == 2, 'fa-solid flag-color-3': t.Flag == 3, 'fa-solid flag-color-4': t.Flag == 4, 'fa-solid flag-color-5': t.Flag == 5 }"></i>
 								</td>
 								<td>{{t.Date | asDate}}</td>
 								<td v-bind:title="t.OriginalPayee">{{t.Payee}} <span class="text-muted">{{t.Reference}}</span></td>
