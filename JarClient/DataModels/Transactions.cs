@@ -268,6 +268,16 @@ namespace Jar.DataModels
 			{
 				foreach (var filter in institution.Value.Filters)
 				{
+					if(filter.MustStartWith != null && filter.MustStartWith.Any() && !transaction.Payee.StartsWith(filter.MustStartWith))
+					{
+						continue;
+					}
+
+					if (filter.MustContain != null && filter.MustContain.Any() && !transaction.Payee.Contains(filter.MustContain))
+					{
+						continue;
+					}
+
 					var match = filter.CompiledRegex.Match(transaction.Payee);
 					if (match.Success)
 					{
@@ -304,6 +314,11 @@ namespace Jar.DataModels
 			{
 				foreach (var filter in institution.Value.Filters)
 				{
+					if(!filter.Regex.EndsWith('$'))
+					{
+						filter.Regex += ".*";
+					}
+
 					filter.CompiledRegex = new Regex(filter.Regex, RegexOptions.Compiled);
 				}
 			}

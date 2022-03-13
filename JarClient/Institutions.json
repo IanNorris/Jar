@@ -2,6 +2,24 @@
 	"Santander": {
 		"Filters": [
 			{
+				"Comment": "The format changed and the rate got removed.",
+				"Name": "CurveNewCardPayment",
+				"Regex": "^CARD PAYMENT TO CRV\\*(?<Name>[^,]+)\\s+ON [\\d\\-]+(?: [\\w\\- ]+)?, [\\d\\.]{3,}",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "(Curve)",
+				"MustStartWith": "CARD PAYMENT TO CRV*",
+				"Example": "CARD PAYMENT TO Google,10.99 GBP, RATE 1.00/GBP ON 02-04-2017, 10.99GBP"
+			},
+			{
+				"Comment": "The format changed and the rate got removed.",
+				"Name": "NewCardPayment",
+				"Regex": "^CARD PAYMENT TO (?<Name>[^,]+)\\s+ON [\\d\\-]+(?: [\\w\\- ]+)?, [\\d\\.]{3,}",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "",
+				"MustStartWith": "CARD PAYMENT TO",
+				"Example": "CARD PAYMENT TO Google,10.99 GBP, RATE 1.00/GBP ON 02-04-2017, 10.99GBP"
+			},
+			{
 				"Name": "Cash",
 				"Regex": "^CASH WITHDRAWAL AT (?<Name>[^,]+),.*$",
 				"PayeeOutput": "Cash",
@@ -11,17 +29,17 @@
 			},
 			{
 				"Name": "CashbackGeneric",
-				"Regex": "^\\d+ Direct Debit Payment[s]? at (?<Amount>[\\d,%]+) Cashback, [\\d\\.]+(?:\\w{3})?",
-				"PayeeOutput": "Cashback",
-				"ReferenceOutput": "${Amount}",
-				"MustContain": "Direct Debit Payment at",
+				"Regex": "^\\d+ Direct Debit Payment[s]? at (?<Amount>[\\d]+),00% Cashback, [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "Cashback (at ${Amount}%)",
+				"ReferenceOutput": "",
+				"MustContain": "Direct Debit Payment",
 				"Example": "7 Direct Debit Payments at 1,00% Cashback, 1.23GBP"
 			},
 			{
 				"Name": "CashbackSpecific",
-				"Regex": "^\\d+ Direct Debit Payment[s]? for (?<Reason>.*) at (?<Amount>[\\d,%]+) Cashback, [\\d\\.]+(?:\\w{3})?",
-				"PayeeOutput": "Cashback",
-				"ReferenceOutput": "${Reason} at ${Amount}",
+				"Regex": "^\\d+ Direct Debit Payment[s]? for (?<Reason>.*) at (?<Amount>[\\d]+),00% Cashback, [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "Cashback (at ${Amount}%)",
+				"ReferenceOutput": "${Reason}",
 				"MustContain": "Direct Debit Payment for",
 				"Example": "1 Direct Debit Payment for Water at 1,00% Cashback, 0.13"
 			},
@@ -35,11 +53,20 @@
 			},
 			{
 				"Name": "BillPayment",
-				"Regex": "^BILL PAYMENT (?:VIA FASTER PAYMENT )?TO (?<Name>.*) REFERENCE (?<Ref>[^,]*) ?(?:, MANDATE)?(?: NO)?(?: \\d+)?, [\\d\\.]+(?:\\w{3})?",
+				"Regex": "^BILL PAYMENT (?:VIA FASTER PAYMENT )TO (?<Name>.+) REFERENCE (?<Ref>.+) , (?:M|MA|MAN|MANDA|MANDAT|MANDATE|MANDATE |MANDATE N|MANDATE NO|MADATE NO |MANDATE NO \\d+), [\\d\\.]+(?:\\w{3})?",
 				"PayeeOutput": "${Name}",
 				"ReferenceOutput": "${Ref}",
-				"MustStartWith": "BILL PAYMENT TO",
-				"Example": "BILL PAYMENT VIA FASTER PAYMENT TO BILL GATES REFERENCE PIZZA , MANDATE NO 10, 32.45"
+				"MustStartWith": "BILL PAYMENT ",
+				"Example": "BILL PAYMENT VIA FASTER PAYMENT TO Bilbo Baggins REFERENCE NEW ROOF , MANDATE NO 1254, 123.00"
+			},
+			{
+				"Comment": "This is a special case for larger transactions where there are commas in the amount, making the parsing ambiguous.",
+				"Name": "CurveCardPaymentWithCommaSeparatedAmount",
+				"Regex": "^CARD PAYMENT TO CRV\\*(?<Name>[^,]+),[\\d\\.,]+ (?:\\w{3}), RATE [\\d\\.]+\/(?:\\w{3}) ON [\\d\\-]+(?: [\\w\\- ]+)?, [\\d\\.]{7,}(?:\\w{3})?",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "(Curve)",
+				"MustStartWith": "CARD PAYMENT TO CRV*",
+				"Example": "CARD PAYMENT TO CRV*Google,10.99 GBP, RATE 1.00/GBP ON 02-04-2017, 10.99GBP"
 			},
 			{
 				"Comment": "This is a special case for larger transactions where there are commas in the amount, making the parsing ambiguous.",
@@ -49,6 +76,14 @@
 				"ReferenceOutput": "",
 				"MustStartWith": "CARD PAYMENT TO",
 				"Example": "CARD PAYMENT TO Google,10.99 GBP, RATE 1.00/GBP ON 02-04-2017, 10.99GBP"
+			},
+			{
+				"Name": "CurveCardPaymentWithRef",
+				"Regex": "^CARD PAYMENT TO CRV\\*(?<Name>.+)(?:\\*(?<Ref>.+)),[\\d\\.]+ (?:\\w{3}), RATE [\\d\\.]+\\/(?:\\w{3}) ON [\\d\\-]+(?: [\\w\\- ]+)?, [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "(Curve) ${Ref}",
+				"MustStartWith": "CARD PAYMENT TO CRV*",
+				"Example": "CARD PAYMENT TO CRV*Freds Bakery,1.20 GBP, RATE 1.00/GBP ON 01-04-2011, 1.20GBP"
 			},
 			{
 				"Name": "CardPaymentWithRef",
@@ -65,6 +100,14 @@
 				"ReferenceOutput": "",
 				"MustStartWith": "CARD PAYMENT TO",
 				"Example": "CARD PAYMENT TO Google,10.99 GBP, RATE 1.00/GBP ON 02-04-2017, 10.99GBP"
+			},
+			{
+				"Name": "CurveCardPaymentWithoutRef",
+				"Regex": "^CARD PAYMENT TO CRV\\*(?<Name>.+),[\\d\\.]+ (?:\\w{3}), RATE [\\d\\.]+\\/(?:\\w{3}) ON [\\d\\-]+(?: [\\w\\- ]+)?, [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "(Curve) ${Name}",
+				"ReferenceOutput": "",
+				"MustStartWith": "CARD PAYMENT TO CRV*",
+				"Example": "CARD PAYMENT TO CRV*Google,10.99 GBP, RATE 1.00/GBP ON 02-04-2017, 10.99GBP"
 			},
 			{
 				"Name": "Cheque",
@@ -115,12 +158,28 @@
 				"Example": "INTEREST PAID AFTER TAX 0.00 DEDUCTED, 1.23"
 			},
 			{
+				"Name": "AccountFee",
+				"Regex": "^MAINTAINING THE ACCOUNT - .*",
+				"PayeeOutput": "Account Monthly Fee",
+				"ReferenceOutput": "",
+				"MustStartWith": "MAINTAINING THE ACCOUNT - ",
+				"Example": "MAINTAINING THE ACCOUNT -  MONTHLY FEE, 2.00"
+			},
+			{
 				"Name": "StandingOrder",
-				"Regex": "^STANDING ORDER (?:VIA FASTER PAYMENT )TO (?<Name>.+) REFERENCE (?<Ref>.+) , (?:MANDATE|MANDAT|MANDATE NO]), [\\d\\.]+(?:\\w{3})?",
+				"Regex": "^STANDING ORDER (?:VIA FASTER PAYMENT )TO (?<Name>.+) REFERENCE (?<Ref>.+) , (?:M|MA|MAN|MANDA|MANDAT|MANDATE|MANDATE |MANDATE N|MANDATE NO]), [\\d\\.]+(?:\\w{3})?",
 				"PayeeOutput": "${Name}",
 				"ReferenceOutput": "${Ref}",
 				"MustStartWith": "STANDING ORDER ",
 				"Example": "STANDING ORDER VIA FASTER PAYMENT TO THE GYM REFERENCE JOEBLOGGS , MANDAT, 54.99"
+			},
+			{
+				"Name": "ThirdPartyPayment",
+				"Regex": "^Third party payment made (?:via Faster Payment )to (?<Name>.+) Reference (?<Ref>.+), [\\d\\.]+(?:\\w{3})?",
+				"PayeeOutput": "${Name}",
+				"ReferenceOutput": "${Ref}",
+				"MustStartWith": "Third party payment ",
+				"Example": "Third party payment made via Faster Payment to Frank Sabotka Reference 12345 , 1234.00GBP"
 			},
 			{
 				"Name": "Cash",
