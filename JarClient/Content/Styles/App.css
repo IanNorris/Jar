@@ -1,5 +1,7 @@
 :root
 {
+	--sidenav-top-colour: #3688e5;
+	--sidenav-bottom-colour: #3332F9;
 	--navbar-height: 3rem;
 	--sidenav-width: 17rem;
 	--transaction-row-height: 3rem;
@@ -48,7 +50,7 @@ input, button, textarea, :focus
 
 .sidenav-bottom
 {
-	background-color: var(--gray-dark);
+	background-color: var(--sidenav-bottom-colour);
 	width: 100%;
 	padding: 1em;
 }
@@ -144,7 +146,7 @@ input, button, textarea, :focus
 
 .sidenav-inner
 {
-	background-image: linear-gradient(0deg, var(--gray-dark), #3688e5);
+	background-image: linear-gradient(0deg, var(--sidenav-bottom-colour), var(--sidenav-top-colour));
 }
 
 .sidenav-dark .sidenav-item.active > .sidenav-link:not(.sidenav-toggle)
@@ -389,4 +391,9 @@ html:not([dir=rtl]) .pl-3, html:not([dir=rtl]) .px-3
 {
 	font-size: 1.5rem;
 	line-height: 1.0;
+}
+
+.text-muted
+{
+	color: #c3c4c6 !important;
 }
