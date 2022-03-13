@@ -305,9 +305,15 @@ namespace Jar
 			}
 
 			var returnValue = targetFunction.Invoke(This, parametersOut);
-			if (targetFunction.ReturnType != typeof(void))
+			if(!targetFunction.ReturnType.IsGenericType && targetFunction.ReturnType == typeof(Task))
 			{
-				if(targetFunction.ReturnType.IsGenericType && targetFunction.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+				await (returnValue as Task);
+
+				return null;
+			}
+			else if (targetFunction.ReturnType != typeof(void))
+			{
+				if((targetFunction.ReturnType.IsGenericType && targetFunction.ReturnType.GetGenericTypeDefinition() == typeof(Task<>)))
 				{
 					await (returnValue as Task);
 
