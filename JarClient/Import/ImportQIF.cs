@@ -23,7 +23,7 @@ namespace Jar.Import
 			return "Quicken";
 		}
 
-		public async Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
+		public async Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId, DateTime ImportFrom)
 		{
 			var outputList = new List<Transaction>();
 

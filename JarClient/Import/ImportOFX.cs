@@ -23,7 +23,7 @@ namespace Jar.Import
 			return "Microsoft Money";
 		}
 
-		public Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
+		public Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId, DateTime ImportFrom)
 		{
 			var parser = new OFXParser.OFXParser();
 			var ofxDocument = parser.GenerateExtract(Filename);

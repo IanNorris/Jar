@@ -175,6 +175,11 @@ namespace Jar.DataModels
 			}
 		}
 
+		public DateTime GetLastImportDate(int account)
+		{
+			return _database.Connection.Table<ImportBatch>().Where(ib => ib.Account == account).Select(a => a.ImportTime).DefaultIfEmpty(DateTime.MinValue).Max();
+		}
+
 		public async Task ImportTransactionBatchFromFile(string accountName, string filename, int account)
 		{
 			var accountObject = _database.Connection.Get<Account>(account);
@@ -183,6 +188,9 @@ namespace Jar.DataModels
 			{
 				throw new InvalidDataException($"Account {account} does not exist");
 			}
+
+			DateTime importFrom = GetLastImportDate(accountObject.Id);
+			importFrom = importFrom.AddDays(-ImportOverlapPeriodDays);
 
 			try
 			{
@@ -197,7 +205,7 @@ namespace Jar.DataModels
 
 				var batchId = (int)_database.GetLastInsertedRowId();
 
-				var transactions = await _import.ImportFile(accountName, filename, account, accountObject.Currency, batchId);
+				var transactions = await _import.ImportFile(accountName, filename, account, accountObject.Currency, batchId, importFrom);
 
 				ProcessAndCommitTransactionBatch(transactions, account);
 			}
@@ -219,6 +227,9 @@ namespace Jar.DataModels
 				throw new InvalidDataException($"Account {account} does not exist");
 			}
 
+			DateTime importFrom = GetLastImportDate(accountObject.Id);
+			importFrom = importFrom.AddDays(-ImportOverlapPeriodDays);
+
 			try
 			{
 				_database.Connection.BeginTransaction();
@@ -232,7 +243,7 @@ namespace Jar.DataModels
 
 				var batchId = (int)_database.GetLastInsertedRowId();
 
-				var transactions = await _import.ImportOnline(accountName, pluginName, account, accountObject.Currency, batchId);
+				var transactions = await _import.ImportOnline(accountName, pluginName, account, accountObject.Currency, batchId, importFrom);
 
 				ProcessAndCommitTransactionBatch(transactions, account);
 			}
@@ -297,6 +308,8 @@ namespace Jar.DataModels
 				}
 			}
 		}
+
+		private const int ImportOverlapPeriodDays = 7;
 
 		private Database _database;
 		private Importer _import;

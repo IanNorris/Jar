@@ -110,7 +110,7 @@ namespace JarPlugin.StarlingBank.Import
 			return outputList;
 		}
 
-		public async Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId)
+		public async Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId, DateTime ImportFrom)
 		{
 			var pat = _configService.GetConfigValue(AccountName, "PAT");
 			var devModeString = _configService.GetConfigValue(AccountName, "DevAccount");
@@ -129,8 +129,7 @@ namespace JarPlugin.StarlingBank.Import
 				throw new InvalidDataException("accountUid is null");
 			}
 
-			var startDate = DateTime.Now.AddYears(-1);
-			var csvFile = await client.GetStringAsync("text/csv", DownloadStatementEndpoint, accountUid, startDate.ToString("yyyy-MM-dd"));
+			var csvFile = await client.GetStringAsync("text/csv", DownloadStatementEndpoint, accountUid, ImportFrom.ToString("yyyy-MM-dd"));
 
 			ThrowOnError(csvFile, "Failed to get transactions");
 

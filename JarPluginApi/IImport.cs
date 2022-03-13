@@ -12,6 +12,6 @@ namespace JarPluginApi
 		ImportType Type();
 		string[] Extensions();
 		string FormatName();
-		Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId);
+		Task<List<Transaction>> Import(string AccountName, string Filename, int Account, int Currency, int BatchId, DateTime ImportFrom);
 	}
 }

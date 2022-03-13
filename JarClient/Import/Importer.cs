@@ -15,17 +15,17 @@ namespace Jar.Import
 		{
 		}
 
-		public async Task<List<Transaction>> ImportOnline(string AccountName, string PluginName, int Account, int Currency, int BatchId)
+		public async Task<List<Transaction>> ImportOnline(string AccountName, string PluginName, int Account, int Currency, int BatchId, DateTime ImportFrom)
 		{
 			if (!m_onlineImporters.TryGetValue(PluginName, out var importer))
 			{
 				throw new InvalidOperationException($"No importer matching plugin {PluginName}");
 			}
 
-			return await importer.Import(AccountName, null, Account, Currency, BatchId);
+			return await importer.Import(AccountName, null, Account, Currency, BatchId, ImportFrom);
 		}
 
-		public async Task<List<Transaction>> ImportFile(string AccountName, string Filename, int Account, int Currency, int BatchId)
+		public async Task<List<Transaction>> ImportFile(string AccountName, string Filename, int Account, int Currency, int BatchId, DateTime ImportFrom)
 		{
 			var Extension = Path.GetExtension(Filename).ToLower();
 
@@ -34,7 +34,7 @@ namespace Jar.Import
 				throw new InvalidOperationException($"No importer for file type {Extension}");
 			}
 
-			return await importer.Import(AccountName, Filename, Account, Currency, BatchId);
+			return await importer.Import(AccountName, Filename, Account, Currency, BatchId, ImportFrom);
 		}
 
 		public override void OnPluginLoaded(IImport importer)
