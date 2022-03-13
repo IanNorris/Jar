@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Jar.Import;
 using Jar.Model;
 using JarPluginApi;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 
 namespace Jar.DataModels
@@ -144,7 +145,17 @@ namespace Jar.DataModels
 				{
 					if(existingMatchingTransactions.Count() > 1)
 					{
-						throw new NotImplementedException();
+						var existingBatch = existingMatchingTransactions.First().ImportBatchId;
+						var remainingTransactions = existingMatchingTransactions.Skip(1);
+						foreach(var existingTransactionSecondary in remainingTransactions)
+						{
+							if(existingTransactionSecondary.ImportBatchId != existingBatch)
+							{
+								transaction.NeedsReview = true;
+							}
+						}
+
+						transactionIndex++;
 					}
 					else
 					{
@@ -189,6 +200,8 @@ namespace Jar.DataModels
 				throw new InvalidDataException($"Account {account} does not exist");
 			}
 
+			accountName = accountObject.Name;
+
 			DateTime importFrom = GetLastImportDate(accountObject.Id);
 			importFrom = importFrom.AddDays(-ImportOverlapPeriodDays);
 
@@ -215,6 +228,21 @@ namespace Jar.DataModels
 				{
 					_database.Connection.Rollback();
 				}
+			}
+		}
+
+		public async Task ImportTransactionsFromFile(int account)
+		{
+			OpenFileDialog Dialog = new OpenFileDialog();
+
+			Dialog.Filter = _import.BuildWindowsOpenFileTypeList();
+			Dialog.FilterIndex = 1;
+			Dialog.RestoreDirectory = true;
+
+			var Result = Dialog.ShowDialog();
+			if (Result.GetValueOrDefault())
+			{
+				await ImportTransactionBatchFromFile(null, Dialog.FileName, account);
 			}
 		}
 

@@ -60,6 +60,9 @@
 					<div class="navbar-nav align-items-lg ml-auto">
 						<datepicker v-on:daterange-changed="dateRangeChanged" v-bind:startDate="dateRangeStart" v-bind:endDate="dateRangeEnd" />
 					</div>
+					<div class="navbar-nav align-items-lg ml-2" v-if="!selectedAccount.OnlinePluginName">
+						<button type="button" class="btn btn-outline-primary rounded-pill" v-on:click="importAccount"><i class="fa-solid fa-file-import"></i>&nbsp;Import</button>
+					</div>
 				</div>
 				<div class="table-responsive fill-vertical-space-inner">
 					<table class="table table-striped table-bordered fixed-header-table">
@@ -77,8 +80,8 @@
 						<tbody>
 							<tr v-for="(t,index) in selectedAccountTransactions">
 								<td>
-									<i v-bind:class="{ 'fa-solid fa-check-circle font-success': t.IsAccepted, 'far fa-question-circle': !t.IsAccepted }"></i>
-									&nbsp;<i class="fa-flag" v-bind:class="{ 'far': t.Flag == 0, 'fa-solid flag-color-1': t.Flag == 1, 'fa-solid flag-color-2': t.Flag == 2, 'fa-solid flag-color-3': t.Flag == 3, 'fa-solid flag-color-4': t.Flag == 4, 'fa-solid flag-color-5': t.Flag == 5 }"></i>
+									<i v-bind:class="{ 'fa-solid fa-check-circle font-success': t.IsAccepted, 'fa-regular fa-question-circle': !t.IsAccepted }"></i>
+									&nbsp;<i class="fa-flag" v-bind:class="{ 'fa-regular': t.Flag == 0, 'fa-solid flag-color-1': t.Flag == 1, 'fa-solid flag-color-2': t.Flag == 2, 'fa-solid flag-color-3': t.Flag == 3, 'fa-solid flag-color-4': t.Flag == 4, 'fa-solid flag-color-5': t.Flag == 5 }"></i>
 								</td>
 								<td>{{t.Date | asDate}}</td>
 								<td v-bind:title="t.OriginalPayee">{{t.Payee}} <span class="text-muted">{{t.Reference}}</span></td>

@@ -30,6 +30,7 @@ namespace JarPluginApi
 		public int ImportBatchId { get; set; }
 		public bool ManualOrEdited { get; set; }
 		public bool Deleted { get; set; } = false;
+		public bool NeedsReview { get; set; } = false;
 
 		//
 		//NOTE: Adding new fields defaults to NULL

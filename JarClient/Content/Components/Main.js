@@ -72,6 +72,9 @@ Vue.component('jar-main', {
 		},
 		dragComplete: function (newSize) {
 			Settings.SetSideNavWidth(newSize);
+		},
+		importAccount: async function () {
+			await Transactions.ImportTransactionsFromFile(this.selectedAccount.Id);
 		}
 	},
 	computed: {

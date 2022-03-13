@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using JarPluginApi;
 
@@ -13,6 +15,28 @@ namespace Jar.Import
 
 		public Importer()
 		{
+		}
+
+		public string BuildWindowsOpenFileTypeList()
+		{
+			var sb = new StringBuilder();
+			var allExtensions = new StringBuilder();
+
+			foreach(var type in m_fileImporters)
+			{
+				var extensions = string.Join(';', type.Value.Extensions().Select( e => $"*{e}"));
+				if(allExtensions.Length > 0)
+				{ 
+					allExtensions.Append(';');
+				}
+				allExtensions.Append(extensions);
+				sb.Append($"{type.Value.FormatName()} ({extensions})|{extensions}|");
+			}
+
+			sb.Insert(0, $"All supported formats ({allExtensions})|{allExtensions}|");
+			sb.Append("All files (*.*)|*.*");
+
+			return sb.ToString();
 		}
 
 		public async Task<List<Transaction>> ImportOnline(string AccountName, string PluginName, int Account, int Currency, int BatchId, DateTime ImportFrom)
