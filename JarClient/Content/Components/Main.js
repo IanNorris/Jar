@@ -75,6 +75,9 @@ Vue.component('jar-main', {
 		},
 		importAccount: async function () {
 			await Transactions.ImportTransactionsFromFile(this.selectedAccount.Id);
+
+			await this.getAccounts();
+			await this.getTransactions();
 		}
 	},
 	computed: {
