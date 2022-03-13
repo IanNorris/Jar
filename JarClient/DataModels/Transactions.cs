@@ -203,7 +203,10 @@ namespace Jar.DataModels
 			accountName = accountObject.Name;
 
 			DateTime importFrom = GetLastImportDate(accountObject.Id);
-			importFrom = importFrom.AddDays(-ImportOverlapPeriodDays);
+			if (importFrom != DateTime.MinValue)
+			{
+				importFrom = importFrom.AddDays(-ImportOverlapPeriodDays);
+			}
 
 			try
 			{
