@@ -64,7 +64,7 @@
 							<p>or</p>
 						</div>
 						<div class="text-center text-muted">
-							<a href="javascript:void(0)" style="text-align: center">Open an existing budget</a>
+							<a href="javascript:void(0)" v-on:click="openExistingBudget" style="text-align: center">Open an existing budget</a>
 						</div>
 					</div>
 				</div>

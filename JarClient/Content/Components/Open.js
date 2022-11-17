@@ -38,11 +38,17 @@ Vue.component('jar-open', {
 		},
 		openExistingBudget: async function () {
 			await OpenExistingBudget();
+			this.budgets = await Settings.GetBudgets();
+			if (this.$refs.password) {
+				this.$refs.password.focus();
+			}
 		},
 		getNewBudgetPath: async function () {
 			let self = this;
 			self.newBudgetObj = await GetNewBudgetPath();
-			self.newBudgetObj.Password = "";
+			if (self.newBudgetObj) {
+				self.newBudgetObj.Password = "";
+			}
 		},
 		createNewBudget: async function () {
 			let self = this;
