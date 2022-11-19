@@ -397,3 +397,8 @@ html:not([dir=rtl]) .pl-3, html:not([dir=rtl]) .px-3
 {
 	color: #c3c4c6 !important;
 }
+
+.table
+{
+	font-weight: 600;
+}
