@@ -18,7 +18,7 @@ activeYear
         </div>
 
         <div class="navbar-nav align-items-lg ml-2">
-            <button type="button" class="btn btn-outline-primary rounded-pill">Configure Jars</button>
+            <button type="button" class="btn btn-outline-primary rounded-pill" v-on:click="openJars">Configure Jars</button>
         </div>
     </div>
 

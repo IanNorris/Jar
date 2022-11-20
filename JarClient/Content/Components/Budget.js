@@ -45,6 +45,9 @@ Vue.component('jar-budget', {
 		getJars: async function () {
 			this.selectedMonthJars = await Budgets.GetDisplayJars(this.activeMonth);
 		},
+		openJars: function () {
+			this.$parent.openJars();
+		}
 	},
 	computed: {
 		budgetTitle: function () {

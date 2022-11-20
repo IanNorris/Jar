@@ -22,6 +22,7 @@ Vue.component('jar-main', {
 		this.MainPage_Accounts = 3;
 		this.MainPage_NewAccount = 4;
 		this.MainPage_Settings = 5;
+		this.MainPage_Jars = 6;
 
 		await this.getAccounts();
 		this.sideNavWidth = await Settings.GetSideNavWidth();
@@ -61,6 +62,10 @@ Vue.component('jar-main', {
 		},
 		openAccounts: function () {
 			this.activePage = this.MainPage_Accounts;
+			this.selectedAccount = null;
+		},
+		openJars: function () {
+			this.activePage = this.MainPage_Jars;
 			this.selectedAccount = null;
 		},
 		dateRangeChanged: async function (start, end) {

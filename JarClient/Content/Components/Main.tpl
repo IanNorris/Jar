@@ -50,6 +50,7 @@
 
 			<split-resize classes="sidenav-drag" variable="--sidenav-width" :initial-value="sideNavWidth" :dragComplete="dragComplete" />
 		</div>
+		<jar-jars v-if="activePage == MainPage_Jars" />
 		<jar-budget v-if="activePage == MainPage_Budgets" />
 		<div class="layout-container" v-if="selectedAccount">
 			<div class="fill-vertical-space-wrapper">
@@ -65,7 +66,7 @@
 					</div>
 				</div>
 				<div class="table-responsive fill-vertical-space-inner">
-					<table class="table table-striped table-bordered fixed-header-table">
+					<table class="table table-striped table-bordered fixed-header-table transaction-table">
 						<thead>
 							<tr>
 								<th class="table-header-status">Status</th>

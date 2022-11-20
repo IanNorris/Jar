@@ -15,6 +15,63 @@ namespace Jar.DataModels
 			_database = database;
 		}
 
+		public IEnumerable<Model.Jar> GetAllJars()
+		{
+			return new List<Model.Jar>()
+			{
+				new Model.Jar
+				{
+					Name = "My Income",
+					Type = JarType.Income,
+					EstimateValue = 200000,
+				},
+
+				new Model.Jar
+				{
+					Name = "Wife Income",
+					Type = JarType.Income,
+					EstimateValue = 300000,
+				},
+
+				new Model.Jar
+				{
+					Name = "Mortgage",
+					Type = JarType.Transaction,
+					EstimateValue = 100000,
+				},
+
+				new Model.Jar
+				{
+					Name = "Utilities",
+					Type = JarType.Transaction,
+					EstimateValue = 120000,
+				},
+
+				new Model.Jar
+				{
+					Name = "Insurance",
+					Type = JarType.Buffer,
+					TargetValue = 100000,
+					TargetDate = DateTime.UtcNow.AddYears(1),
+				},
+
+				new Model.Jar
+				{
+					Name = "Takeout",
+					Type = JarType.Budget,
+					MonthlyValue = 10000,
+				},
+
+				new Model.Jar
+				{
+					Name = "Holiday",
+					Type = JarType.Goal,
+					TargetValue = 700000,
+					TargetDate= DateTime.UtcNow.AddMonths(4),
+				},
+			};
+		}
+
 		public IEnumerable<DisplayJar> GetDisplayJars(string budgetMonth)
 		{
 			return new List<DisplayJar>()
