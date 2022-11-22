@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Jar.Model;
 
 namespace Jar.DataModels
@@ -15,12 +17,11 @@ namespace Jar.DataModels
 			_database = database;
 		}
 
-		public IEnumerable<Model.Jar> GetAllJars()
-		{
-			return new List<Model.Jar>()
+		static List<Model.Jar> jars = new List<Model.Jar>()
 			{
 				new Model.Jar
 				{
+					Id = 1256,
 					Name = "My Income",
 					Type = JarType.Income,
 					EstimateValue = 200000,
@@ -28,6 +29,7 @@ namespace Jar.DataModels
 
 				new Model.Jar
 				{
+					Id = 58216,
 					Name = "Wife Income",
 					Type = JarType.Income,
 					EstimateValue = 300000,
@@ -35,6 +37,7 @@ namespace Jar.DataModels
 
 				new Model.Jar
 				{
+					Id = 6783,
 					Name = "Mortgage",
 					Type = JarType.Transaction,
 					EstimateValue = 100000,
@@ -42,6 +45,7 @@ namespace Jar.DataModels
 
 				new Model.Jar
 				{
+					Id = 527,
 					Name = "Utilities",
 					Type = JarType.Transaction,
 					EstimateValue = 120000,
@@ -49,6 +53,7 @@ namespace Jar.DataModels
 
 				new Model.Jar
 				{
+					Id = 371,
 					Name = "Insurance",
 					Type = JarType.Buffer,
 					TargetValue = 100000,
@@ -57,6 +62,7 @@ namespace Jar.DataModels
 
 				new Model.Jar
 				{
+					Id = 154,
 					Name = "Takeout",
 					Type = JarType.Budget,
 					MonthlyValue = 10000,
@@ -64,12 +70,30 @@ namespace Jar.DataModels
 
 				new Model.Jar
 				{
+					Id = 7173,
 					Name = "Holiday",
 					Type = JarType.Goal,
 					TargetValue = 700000,
 					TargetDate= DateTime.UtcNow.AddMonths(4),
 				},
 			};
+
+		public IEnumerable<Model.Jar> GetAllJars()
+		{
+			return jars.OrderBy(x => x.Order);
+		}
+
+		public async Task OnJarReorder(IEnumerable<Model.Jar> newOrder)
+		{
+			var index = 0;
+
+			foreach(var jar in newOrder)
+			{
+				jar.Order = index;
+
+				index++;
+			}
+
 		}
 
 		public IEnumerable<DisplayJar> GetDisplayJars(string budgetMonth)

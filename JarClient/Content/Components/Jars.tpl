@@ -14,8 +14,8 @@
     </div>
 
     <div class="row ml-1">
-        <div class="col-4 p-3">
-                <div class="card mb-2" v-for="(jar,index) in allJars">
+        <div class="col-4 p-3" v-dragula="allJars" bag="jar-list">
+            <div class="card mb-2" v-for="(jar,index) in allJars" :key="jar.Id">
                 <div class="card-header">
                     {{jar.Name}} - {{jar.Type}}
                 </div>
