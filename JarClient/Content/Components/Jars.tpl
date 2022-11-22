@@ -14,10 +14,15 @@
     </div>
 
     <div class="row ml-1">
-        <div class="col-4 p-3" v-dragula="allJars" bag="jar-list">
-            <div class="card mb-2" v-for="(jar,index) in allJars" :key="jar.Id">
-                <div class="card-header">
-                    {{jar.Name}} - {{jar.Type}}
+
+        <div class="col-4 p-3">
+            <button type="button" class="btn btn-primary m-4" data-toggle="modal" data-target="#modal-new-jar">Show</button>
+
+            <div v-dragula="allJars" bag="jar-list">
+                <div class="card mb-2" v-for="(jar,index) in allJars" :key="jar.Id">
+                    <div class="card-header">
+                        {{jar.Name}} - {{jar.Type}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -73,5 +78,54 @@
         </div>
     </div>
 
-   
+    <div class="modal fade" id="modal-new-jar">
+        <div class="modal-dialog">
+        <form class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">
+                New Jar
+                <br>
+                <small class="text-muted">Add a new Jar to classify your spending or income.</small>
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+            </div>
+            <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group col">
+                <label class="form-label">Jar name</label>
+                <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col">
+                <label class="form-label">Jar type</label>
+                <select class="form-control">
+                    <option>Income</option>
+                    <option>Transaction</option>
+                    <option>Budget</option>
+                    <option>Buffer</option>
+                    <option>Goal</option>
+                    <option>Savings</option>
+                </input>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col mb-0">
+                <label class="form-label">Target date</label>
+                <input type="text" class="form-control" placeholder="DD / MM">
+                </div>
+                <div class="form-group col mb-0">
+                <label class="form-label">Target amount</label>
+                <input type="text" class="form-control" placeholder="Amount to save">
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Add</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
 </div>
