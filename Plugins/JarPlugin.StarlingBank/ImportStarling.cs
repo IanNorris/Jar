@@ -29,9 +29,9 @@ namespace JarPlugin.StarlingBank.Import
 
 		public void ThrowOnError<T>(RestResult<T> result, string message) where T : StarlingError
 		{
-			if (!(result.IsSuccess && result.Result.Success))
+			if (!result.IsSuccess || result.Result == null || !result.Result.Success)
 			{
-				var errors = string.Join("\r\n", result.Result.Errors);
+				var errors = result.Result != null ? string.Join("\r\n", result.Result.Errors) : "";
 				throw new InvalidDataException($"{message}.\nStatus code {result.StatusCode.ToString("G")} {result.StatusCode.ToString("D")}\n{errors}");
 			}
 		}
@@ -43,7 +43,7 @@ namespace JarPlugin.StarlingBank.Import
 				//We did something wrong
 				if ((int)result.StatusCode >= 400 && (int)result.StatusCode < 500)
 				{
-					var errorPayload = JsonConvert.DeserializeObject<StarlingError>(result.Result, RestClient.GetSerializationPolicy(camelCaseJson: true));
+					var errorPayload = result.Result != null ? JsonConvert.DeserializeObject<StarlingError>(result.Result, RestClient.GetSerializationPolicy(camelCaseJson: true)) : new StarlingError { Success = false };
 
 					if (errorPayload != null && errorPayload.Errors != null)
 					{
@@ -75,7 +75,12 @@ namespace JarPlugin.StarlingBank.Import
 			bool firstRow = true;
 			while (!parser.EndOfData)
 			{
-				string[] fields = parser.ReadFields();
+				string[]? fields = parser.ReadFields();
+
+				if(fields == null)
+				{
+					break;
+				}
 
 				if (firstRow)
 				{
@@ -132,6 +137,11 @@ namespace JarPlugin.StarlingBank.Import
 			var csvFile = await client.GetStringAsync("text/csv", DownloadStatementEndpoint, accountUid, ImportFrom.ToString("yyyy-MM-dd"));
 
 			ThrowOnError(csvFile, "Failed to get transactions");
+
+			if(csvFile.Result == null)
+			{
+				throw new InvalidDataException($"CSV file returned was invalid from {AccountName}");
+			}
 
 			return ReadCsv(csvFile.Result, Account, Currency, BatchId);
 		}

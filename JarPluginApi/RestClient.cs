@@ -7,7 +7,7 @@ namespace JarPluginApi
 {
 	public class RestResult<T>
 	{
-		public T Result { get; set; }
+		public T? Result { get; set; }
 		public HttpStatusCode StatusCode { get; set; }
 		public bool IsSuccess { get; set; }
 	}
