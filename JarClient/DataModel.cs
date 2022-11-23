@@ -30,6 +30,7 @@ namespace Jar
 		public AccountCheckpoints AccountCheckpoints { get; private set; }
 		public Transactions Transactions { get; private set; }
 		public Budgets Budgets { get; private set; }
+		public Jars Jars { get; private set; }
 		public Configurations Configurations { get; private set; }
 
 		public PluginService PluginService { get; private set; }
@@ -66,6 +67,7 @@ namespace Jar
 			AccountCheckpoints.SetDatabase(_database);
 			Transactions.SetDatabase(_database);
 			Budgets.SetDatabase(_database);
+			Jars.SetDatabase(_database);
 
 			var accounts = Accounts.GetAccounts();
 			foreach (var account in accounts)
@@ -118,6 +120,7 @@ namespace Jar
 			Transactions = new Transactions(_eventBus, Importer);
 			AccountCheckpoints = new AccountCheckpoints(Transactions, _eventBus);
 			Budgets = new Budgets(_eventBus);
+			Jars = new Jars(_eventBus);
 		}
 
 		public void BindBrowser(WebBinding.ExecuteJavascriptDelegate executeJS)

@@ -37,41 +37,9 @@
 
             <table class="table table-borderless">
                 <tbody>
-                    <tr>
-                        <th>Income</th>
-                        <td>Any source of income, such as wages, side-hustle income, rental income etc.<br/>
-                        You can create more than one source of income if you want them to be displayed separately, such as if you want your and your partner's income to not be combined when showing a breakdown of your budget.</td>
-                    </tr>
-
-                    <tr>
-                        <th>Transaction</th>
-                        <td>Any payments that should be tracked separately, but where you are not adhering to a budget. This might be your mortgage or utility bills. 
-                        You aren't trying to apply a budget to this spending, but you do want to track it. You can set an estimate if you know it, or one will be calculated for you. The value of the Jar will always be zero
-                        as your jar value is calculated to exactly match the transactions in it.</td>
-                    </tr>
-
-                    <tr>
-                        <th>Budget</th>
-                        <td>Budgets are used when you want to keep a limit on spending in an area.
-                        This might be for indulgences, hobbies and other activities that you might spend too much on.
-                        For example if you like video games, this will allow you to decide if you can afford a new game this month.
-                        The value of Budgets can roll over from month-to-month.</td>
-                    </tr>
-
-                    <tr>
-                        <th>Buffer</th>
-                        <td>A buffer allows you to prepare for large spends that you know are coming, but happen regularly. For example saving up for your car insurance if you pay it annually. You can either set a monthly amount, or set a target date and repeating cycle and target value and let Jars calculate the rest.
-                        Buffers will warn you if you're not going to hit your target. A buffer could also just contain a target amount and be used as a "rainy day" fund for unexpected expenses.</td>
-                    </tr>
-
-                    <tr>
-                        <th>Goal</th>
-                        <td>Goals are things you are saving for, such as holidays, rennovations, new computers etc. They typically last multiple months or years and are closed when completed. If a target amount is specified, Jars will inform you when you might hit the target based on your deposits so far.</td>
-                    </tr>
-
-                    <tr>
-                        <th>Savings</th>
-                        <td>Savings are very long term jars for your money to grow in. This might be for a retirement etc.</td>
+                    <tr v-for="(type,index) in jarTypes">
+                        <th>{{type.Name}}</th>
+                        <td>{{type.Description}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -100,13 +68,8 @@
                 <div class="form-group col">
                 <label class="form-label">Jar type</label>
                 <select class="form-control">
-                    <option>Income</option>
-                    <option>Transaction</option>
-                    <option>Budget</option>
-                    <option>Buffer</option>
-                    <option>Goal</option>
-                    <option>Savings</option>
-                </input>
+                    <option v-for="(type,index) in jarTypes" :key="type.Value" :value="type.Value">{{type.Name}}</option>
+                </select>
                 </div>
             </div>
             <div class="form-row">

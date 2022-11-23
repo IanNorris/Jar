@@ -4,11 +4,13 @@ Vue.component('jar-jars', {
 	template: '#JarsTemplate',
 	data: function () {
 		return {
-			allJars: []
+			allJars: [],
+			jarTypes: []
 		};
 	},
 	created: async function () {
 		await this.getJars();
+		await this.getJarTypes();
 	},
 	mounted: function () {
 		let self = this;
@@ -20,7 +22,10 @@ Vue.component('jar-jars', {
 	},
 	methods: {
 		getJars: async function () {
-			this.allJars = await Budgets.GetAllJars();
+			this.allJars = await Jars.GetAllJars();
+		},
+		getJarTypes: async function () {
+			this.jarTypes = await Jars.GetJarTypes();
 		},
 		closeJars: async function () {
 			this.$parent.openBudget();
