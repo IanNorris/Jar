@@ -6,6 +6,10 @@ let globalApp = null;
 let onLoaded = async function () {
 	moment.locale(navigator.language);
 
+	jQuery.validator.addMethod("notNone", function (value, element) {
+		return this.optional(element) || value != "None";
+	});
+
 	let app = new Vue({
 		el: '#app',
 		data: {

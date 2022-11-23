@@ -5,7 +5,9 @@ Vue.component('jar-jars', {
 	data: function () {
 		return {
 			allJars: [],
-			jarTypes: []
+			jarTypes: [],
+			newJarTargetStart: moment('1900-01-01'),
+			newJarTargetEnd: moment(),
 		};
 	},
 	created: async function () {
@@ -28,12 +30,6 @@ Vue.component('jar-jars', {
 				},
 				'jarType': {
 					required: true
-				},
-				'targetDate': {
-					require_from_group: [1, '.jar-target-field']
-				},
-				'targetAmount': {
-					require_from_group: [1, '.jar-target-field']
 				}
 			},
 
@@ -68,6 +64,9 @@ Vue.component('jar-jars', {
 		});
 	},
 	methods: {
+		newJarTargetDateChanged: async function () {
+			
+		},
 		getJars: async function () {
 			this.allJars = await Jars.GetAllJars();
 		},

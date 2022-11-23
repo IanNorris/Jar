@@ -75,7 +75,7 @@
             <div class="form-row">
                 <div class="form-group col mb-0">
                 <label class="form-label">Target date</label>
-                <input name="targetDate" type="text" class="form-control jar-target-field" placeholder="DD / MM">
+                <datepicker class="form-control jar-target-field" v-on:daterange-changed="newJarTargetDateChanged" v-bind:startDate="newJarTargetStart" v-bind:endDate="newJarTargetEnd" v-bind:singleDate="true" v-bind:future="true" v-bind:allowNone="true" />
                 </div>
                 <div class="form-group col mb-0">
                 <label class="form-label">Target amount</label>
