@@ -28,14 +28,14 @@ namespace Jar.DataModels
 			return outputList;
 		}
 
-		private EnumValue(int integer, string name, string description)
+		private EnumValue(int value, string name, string description)
 		{
-			Integer = integer;
+			Value = value;
 			Name = name;
 			Description = description;
 		}
 
-		public int Integer { get; }
+		public int Value { get; }
 		public string Name { get; }
 		public string Description { get; }
 

@@ -48,7 +48,7 @@
 
     <div class="modal fade" id="modal-new-jar">
         <div class="modal-dialog">
-        <form class="modal-content">
+        <form class="modal-content" id="new-jar-form">
             <div class="modal-header">
             <h5 class="modal-title">
                 New Jar
@@ -61,31 +61,31 @@
             <div class="form-row">
                 <div class="form-group col">
                 <label class="form-label">Jar name</label>
-                <input type="text" class="form-control">
+                <input name="jarName" type="text" class="form-control">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col">
                 <label class="form-label">Jar type</label>
-                <select class="form-control">
-                    <option v-for="(type,index) in jarTypes" :key="type.Value" :value="type.Value">{{type.Name}}</option>
+                <select name="jarType" class="form-control">
+                    <option v-for="(type,index) in jarTypes" :key="type.Value" v-bind:value="type.Value">{{type.Name}}</option>
                 </select>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col mb-0">
                 <label class="form-label">Target date</label>
-                <input type="text" class="form-control" placeholder="DD / MM">
+                <input name="targetDate" type="text" class="form-control jar-target-field" placeholder="DD / MM">
                 </div>
                 <div class="form-group col mb-0">
                 <label class="form-label">Target amount</label>
-                <input type="text" class="form-control" placeholder="Amount to save">
+                <input name="targetAmount" type="text" class="form-control jar-target-field" placeholder="Amount to save">
                 </div>
             </div>
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Add</button>
+            <button type="submit" class="btn btn-primary">Add</button>
             </div>
         </form>
         </div>
