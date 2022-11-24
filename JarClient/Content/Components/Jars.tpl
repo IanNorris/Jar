@@ -67,10 +67,7 @@
             <div class="form-row">
                 <div class="form-group col">
                 <label class="form-label">Category</label>
-                <select name="jarCategory" class="form-control select2">
-                    <option>Hello</option>
-                    <option>World</option>
-                </select>
+                <select name="jarCategory" class="form-control select2"></select>
                 </div>
             </div>
             <div class="form-row">

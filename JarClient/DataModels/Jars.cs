@@ -23,8 +23,8 @@ namespace Jar.DataModels
 			{
 				new Category() { Id = 1, Name = "Income" },
 				new Category() { Id = 2, Name = "House" },
-				new Category() { Id = 2, Name = "Children" },
-				new Category() { Id = 2, Name = "Utilities" },
+				new Category() { Id = 3, Name = "Children" },
+				new Category() { Id = 4, Name = "Utilities" },
 			}.Select( c => new Select2Value { Id = c.Id, Text = c.Name } );
 		}
 

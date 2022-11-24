@@ -32,6 +32,15 @@ Vue.component('jar-jars', {
 					let categories = await Jars.GetCategories();
 					success({ results: categories });
 				}
+			},
+			createTag: function (params) {
+				var newTerm = $.trim(params.term);
+
+				if (newTerm === '') {
+					return null;
+				}
+
+				return { id: newTerm + '_PLACEHOLDER', text: newTerm };
 			}
 		}).change(function () {
 			
