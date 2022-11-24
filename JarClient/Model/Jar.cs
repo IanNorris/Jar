@@ -8,7 +8,7 @@ namespace Jar.Model
 	{
 		[PrimaryKey, AutoIncrement]
 		public int Id { get; set; }
-		public int ParentId { get; set; }
+		public int CategoryId { get; set; }
 		public string Name { get; set; }
 		public JarType Type { get; set; }
 		public string Filters { get; set; }

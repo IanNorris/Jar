@@ -119,7 +119,7 @@ namespace Jar.DataModels
 						FlagTotalAmount = 1,
 						Filters = null,
 						FlagTransactionCount = 1,
-						ParentId = -1,
+						CategoryId = -1,
 					},
 
 					TotalValue = 123456,
@@ -144,7 +144,7 @@ namespace Jar.DataModels
 						FlagTotalAmount = 1,
 						Filters = null,
 						FlagTransactionCount = 1,
-						ParentId = -1,
+						CategoryId = -1,
 					},
 
 					TotalValue = 90034,
@@ -170,7 +170,7 @@ namespace Jar.DataModels
 						FlagTotalAmount = 1,
 						Filters = null,
 						FlagTransactionCount = 1,
-						ParentId = -1,
+						CategoryId = -1,
 					},
 
 					AverageValue = 8032,
@@ -195,7 +195,7 @@ namespace Jar.DataModels
 						FlagTotalAmount = 1,
 						Filters = "Budget Insurance",
 						FlagTransactionCount = 1,
-						ParentId = -1,
+						CategoryId = -1,
 					},
 
 					AverageValue = 3000,
@@ -220,7 +220,7 @@ namespace Jar.DataModels
 						FlagTotalAmount = 1,
 						Filters = "Budget Insurance",
 						FlagTransactionCount = 1,
-						ParentId = -1,
+						CategoryId = -1,
 					},
 
 					AverageValue = 2345,
@@ -245,7 +245,7 @@ namespace Jar.DataModels
 						FlagTotalAmount = 1,
 						Filters = null,
 						FlagTransactionCount = 1,
-						ParentId = -1,
+						CategoryId = -1,
 					},
 
 					AverageValue = 0,
