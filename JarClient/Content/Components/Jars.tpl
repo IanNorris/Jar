@@ -30,10 +30,10 @@
         <div class="col-8 p-3">
             <p>Here you can configure your Jars! Jars are just containers for tracking your money. No money is actually moved, it just allows you to track your spending and saving targets.</p>
 
-            <p>When you make a transaction, it is assigned to a jar. Depending on the jar type you either need to pre-allocate the funds for it, or the jar value will be automatically calculated based on the transactions in it (and will remain zero).</p>
+            <p>When you make a transaction, it needs to be assigned to a jar. When all transactions are assigned, the Jars get filled from top to bottom, with negative Jars being filled first.</p>
 
-            <p>Jars uses a form of double-entry bookkeeping. This means every expense must be covered by a credit from somewhere else. Your Jars are filled from top to bottom. Your most important Jars should be at the top,
-            with the jars becoming decreasingly important as you go down. The last bucket will receive whatever money is left over.</p>
+            <p>Jars uses a form of double-entry bookkeeping. This means every expense must be covered by a credit from somewhere else. Because your Jars are filled from top to bottom, your most important Jars should be at the top.
+            The most aspirational jars should be at the bottom. The last bucket will receive whatever money is left over.</p>
 
             <table class="table table-borderless">
                 <tbody>

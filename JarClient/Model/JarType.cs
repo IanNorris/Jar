@@ -14,7 +14,7 @@ namespace Jar.Model
             as your jar value is calculated to exactly match the transactions in it.")]
 		Transaction = 2,
 
-		[Description(@"Budgets are used when you want to keep a limit on spending in an area.
+		[Description(@"Budgets are used when you want to keep a limit on spending in an area (or remind yourself that you've earned it).
             This might be for indulgences, hobbies and other activities that you might spend too much on.
             For example if you like video games, this will allow you to decide if you can afford a new game this month.
             The value of Budgets can roll over from month-to-month.")]
@@ -24,10 +24,8 @@ namespace Jar.Model
              Buffers will warn you if you're not going to hit your target. A buffer could also just contain a target amount and be used as a ""rainy day"" fund for unexpected expenses.")]
 		Buffer = 4,
 
-		[Description(@"Goals are things you are saving for, such as holidays, rennovations, new computers etc. They typically last multiple months or years and are closed when completed. If a target amount is specified, Jars will inform you when you might hit the target based on your deposits so far.")]
+		[Description(@"Goals are things you are saving for, such as holidays, rennovations, new computers etc. They typically last multiple months or years and are closed when completed. If a target amount is specified, Jars will inform you when you might hit the target based on your deposits so far.
+			You can also specify just an amount to save each month. This lets you save a little bit over time for example your child's education. Your goals should generally be the last of your Jars, and your last Jar will receive any money left over at the end of the month.")]
 		Goal = 5,
-
-		[Description(@"Savings are very long term jars for your money to grow in. This might be for a retirement etc.")]
-		Savings = 6,
 	}
 }
