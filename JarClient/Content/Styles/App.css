@@ -402,3 +402,8 @@ html:not([dir=rtl]) .pl-3, html:not([dir=rtl]) .px-3
 {
 	font-weight: 600;
 }
+
+.select2
+{
+	display: block;
+}
