@@ -8,6 +8,8 @@ Vue.component('jar-jars', {
 			jarTypes: [],
 			newJarTargetStart: moment('1900-01-01'),
 			newJarTargetEnd: moment(),
+
+			newJarTargetAmount: 0.0
 		};
 	},
 	created: async function () {
@@ -88,8 +90,9 @@ Vue.component('jar-jars', {
 		});
 	},
 	methods: {
-		newJarTargetDateChanged: async function () {
-			
+		newJarTargetDateChanged: async function (start, end) {
+			this.newJarTargetStart = start;
+			this.newJarTargetEnd = end;
 		},
 		getJars: async function () {
 			this.allJars = await Jars.GetAllJars();
@@ -102,6 +105,21 @@ Vue.component('jar-jars', {
 		},
 		onJarReorder: async function () {
 			await Budgets.OnJarReorder(this.allJars);
+		}
+	},
+	computed: {
+		targetDescription() {
+			let now = moment.utc();
+			let dateDescription = this.newJarTargetStart.format('MMMM D, YYYY');
+			if (dateDescription == moment('1900-01-01').format('MMMM D, YYYY')) {
+				let totalAmount = 12 * this.newJarTargetAmount;
+				return `Saving ${this.newJarTargetAmount} a month, which is ${totalAmount} a year.`;
+			}
+			else {
+				var dateMonths = this.newJarTargetStart.diff(now, 'months');
+				let totalAmount = dateMonths * this.newJarTargetAmount;
+				return `Saving ${this.newJarTargetAmount} a month, which is ${totalAmount} by ${dateDescription}.`;
+			}
 		}
 	}
 });

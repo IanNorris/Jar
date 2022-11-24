@@ -58,43 +58,68 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
             </div>
             <div class="modal-body">
-            <div class="form-row">
-                <div class="form-group col">
-                <label class="form-label">Jar name</label>
-                <input name="jarName" type="text" class="form-control">
+
+                <div class="form-row">
+                    <div class="form-group col">
+                    <label class="form-label">Jar name</label>
+                    <input name="jarName" type="text" class="form-control">
+                    </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col">
-                <label class="form-label">Category</label>
-                <select name="jarCategory" class="form-control select2"></select>
+
+                <div class="form-row">
+                    <div class="form-group col">
+                    <label class="form-label">Category</label>
+                    <select name="jarCategory" class="form-control select2"></select>
+                    </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col">
-                <label class="form-label">Jar type</label>
-                <select name="jarType" class="form-control">
-                    <option v-for="(type,index) in jarTypes" :key="type.Value" v-bind:value="type.Value">{{type.Name}}</option>
-                </select>
+
+                <div class="form-row">
+                    <div class="form-group col">
+                    <label class="form-label">Jar type</label>
+                    <select name="jarType" class="form-control">
+                        <option v-for="(type,index) in jarTypes" :key="type.Value" v-bind:value="type.Value">{{type.Name}}</option>
+                    </select>
+                    </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col mb-0">
-                <label class="form-label">Target date</label>
-                <datepicker class="form-control jar-target-field" v-on:daterange-changed="newJarTargetDateChanged" v-bind:startDate="newJarTargetStart" v-bind:endDate="newJarTargetEnd" v-bind:singleDate="true" v-bind:future="true" v-bind:allowNone="true" />
+
+                <div class="form-row">
+                    <div class="form-group col mb-0">
+                    <label class="form-label">Target date</label>
+                    <datepicker class="form-control jar-target-field" v-on:daterange-changed="newJarTargetDateChanged" v-bind:startDate="newJarTargetStart" v-bind:endDate="newJarTargetEnd" v-bind:singleDate="true" v-bind:future="true" v-bind:allowNone="true" />
+                    </div>
+                    <div class="form-group col mb-0">
+                    <label class="form-label">Target monthly amount</label>
+                    <input name="targetAmount" type="number" class="form-control jar-target-field" placeholder="Amount to save (or estimated amount) each month" v-model="newJarTargetAmount">
+                    </div>
                 </div>
-                <div class="form-group col mb-0">
-                <label class="form-label">Target amount</label>
-                <input name="targetAmount" type="text" class="form-control jar-target-field" placeholder="Amount to save">
+
+                <div class="form-row mt-4">
+                    <div class="form-group col mb-0">
+                        <i>{{targetDescription}}</i>
+                    </div>
                 </div>
-            </div>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Add</button>
-            </div>
-        </form>
+
+                <div class="form-row mt-4">
+                    <div class="form-group col mb-0">
+                        <label class="custom-control custom-checkbox">
+                          <input name="flagAmountDeviations" type="checkbox" class="custom-control-input">
+                          <span class="custom-control-label">Alert me if the amount is unusual.</span>
+                        </label>
+
+                        <label class="custom-control custom-checkbox">
+                          <input name="flagCountDeviations" type="checkbox" class="custom-control-input">
+                          <span class="custom-control-label">Alert me if the transaction count is unusual.</span>
+                        </label>
+                    </div>
+                </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
         </div>
-    </div>
+        </div>
     </div>
 </div>
