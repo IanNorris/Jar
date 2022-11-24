@@ -41,6 +41,8 @@ namespace Jar
 		{
 			_database.CreateTable<Configuration>(CreateFlags.ImplicitIndex);
 			_database.CreateTable<Account>(CreateFlags.ImplicitIndex);
+			_database.CreateTable<Model.Jar>(CreateFlags.ImplicitIndex);
+			_database.CreateTable<Category>(CreateFlags.ImplicitIndex);
 			_database.CreateTable<Transaction>(CreateFlags.ImplicitIndex);
 			_database.CreateTable<ImportBatch>(CreateFlags.ImplicitIndex);
 			_database.CreateTable<AccountCheckpoint>(CreateFlags.ImplicitIndex);

@@ -17,6 +17,17 @@ namespace Jar.DataModels
 			_database = database;
 		}
 
+		public async Task<IEnumerable<Select2Value>> GetCategories()
+		{
+			return new List<Category>()
+			{
+				new Category() { Id = 1, Name = "Income" },
+				new Category() { Id = 2, Name = "House" },
+				new Category() { Id = 2, Name = "Children" },
+				new Category() { Id = 2, Name = "Utilities" },
+			}.Select( c => new Select2Value { Id = c.Id, Text = c.Name } );
+		}
+
 		static List<Model.Jar> jars = new List<Model.Jar>()
 			{
 				new Model.Jar

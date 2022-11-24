@@ -22,6 +22,21 @@ Vue.component('jar-jars', {
 			}
 		});
 
+		$('.select2').select2({
+			allowClear: true,
+			tags: true,
+			dropdownParent: $('#modal-new-jar'),
+			placeholder: 'Select a caterory...',
+			ajax: {
+				transport: async function (params, success, failure) {
+					let categories = await Jars.GetCategories();
+					success({ results: categories });
+				}
+			}
+		}).change(function () {
+			
+		});
+
 		$('#new-jar-form').validate({
 			focusInvalid: true,
 			rules: {

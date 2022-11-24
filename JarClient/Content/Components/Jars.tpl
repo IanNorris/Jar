@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-new-jar">
+    <div class="modal fade" id="modal-new-jar" data-backdrop="static">
         <div class="modal-dialog">
         <form class="modal-content" id="new-jar-form">
             <div class="modal-header">
@@ -62,6 +62,15 @@
                 <div class="form-group col">
                 <label class="form-label">Jar name</label>
                 <input name="jarName" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col">
+                <label class="form-label">Category</label>
+                <select name="jarCategory" class="form-control select2">
+                    <option>Hello</option>
+                    <option>World</option>
+                </select>
                 </div>
             </div>
             <div class="form-row">
