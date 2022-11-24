@@ -112,17 +112,17 @@
                     <div class="form-group col mb-0">
                         <label class="custom-control custom-checkbox">
                             <input name="allowCarryOver" type="checkbox" class="custom-control-input">
-                            <span class="custom-control-label">Carry over balance.</span>
+                            <span class="custom-control-label">Carry over balance</span>
                         </label>
 
                         <label class="custom-control custom-checkbox">
                             <input name="flagAmountDeviations" type="checkbox" class="custom-control-input">
-                            <span class="custom-control-label">Alert me if the amount is unusual.</span>
+                            <span class="custom-control-label">Alert me if the amount is unusual</span>
                         </label>
 
                         <label class="custom-control custom-checkbox">
                             <input name="flagCountDeviations" type="checkbox" class="custom-control-input">
-                            <span class="custom-control-label">Alert me if the transaction count is unusual.</span>
+                            <span class="custom-control-label">Alert me if the transaction count is unusual</span>
                         </label>
                     </div>
                 </div>
