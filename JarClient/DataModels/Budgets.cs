@@ -24,7 +24,7 @@ namespace Jar.DataModels
 					Id = 1256,
 					Name = "My Income",
 					Type = JarType.Income,
-					EstimateValue = 200000,
+					MonthlyValue = 200000,
 				},
 
 				new Model.Jar
@@ -32,7 +32,7 @@ namespace Jar.DataModels
 					Id = 58216,
 					Name = "Wife Income",
 					Type = JarType.Income,
-					EstimateValue = 300000,
+					MonthlyValue = 300000,
 				},
 
 				new Model.Jar
@@ -40,7 +40,7 @@ namespace Jar.DataModels
 					Id = 6783,
 					Name = "Mortgage",
 					Type = JarType.Transaction,
-					EstimateValue = 100000,
+					MonthlyValue = 100000,
 				},
 
 				new Model.Jar
@@ -48,7 +48,7 @@ namespace Jar.DataModels
 					Id = 527,
 					Name = "Utilities",
 					Type = JarType.Transaction,
-					EstimateValue = 120000,
+					MonthlyValue = 120000,
 				},
 
 				new Model.Jar

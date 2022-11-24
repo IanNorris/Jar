@@ -12,7 +12,6 @@ namespace Jar.Model
 		public string Name { get; set; }
 		public JarType Type { get; set; }
 		public string Filters { get; set; }
-		public long EstimateValue { get; set; }
 		public long MonthlyValue { get; set; }
 		public long TargetValue { get; set; }
 		public DateTime TargetDate { get; set; }
