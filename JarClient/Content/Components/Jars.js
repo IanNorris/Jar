@@ -8,8 +8,9 @@ Vue.component('jar-jars', {
 			jarTypes: [],
 			newJarTargetStart: moment('1900-01-01'),
 			newJarTargetEnd: moment(),
-
-			newJarTargetAmount: 0.0
+			newJarType: 2,
+			newJarTargetAmount: 0,
+			newJarMaxAmount: 0,
 		};
 	},
 	created: async function () {
@@ -112,8 +113,16 @@ Vue.component('jar-jars', {
 			let now = moment.utc();
 			let dateDescription = this.newJarTargetStart.format('MMMM D, YYYY');
 			if (dateDescription == moment('1900-01-01').format('MMMM D, YYYY')) {
-				let totalAmount = 12 * this.newJarTargetAmount;
-				return `Saving ${this.newJarTargetAmount} a month, which is ${totalAmount} a year.`;
+				if (this.newJarMaxAmount != null && this.newJarMaxAmount != '' && this.newJarMaxAmount > 0 && this.newJarTargetAmount != null && this.newJarTargetAmount != '' && this.newJarTargetAmount > 0) {
+					let months = Math.round(this.newJarMaxAmount / this.newJarTargetAmount);
+					let newDate = now.add(months, 'month').format('MMMM D, YYYY');
+					return `Saving ${this.newJarTargetAmount} a month, target of ${this.newJarMaxAmount} will be hit by ${newDate}.`;
+				}
+				else {
+					let totalAmount = 12 * this.newJarTargetAmount;
+					return `Saving ${this.newJarTargetAmount} a month, which is ${totalAmount} a year.`;
+				}
+				
 			}
 			else {
 				var dateMonths = this.newJarTargetStart.diff(now, 'months');

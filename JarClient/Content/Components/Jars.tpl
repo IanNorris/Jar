@@ -76,39 +76,53 @@
                 <div class="form-row">
                     <div class="form-group col">
                     <label class="form-label">Jar type</label>
-                    <select name="jarType" class="form-control">
+                    <select name="jarType" class="form-control" v-model="newJarType">
                         <option v-for="(type,index) in jarTypes" :key="type.Value" v-bind:value="type.Value">{{type.Name}}</option>
                     </select>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group col mb-0">
-                    <label class="form-label">Target date</label>
-                    <datepicker class="form-control jar-target-field" v-on:daterange-changed="newJarTargetDateChanged" v-bind:startDate="newJarTargetStart" v-bind:endDate="newJarTargetEnd" v-bind:singleDate="true" v-bind:future="true" v-bind:allowNone="true" />
+                <div v-if="newJarType != 1">
+                    <div class="form-row">
+                        <div class="form-group col mb-0">
+                        <label class="form-label">Target date</label>
+                        <datepicker class="form-control jar-target-field" v-on:daterange-changed="newJarTargetDateChanged" v-bind:startDate="newJarTargetStart" v-bind:endDate="newJarTargetEnd" v-bind:singleDate="true" v-bind:future="true" v-bind:allowNone="true" />
+                        </div>
                     </div>
-                    <div class="form-group col mb-0">
-                    <label class="form-label">Target monthly amount</label>
-                    <input name="targetAmount" type="number" class="form-control jar-target-field" placeholder="Amount to save (or estimated amount) each month" v-model="newJarTargetAmount">
-                    </div>
-                </div>
 
-                <div class="form-row mt-4">
-                    <div class="form-group col mb-0">
-                        <i>{{targetDescription}}</i>
+                    <div class="form-row">
+                         <div class="form-group col mb-0">
+                        <label class="form-label">Desired monthly amount</label>
+                        <input name="targetAmount" type="number" min="0" class="form-control jar-target-field" placeholder="Amount to try to save (or estimated amount) each month" v-model="newJarTargetAmount">
+                        </div>
+                        <div class="form-group col mb-0">
+                        <label class="form-label">Maximum Jar amount</label>
+                        <input name="maxAmount" type="number" min="0" class="form-control jar-target-field" placeholder="The max amount this Jar should contain" v-model="newJarMaxAmount">
+                        </div>
                     </div>
-                </div>
+
+                    <div class="form-row mt-4">
+                        <div class="form-group col mb-0">
+                            <i>{{targetDescription}}</i>
+                        </div>
+                    </div>
+                 </div>
 
                 <div class="form-row mt-4">
                     <div class="form-group col mb-0">
                         <label class="custom-control custom-checkbox">
-                          <input name="flagAmountDeviations" type="checkbox" class="custom-control-input">
-                          <span class="custom-control-label">Alert me if the amount is unusual.</span>
+                            <input name="allowCarryOver" type="checkbox" class="custom-control-input">
+                            <span class="custom-control-label">Carry over balance.</span>
                         </label>
 
                         <label class="custom-control custom-checkbox">
-                          <input name="flagCountDeviations" type="checkbox" class="custom-control-input">
-                          <span class="custom-control-label">Alert me if the transaction count is unusual.</span>
+                            <input name="flagAmountDeviations" type="checkbox" class="custom-control-input">
+                            <span class="custom-control-label">Alert me if the amount is unusual.</span>
+                        </label>
+
+                        <label class="custom-control custom-checkbox">
+                            <input name="flagCountDeviations" type="checkbox" class="custom-control-input">
+                            <span class="custom-control-label">Alert me if the transaction count is unusual.</span>
                         </label>
                     </div>
                 </div>
