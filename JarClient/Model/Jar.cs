@@ -16,8 +16,8 @@ namespace Jar.Model
 		public long TargetValue { get; set; }
 		public DateTime TargetDate { get; set; }
 		public bool CarryOver { get; set; }
-		public int FlagTransactionCount { get; set; }
-		public int FlagTotalAmount { get; set; }
+		public bool FlagTransactionCount { get; set; }
+		public bool FlagTotalAmount { get; set; }
 
 		public int Order { get; set; }
 
