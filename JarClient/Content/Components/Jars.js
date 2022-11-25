@@ -118,6 +118,8 @@ Vue.component('jar-jars', {
 					FlagTotalAmount: this.newJarFlagTotalAmount
 				}, isCategoryNumberic ? '' : category);
 
+				await this.getJars();
+
 				this.newJarName = '';
 
 				setTimeout(() => {
