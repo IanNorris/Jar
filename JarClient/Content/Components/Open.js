@@ -15,6 +15,13 @@ Vue.component('jar-open', {
 	async created() {
 		this.budgets = await Settings.GetBudgets();
 	},
+	async mounted() {
+		setTimeout(() => {
+			this.$nextTick(() =>
+				$('#passwordInput').focus()
+			);
+		}, 250);
+	},
 	methods: {
 		selectBudget: function (index) {
 			this.selectedBudget = index;

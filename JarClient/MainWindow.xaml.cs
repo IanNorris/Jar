@@ -67,7 +67,8 @@ namespace Jar
 			m_browser.Source = new Uri("http://jars.lh/index.html");
 			ShowDevTools();
 
-
+			Activate();
+			m_browser.Focus();
 		}
 
 		private async void m_browser_Initialized(object sender, EventArgs e)

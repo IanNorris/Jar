@@ -38,7 +38,7 @@
 									<div>
 										<label class="form-label d-flex justify-content-between align-items-end">Password</label>
 									</div>
-									<input type="password" ref="password" class="form-control" v-model="password" autofocus />
+									<input type="password" ref="password" class="form-control" v-model="password" id="passwordInput" />
 								</div>
 								<div class="d-flex m-0">
 									<!--<label class="custom-control custom-checkbox m-0">
