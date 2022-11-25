@@ -63,6 +63,7 @@ namespace Jar
 			m_browser.CoreWebView2.SetVirtualHostNameToFolderMapping("jars.lh", Base, CoreWebView2HostResourceAccessKind.DenyCors);
 
 			m_browser.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+			m_browser.CoreWebView2.Settings.IsGeneralAutofillEnabled = false;
 
 			m_browser.Source = new Uri("http://jars.lh/index.html");
 			ShowDevTools();
