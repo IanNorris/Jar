@@ -28,6 +28,11 @@ namespace Jar.DataModels
 			}.Select( c => new Select2Value { Id = c.Id, Text = c.Name } );
 		}
 
+		public async Task CreateNewJar(Model.Jar newJar, string newCategoryName)
+		{
+
+		}
+
 		static List<Model.Jar> jars = new List<Model.Jar>()
 			{
 				new Model.Jar

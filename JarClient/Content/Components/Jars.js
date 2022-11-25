@@ -6,11 +6,15 @@ Vue.component('jar-jars', {
 		return {
 			allJars: [],
 			jarTypes: [],
+			newJarName: '',
 			newJarTargetStart: moment('1900-01-01'),
 			newJarTargetEnd: moment(),
 			newJarType: 2,
 			newJarTargetAmount: 0,
 			newJarMaxAmount: 0,
+			newJarCarryOver: false,
+			newJarFlagTransactionCount: false,
+			newJarFlagTotalAmount: false,
 		};
 	},
 	created: async function () {
@@ -43,14 +47,12 @@ Vue.component('jar-jars', {
 					return null;
 				}
 
-				return { id: newTerm + '_PLACEHOLDER', text: newTerm };
+				return { id: newTerm, text: newTerm };
 			}
-		}).change(function () {
-			
-		});
+		}).change(function () { });
 
 		$('#new-jar-form').validate({
-			focusInvalid: true,
+			focusInvalid: false,
 			rules: {
 				'jarName': {
 					required: true
@@ -60,8 +62,9 @@ Vue.component('jar-jars', {
 				}
 			},
 
-			submitHandler: function (form) {
-
+			submitHandler: async function (form) {
+				//Do nothing, we handle this elsewhere
+				//but we don't want it actually submitting the form.
 			},
 
 			errorPlacement: function errorPlacement(error, element) {
@@ -76,8 +79,6 @@ Vue.component('jar-jars', {
 			},
 			highlight: function (element) {
 				var $el = $(element);
-				var $parent = $el.parents('.form-group');
-
 				$el.addClass('is-invalid');
 
 				// Select2 and Tagsinput
@@ -89,8 +90,45 @@ Vue.component('jar-jars', {
 				$(element).parents('.form-group').find('.is-invalid').removeClass('is-invalid');
 			}
 		});
+
+		// HACK: Opening the daterangepicker is submitting the form, causing the validation to fire
+		// and I can't figure out why. So we completely disable the submit path and validate and submit manually...
+		// There's no callstack, the event comes from nowhere, and it doesn't happen if you
+		// step through either...
+		$('#new-jar-form').off('submit').on('submit', e => e.preventDefault() );
 	},
 	methods: {
+		onAddJar: async function () {
+			if ($('#new-jar-form').valid()) {
+				$('#new-jar-submit').prop("disabled", true);
+
+				let category = $('#jarCategoryInput').val();
+				let categoryNumeric = parseInt(category);
+				let isCategoryNumberic = !Number.isNaN(categoryNumeric);
+
+				await Jars.CreateNewJar({
+					CategoryId: isCategoryNumberic ? categoryNumeric : 0,
+					Name: this.newJarName,
+					Type: this.newJarType,
+					MonthlyValue: parseFloat(this.newJarTargetAmount),
+					TargetValue: parseFloat(this.newJarMaxAmount),
+					TargetDate: this.newJarTargetStart.toISOString(),
+					CarryOver: this.newJarCarryOver,
+					FlagTransactionCount: this.newJarFlagTransactionCount,
+					FlagTotalAmount: this.newJarFlagTotalAmount
+				}, isCategoryNumberic ? '' : category);
+
+				this.newJarName = '';
+
+				setTimeout(() => {
+					$('#new-jar-submit').prop("disabled", false);
+					$('#modal-new-jar').modal('toggle');
+				}, 0);
+			}
+		},
+		onSubmitForm: function () {
+
+		},
 		newJarTargetDateChanged: async function (start, end) {
 			this.newJarTargetStart = start;
 			this.newJarTargetEnd = end;

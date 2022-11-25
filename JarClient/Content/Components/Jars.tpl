@@ -48,7 +48,7 @@
 
     <div class="modal fade" id="modal-new-jar" data-backdrop="static">
         <div class="modal-dialog">
-        <form class="modal-content" id="new-jar-form">
+        <form class="modal-content" id="new-jar-form" onsubmit="return false;">
             <div class="modal-header">
             <h5 class="modal-title">
                 New Jar
@@ -62,14 +62,14 @@
                 <div class="form-row">
                     <div class="form-group col">
                     <label class="form-label">Jar name</label>
-                    <input name="jarName" type="text" class="form-control">
+                    <input name="jarName" v-model="newJarName" type="text" class="form-control">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col">
                     <label class="form-label">Category</label>
-                    <select name="jarCategory" class="form-control select2"></select>
+                    <select name="jarCategory" id="jarCategoryInput" class="form-control select2"></select>
                     </div>
                 </div>
 
@@ -111,17 +111,17 @@
                 <div class="form-row mt-4">
                     <div class="form-group col mb-0">
                         <label class="custom-control custom-checkbox">
-                            <input name="allowCarryOver" type="checkbox" class="custom-control-input">
+                            <input name="allowCarryOver" type="checkbox" v-model="newJarCarryOver" class="custom-control-input">
                             <span class="custom-control-label">Carry over balance</span>
                         </label>
 
                         <label class="custom-control custom-checkbox">
-                            <input name="flagAmountDeviations" type="checkbox" class="custom-control-input">
+                            <input name="flagAmountDeviations" type="checkbox" v-model="newJarFlagTransactionCount" class="custom-control-input">
                             <span class="custom-control-label">Alert me if the amount is unusual</span>
                         </label>
 
                         <label class="custom-control custom-checkbox">
-                            <input name="flagCountDeviations" type="checkbox" class="custom-control-input">
+                            <input name="flagCountDeviations" type="checkbox" v-model="newJarFlagTotalAmount" class="custom-control-input">
                             <span class="custom-control-label">Alert me if the transaction count is unusual</span>
                         </label>
                     </div>
@@ -130,7 +130,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="button" id="new-jar-submit" class="btn btn-primary" v-on:click="onAddJar">Add</button>
                 </div>
             </form>
         </div>
