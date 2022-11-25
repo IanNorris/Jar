@@ -104,6 +104,10 @@ namespace Jar
 				{
 					await m_browser.ExecuteScriptAsync($"callCallback({message.Callback}, null, {returnValue});");
 				}
+				else
+				{
+					await m_browser.ExecuteScriptAsync($"callCallback({message.Callback}, null, null);");
+				}
 			}
 			catch (Exception ex)
 			{
