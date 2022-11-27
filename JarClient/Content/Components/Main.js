@@ -92,46 +92,5 @@ Vue.component('jar-main', {
 			}
 			return false;
 		}
-	},
-	filters: {
-		asDate: function (date) {
-			return moment(date).format('L');
-		},
-		asCurrency: function (amount) {
-			var formatter = Intl.NumberFormat(navigator.language, {
-				style: 'currency',
-				currency: 'GBP',
-				minimumFractionDigits: 2,
-				maximumFractionDigits: 2
-			});
-
-			return formatter.format(amount / 100.0);
-		},
-		asCurrencyRoundDown: function (amount) {
-			var formatter = Intl.NumberFormat(navigator.language, {
-				style: 'currency',
-				currency: 'GBP',
-				minimumFractionDigits: 0,
-				maximumFractionDigits: 0
-			});
-
-			return formatter.format(Math.floor(amount / 100.0));
-		},
-		asNumeric: function (amount) {
-			var formatter = Intl.NumberFormat(navigator.language, {
-				minimumFractionDigits: 2,
-				maximumFractionDigits: 2
-			});
-
-			return formatter.format(amount / 100.0);
-		},
-		asNumericRoundDown: function (amount) {
-			var formatter = Intl.NumberFormat(navigator.language, {
-				minimumFractionDigits: 0,
-				maximumFractionDigits: 0
-			});
-
-			return formatter.format(Math.floor(amount / 100.0));
-		}
 	}
 });
