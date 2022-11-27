@@ -6,6 +6,7 @@ Vue.component('jar-jars', {
 		return {
 			allJars: [],
 			jarTypes: [],
+			categories: [],
 			newJarName: '',
 			newJarTargetStart: moment('1900-01-01'),
 			newJarTargetEnd: moment(),
@@ -18,6 +19,7 @@ Vue.component('jar-jars', {
 		};
 	},
 	created: async function () {
+		await this.updateCategories();
 		await this.getJarTypes();
 		await this.getJars();
 	},
@@ -36,8 +38,8 @@ Vue.component('jar-jars', {
 			placeholder: 'Select a caterory...',
 			ajax: {
 				transport: async function (params, success, failure) {
-					let categories = await Jars.GetCategories();
-					success({ results: categories });
+					await this.updateCategories();
+					success({ results: this.categories });
 				}
 			},
 			createTag: function (params) {
@@ -128,9 +130,6 @@ Vue.component('jar-jars', {
 				}, 0);
 			}
 		},
-		onSubmitForm: function () {
-
-		},
 		newJarTargetDateChanged: async function (start, end) {
 			this.newJarTargetStart = start;
 			this.newJarTargetEnd = end;
@@ -149,6 +148,18 @@ Vue.component('jar-jars', {
 			}
 
 			return "Unknown";
+		},
+		getCategoryName: function (id) {
+			for (let i = 0; i < this.categories.length; i++) {
+				if (this.categories[i].id == id) {
+					return this.categories[i].text;
+				}
+			}
+
+			return null;
+		},
+		updateCategories: async function () {
+			this.categories = await Jars.GetCategories();
 		},
 		closeJars: async function () {
 			this.$parent.openBudget();

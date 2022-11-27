@@ -19,8 +19,9 @@
             <div v-dragula="allJars" bag="jar-list">
                 <div class="card mb-2" v-for="(jar,index) in allJars" :key="jar.Id">
                     <div class="card-body">
-                        <div class="card-title with-elements">
-                            <h5 class="m-0 mr-2">{{jar.Name}}</h5>
+                        <div class="card-title with-elements" v-for="locals in [{ categoryName: getCategoryName(jar.CategoryId) }]">
+                            <h5 v-if="locals.categoryName != null" class="m-0 mr-2"><span class="text-muted">{{locals.categoryName}}</span> <span class="text-muted">\</span> {{jar.Name}}</h5>
+                            <h5 v-if="locals.categoryName == null" class="m-0 mr-2">{{jar.Name}}</h5>
                             <div class="card-title-elements">
                                 <span class="badge badge-pill badge-info">{{getJarTypeName(jar.Type)}}</span>
                             </div>
