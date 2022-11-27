@@ -1,5 +1,4 @@
 ﻿<div class="layout-container">
-
     <div id="layout-navbar" class="navbar navbar-expand-lg align-items-lg-center bg-white">
         <div class="navbar-nav align-items-lg">
             <h2>Jars</h2>
@@ -16,15 +15,26 @@
     <div class="row ml-1">
 
         <div class="col-4 p-3">
-            <button type="button" class="btn btn-primary m-4" data-toggle="modal" data-target="#modal-new-jar">Add Jar</button>
 
             <div v-dragula="allJars" bag="jar-list">
                 <div class="card mb-2" v-for="(jar,index) in allJars" :key="jar.Id">
-                    <div class="card-header">
-                        {{jar.Name}} - {{jar.Type}}
+                    <div class="card-body">
+                        <div class="card-title with-elements">
+                            <h5 class="m-0 mr-2">{{jar.Name}}</h5>
+                            <div class="card-title-elements">
+                                <span class="badge badge-pill badge-info">{{getJarTypeName(jar.Type)}}</span>
+                            </div>
+                            <div class="card-title-elements ml-md-auto">
+                                <button type="button" class="btn icon-btn btn-xs btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button type="button" class="btn icon-btn btn-xs btn-outline-primary"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <p class="card-text">{{jar.MonthlyValue | asCurrency}}/month</p>
                     </div>
                 </div>
             </div>
+
+            <button type="button" class="btn icon-btn btn-outline-primary mt-2 float-right" data-toggle="modal" data-target="#modal-new-jar"><i class="fa-solid fa-plus"></i></button>
         </div>
 
         <div class="col-8 p-3">

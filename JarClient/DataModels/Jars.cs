@@ -48,7 +48,7 @@ namespace Jar.DataModels
 		{
 			var jars = _database.Connection.Table<Model.Jar>().OrderBy(c => c.Order);
 
-			return jars.OrderBy(x => x.Order);
+			return jars;
 		}
 
 		public async Task OnJarReorder(IEnumerable<Model.Jar> newOrder)
@@ -59,9 +59,12 @@ namespace Jar.DataModels
 			{
 				jar.Order = index;
 
+				_database.Connection.Update(jar);
+
 				index++;
 			}
 
+			
 		}
 
 		private Database _database;

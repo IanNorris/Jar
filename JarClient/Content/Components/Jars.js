@@ -18,12 +18,12 @@ Vue.component('jar-jars', {
 		};
 	},
 	created: async function () {
-		await this.getJars();
 		await this.getJarTypes();
+		await this.getJars();
 	},
 	mounted: function () {
 		let self = this;
-		Vue.vueDragula.eventBus.$on('drop', function (args) {
+		Vue.vueDragula.eventBus.$on('dropModel', function (args) {
 			if (args[0] == "jar-list") {
 				self.onJarReorder();
 			}
@@ -110,8 +110,8 @@ Vue.component('jar-jars', {
 					CategoryId: isCategoryNumberic ? categoryNumeric : 0,
 					Name: this.newJarName,
 					Type: this.newJarType,
-					MonthlyValue: parseFloat(this.newJarTargetAmount),
-					TargetValue: parseFloat(this.newJarMaxAmount),
+					MonthlyValue: Math.round(parseFloat(this.newJarTargetAmount) * 100.0),
+					TargetValue: Math.round(parseFloat(this.newJarMaxAmount) * 100.0),
 					TargetDate: this.newJarTargetStart.toISOString(),
 					CarryOver: this.newJarCarryOver,
 					FlagTransactionCount: this.newJarFlagTransactionCount,
@@ -141,11 +141,20 @@ Vue.component('jar-jars', {
 		getJarTypes: async function () {
 			this.jarTypes = await Jars.GetJarTypes();
 		},
+		getJarTypeName: function (id) {
+			for (let i = 0; i < this.jarTypes.length; i++) {
+				if (this.jarTypes[i].Value == id) {
+					return this.jarTypes[i].Name;
+				}
+			}
+
+			return "Unknown";
+		},
 		closeJars: async function () {
 			this.$parent.openBudget();
 		},
 		onJarReorder: async function () {
-			await Budgets.OnJarReorder(this.allJars);
+			await Jars.OnJarReorder(this.allJars);
 		}
 	},
 	computed: {
