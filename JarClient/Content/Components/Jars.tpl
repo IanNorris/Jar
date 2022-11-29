@@ -26,7 +26,7 @@
                                 <span class="badge badge-pill badge-info">{{getJarTypeName(jar.Type)}}</span>
                             </div>
                             <div class="card-title-elements ml-md-auto">
-                                <button type="button" class="btn icon-btn btn-xs btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button type="button" class="btn icon-btn btn-xs btn-outline-primary" v-on:click="onClickDialogButton(true, jar)"><i class="fa-solid fa-pen-to-square"></i></button>
                                 <button type="button" class="btn icon-btn btn-xs btn-outline-primary"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <button type="button" class="btn icon-btn btn-outline-primary mt-2 float-right" data-toggle="modal" data-target="#modal-new-jar"><i class="fa-solid fa-plus"></i></button>
+            <button type="button" class="btn icon-btn btn-outline-primary mt-2 float-right" v-on:click="onClickDialogButton(false, null)"><i class="fa-solid fa-plus"></i></button>
         </div>
 
         <div class="col-8 p-3">
@@ -61,11 +61,12 @@
         <div class="modal-dialog">
         <form class="modal-content" id="new-jar-form" onsubmit="return false;">
             <div class="modal-header">
-            <h5 class="modal-title">
-                New Jar
-                <br>
-                <small class="text-muted">Add a new Jar to classify your spending or income.</small>
-            </h5>
+                <h5 class="modal-title">
+                    New Jar
+                    <br>
+                    <small class="text-muted" v-if="!dialogModeEdit">Add a new Jar to classify your spending or income.</small>
+                    <small class="text-muted" v-if="dialogModeEdit">Editing "{{newJarNameOriginal}}" Jar.</small>
+                </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
             </div>
             <div class="modal-body">
@@ -104,11 +105,11 @@
                     <div class="form-row">
                          <div class="form-group col mb-0">
                         <label class="form-label">Desired monthly amount</label>
-                        <input name="targetAmount" type="number" min="0" class="form-control jar-target-field" placeholder="Amount to try to save (or estimated amount) each month" v-model="newJarTargetAmount">
+                        <input name="targetAmount" type="number" min="0" class="form-control jar-target-field" placeholder="Amount to put in each month" v-model="newJarTargetAmount">
                         </div>
                         <div class="form-group col mb-0">
                         <label class="form-label">Maximum Jar amount</label>
-                        <input name="maxAmount" type="number" min="0" class="form-control jar-target-field" placeholder="The max amount this Jar should contain" v-model="newJarMaxAmount">
+                        <input name="maxAmount" type="number" min="0" class="form-control jar-target-field" placeholder="Max this Jar should contain" v-model="newJarMaxAmount">
                         </div>
                     </div>
 
@@ -141,7 +142,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" id="new-jar-submit" class="btn btn-primary" v-on:click="onAddJar">Add</button>
+                    <button type="button" id="new-jar-submit" class="btn btn-primary" v-on:click="onAddOrEditJar">{{dialogModeEdit ? "Update" : "Add"}}</button>
                 </div>
             </form>
         </div>

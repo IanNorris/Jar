@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 Vue.component('jar-jars', {
 	template: '#JarsTemplate',
@@ -8,6 +8,7 @@ Vue.component('jar-jars', {
 			jarTypes: [],
 			categories: [],
 			newJarName: '',
+			newJarNameOriginal: '',
 			newJarTargetStart: moment('1900-01-01'),
 			newJarTargetEnd: moment(),
 			newJarType: 2,
@@ -16,10 +17,14 @@ Vue.component('jar-jars', {
 			newJarCarryOver: false,
 			newJarFlagTransactionCount: false,
 			newJarFlagTotalAmount: false,
+
+			editJarObject: null,
+			dialogModeText: 'Add',
+			dialogModeEdit: false,
 		};
 	},
 	created: async function () {
-		await this.updateCategories();
+		await this.updateCategories('');
 		await this.getJarTypes();
 		await this.getJars();
 	},
@@ -38,8 +43,8 @@ Vue.component('jar-jars', {
 			placeholder: 'Select a caterory...',
 			ajax: {
 				transport: async function (params, success, failure) {
-					await this.updateCategories();
-					success({ results: this.categories });
+					await self.updateCategories(params.data.term);
+					success({ results: self.categories });
 				}
 			},
 			createTag: function (params) {
@@ -100,7 +105,51 @@ Vue.component('jar-jars', {
 		$('#new-jar-form').off('submit').on('submit', e => e.preventDefault() );
 	},
 	methods: {
-		onAddJar: async function () {
+		onClickDialogButton: async function (editMode, editJarObject) {
+			this.dialogModeEdit = editMode;
+			this.newJarName = editJarObject != null ? editJarObject.Name : "";
+			this.newJarNameOriginal = editJarObject != null ? editJarObject.Name : "";
+			this.editJarObject = editJarObject;
+
+			this.newJarTargetEnd = moment();
+
+			if (editJarObject) {
+				this.newJarName = editJarObject.Name;
+				this.newJarNameOriginal = editJarObject.Name;
+				this.newJarType = editJarObject.Type;
+
+				this.newJarTargetAmount = editJarObject.MonthlyValue / 100.0;
+				this.newJarMaxAmount = editJarObject.TargetValue / 100.0;
+				this.newJarTargetStart = moment(editJarObject.TargetDate);
+				this.newJarCarryOver = editJarObject.CarryOver;
+				this.newJarFlagTransactionCount = editJarObject.FlagTransactionCount;
+				this.newJarFlagTotalAmount = editJarObject.FlagTotalAmount;
+
+				if (editJarObject.CategoryId) {
+					$('#jarCategoryInput').html(`<option value="${editJarObject.CategoryId}">${this.getCategoryName(editJarObject.CategoryId)}<option>`);
+					$('#jarCategoryInput').val(editJarObject.CategoryId.toString()).trigger('change');
+				}
+				else {
+					$('#jarCategoryInput').val('').trigger('change');
+				}
+			}
+			else {
+				this.newJarName = "";
+				this.newJarNameOriginal = "";
+
+
+				this.newJarTargetAmount = "";
+				this.newJarMaxAmount = "";
+				this.newJarTargetStart = moment('1900-01-01');
+				this.newJarCarryOver = false;
+				this.newJarFlagTransactionCount = false;
+				this.newJarFlagTotalAmount = false;
+			}
+
+			//Show
+			$('#modal-new-jar').modal('toggle');
+		},
+		onAddOrEditJar: async function () {
 			if ($('#new-jar-form').valid()) {
 				$('#new-jar-submit').prop("disabled", true);
 
@@ -108,18 +157,36 @@ Vue.component('jar-jars', {
 				let categoryNumeric = parseInt(category);
 				let isCategoryNumberic = !Number.isNaN(categoryNumeric);
 
-				await Jars.CreateNewJar({
-					CategoryId: isCategoryNumberic ? categoryNumeric : 0,
-					Name: this.newJarName,
-					Type: this.newJarType,
-					MonthlyValue: Math.round(parseFloat(this.newJarTargetAmount) * 100.0),
-					TargetValue: Math.round(parseFloat(this.newJarMaxAmount) * 100.0),
-					TargetDate: this.newJarTargetStart.toISOString(),
-					CarryOver: this.newJarCarryOver,
-					FlagTransactionCount: this.newJarFlagTransactionCount,
-					FlagTotalAmount: this.newJarFlagTotalAmount
-				}, isCategoryNumberic ? '' : category);
-
+				if (this.dialogModeEdit) {
+					await Jars.EditJar({
+						Id: this.editJarObject.Id,
+						Order: this.editJarObject.Order,
+						CategoryId: isCategoryNumberic ? categoryNumeric : 0,
+						Name: this.newJarName,
+						Type: this.newJarType,
+						MonthlyValue: this.toCurrencyFromFloatString(this.newJarTargetAmount),
+						TargetValue: this.toCurrencyFromFloatString(this.newJarMaxAmount),
+						TargetDate: this.newJarTargetStart.toISOString(),
+						CarryOver: this.newJarCarryOver,
+						FlagTransactionCount: this.newJarFlagTransactionCount,
+						FlagTotalAmount: this.newJarFlagTotalAmount
+					}, isCategoryNumberic ? '' : category);
+				}
+				else {
+					await Jars.CreateNewJar({
+						CategoryId: isCategoryNumberic ? categoryNumeric : 0,
+						Name: this.newJarName,
+						Type: this.newJarType,
+						MonthlyValue: this.toCurrencyFromFloatString(this.newJarTargetAmount),
+						TargetValue: this.toCurrencyFromFloatString(this.newJarMaxAmount),
+						TargetDate: this.newJarTargetStart.toISOString(),
+						CarryOver: this.newJarCarryOver,
+						FlagTransactionCount: this.newJarFlagTransactionCount,
+						FlagTotalAmount: this.newJarFlagTotalAmount
+					}, isCategoryNumberic ? '' : category);
+				}
+				
+				//Update, this should contain our insertion/edit
 				await this.getJars();
 
 				this.newJarName = '';
@@ -129,6 +196,14 @@ Vue.component('jar-jars', {
 					$('#modal-new-jar').modal('toggle');
 				}, 0);
 			}
+		},
+		toCurrencyFromFloatString: function (stringValue) {
+			let parsedFloat = parseFloat(stringValue);
+			if (isNaN(parsedFloat)) {
+				return 0;
+			}
+			
+			return Math.round(parsedFloat * 100.0);
 		},
 		newJarTargetDateChanged: async function (start, end) {
 			this.newJarTargetStart = start;
@@ -158,8 +233,8 @@ Vue.component('jar-jars', {
 
 			return null;
 		},
-		updateCategories: async function () {
-			this.categories = await Jars.GetCategories();
+		updateCategories: async function (substring) {
+			this.categories = await Jars.GetCategories(substring ?? '');
 		},
 		closeJars: async function () {
 			this.$parent.openBudget();
