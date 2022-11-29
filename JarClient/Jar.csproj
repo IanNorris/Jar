@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
     <RootNamespace>Jar</RootNamespace>
+    <ApplicationIcon>AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="AppIcon.ico" />
     <Content Include="Institutions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
