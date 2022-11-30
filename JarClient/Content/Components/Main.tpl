@@ -79,17 +79,23 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="(t,index) in selectedAccountTransactions">
+							<tr v-for="(t,index) in selectedAccountTransactions" :key="t.Id">
 								<td>
-									<i v-bind:class="{ 'fa-solid fa-check-circle font-success': t.IsAccepted, 'fa-regular fa-question-circle': !t.IsAccepted }"></i>
-									&nbsp;<i class="fa-flag" v-bind:class="{ 'fa-regular': t.Flag == 0, 'fa-solid flag-color-1': t.Flag == 1, 'fa-solid flag-color-2': t.Flag == 2, 'fa-solid flag-color-3': t.Flag == 3, 'fa-solid flag-color-4': t.Flag == 4, 'fa-solid flag-color-5': t.Flag == 5 }"></i>
+									<span class="vertical-align nowrap">
+										<i v-bind:class="{ 'fa-solid fa-check-circle font-success': t.IsAccepted, 'fa-regular fa-question-circle': !t.IsAccepted }"></i>
+										&nbsp;
+										<i class="fa-flag" v-bind:class="{ 'fa-regular': t.Flag == 0, 'fa-solid flag-color-1': t.Flag == 1, 'fa-solid flag-color-2': t.Flag == 2, 'fa-solid flag-color-3': t.Flag == 3, 'fa-solid flag-color-4': t.Flag == 4, 'fa-solid flag-color-5': t.Flag == 5 }"></i>
+									</span>
 								</td>
-								<td>{{t.Date | asDate}}</td>
-								<td v-bind:title="t.OriginalPayee">{{t.Payee}} <span class="text-muted">{{t.Reference}}</span></td>
-								<td>{{t.Memo}}</td>
+								<td><span class="vertical-align">{{t.Date | asDate}}</span></td>
+								<td v-bind:title="t.OriginalPayee"><span class="vertical-align">{{t.Payee}} <span class="text-muted">{{t.Reference}}</span></span></td>
+								<td v-bind:class="{ 'table-row-with-edit': editingMemo == t.Id, 'table-row-without-edit': editingMemo != t.Id }">
+									<div v-if="editingMemo != t.Id" class="vertical-align-outer" v-on:click="setEditMemo($event, t.Id)"><span class="vertical-align">{{t.Memo.replace('\n', ' ')}}</span></div>
+									<input v-if="editingMemo == t.Id" type="text" class="form-control inplace-edit-field" v-model="t.Memo" v-on:blur="setEditMemo($event, -1)"/>
+								</td>
 								<td>{{t.Jar}}</td>
-								<td class="table-cell-align-right" v-bind:class="{ 'font-positive-value': t.Amount >= 0, 'font-negative-value': t.Amount < 0 }">{{t.Amount | asNumeric}}</td>
-								<td class="table-cell-align-right">{{t.Balance | asNumeric}}</td>
+								<td class="table-cell-align-right" v-bind:class="{ 'font-positive-value': t.Amount >= 0, 'font-negative-value': t.Amount < 0 }"><span class="vertical-align">{{t.Amount | asNumeric}}</span></td>
+								<td class="table-cell-align-right"><span class="vertical-align">{{t.Balance | asNumeric}}</span></td>
 							</tr>
 						</tbody>
 					</table>

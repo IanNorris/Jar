@@ -12,6 +12,8 @@ Vue.component('jar-main', {
 			accounts: [],
 			selectedAccountTransactions: [],
 			sideNavWidth: 0.0,
+
+			editingMemo: -1,
 		};
 	},
 	created: async function () {
@@ -83,6 +85,14 @@ Vue.component('jar-main', {
 
 			await this.getAccounts();
 			await this.getTransactions();
+		},
+		setEditMemo: async function (event, edit) {
+			let currentEventTargetParent = $(event.currentTarget).parent();
+			this.editingMemo = edit;
+
+			Vue.nextTick(function () {
+				currentEventTargetParent.children('input').focus();
+			})
 		}
 	},
 	computed: {
