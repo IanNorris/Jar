@@ -36,7 +36,7 @@ Vue.component('jar-jars', {
 			}
 		});
 
-		$('.select2').select2({
+		$('#jarCategoryInput').select2({
 			allowClear: true,
 			tags: true,
 			dropdownParent: $('#modal-new-jar'),
